@@ -62,6 +62,20 @@ gulp.task('styles', () => {
     .pipe($.size({title: 'styles'}));
 });
 
+gulp.task('polyfill', () => {
+  return browserify({
+        entries: ['lib/polyfill.js'],
+        paths: [ 'lib' ],
+        debug : false // !gulp.env.production
+      })
+      .transform([ babelify ])
+      .bundle()
+      .pipe(source('polyfill.js'))
+      .pipe(buffer())
+      .pipe($.uglify())
+      .pipe(gulp.dest('.'))
+});
+
 gulp.task('scripts', () => {
   return browserify({
         entries: ['lib/main.js'],
@@ -71,31 +85,14 @@ gulp.task('scripts', () => {
       .transform([ babelify ])
       .bundle()
       .on('error', onError)
-
       .pipe(source('koliseo-agenda.js'))
       .pipe(buffer())
       .pipe($.sourcemaps.init({
         loadMaps: true,
         base: '.',
-        sourceRoot: '.'
+        sourceRoot: '..'
       })) // loads map from browserify file
       .pipe($.uglify())
-/*
-      .pipe($.uglify({
-        // see http://davidwalsh.name/compress-uglify
-        mangle: true,
-        compress: {
-          sequences: true,
-          dead_code: true,
-          conditionals: true,
-          booleans: true,
-          unused: true,
-          if_return: true,
-          join_vars: true,
-          drop_console: true
-        }
-      })))
-*/
       .pipe($.sourcemaps.write('.')) // writes .map file
       .pipe(gulp.dest('.'))
 });
@@ -108,7 +105,7 @@ gulp.task('test', () => {
 */
 
 // Watch Files For Changes & Reload
-gulp.task('serve', ['styles', 'scripts'], () => {
+gulp.task('serve', ['styles', 'polyfill', 'scripts'], () => {
   browserSync({
     notify: false,
     // https: true,
@@ -122,4 +119,4 @@ gulp.task('serve', ['styles', 'scripts'], () => {
   gulp.watch(['img/**/*'], [ 'images', reload ]);
 });
 
-gulp.task('default', ['clean', 'styles', 'scripts']);
+gulp.task('default', ['clean', 'styles', 'polyfill', 'scripts']);
