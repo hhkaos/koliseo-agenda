@@ -70,7 +70,7 @@ gulp.task('polyfill', () => {
       })
       .transform([ babelify ])
       .bundle()
-      .pipe(source('polyfill.js'))
+      .pipe(source('koliseo-polyfill.js'))
       .pipe(buffer())
       .pipe($.uglify())
       .pipe(gulp.dest('.'))

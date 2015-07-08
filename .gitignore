@@ -4,3 +4,5 @@ build
 *.log
 *.map
 node_modules
+koliseo-agenda.js
+koliseo-polyfill.js
