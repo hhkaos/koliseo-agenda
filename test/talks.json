@@ -12,24 +12,23 @@
               "id": 111,
               "start": "09:00",
               "end": "10:00",
-              "type": "talk",
+              "type": "TALK",
               "contents": {"id":1,"title":"Title for talk 1","description":"Description talk 1","creationDate":1435663557878,"authors":[{"id":31404001,"uuid":"juanmanuelserranohidalgo","name":"Juan Manuel Serrano Hidalgo","avatar":"//storage.googleapis.com/k-avatars/31404001-caa3596b","description":"Description speaker 1."}],"comments":"Comments 1","tags":{"Type of Proposal":["Workshop"],"Language of the talk/workshop":["Spanish"],"Technology":["Other"],"Language ":["JAVA and JVM languages"],"Level ":["Intermediate"]},"totalVotes":3}
             },
             {
               "id": 112,
               "start": "10:00",
               "end": "11:00",
-              "type": "talk",
+              "type": "TALK",
               "contents": {"id":2,"title":"Title for talk 2","description":"Description talk 2","creationDate":1435663557878,"authors":[{"id":31404001,"uuid":"juanmanuelserranohidalgo","name":"Juan Manuel Serrano Hidalgo","avatar":"//storage.googleapis.com/k-avatars/31404001-caa3596b","description":"Description speaker 1."}],"comments":"Comments 1","tags":{"Type of Proposal":["Workshop"],"Language of the talk/workshop":["Spanish"],"Technology":["Other"],"Language ":["JAVA and JVM languages"],"Level ":["Intermediate"]},"totalVotes":3}
             },
             {
               "id": 113,
               "start": "11:00",
               "end": "11:15",
-              "type": "break",
+              "type": "BREAK",
               "contents": {
-                "title": "Break",
-                "description": "Let's take five to talk about life"
+                "title": "Tea time like it's 1999"
               }
             }
 
@@ -43,7 +42,7 @@
               "id": 121,
               "start": "09:00",
               "end": "11:00",
-              "type": "talk",
+              "type": "TALK",
               "contents": {
                 "id": 243,
                 "title": "barbaz"
@@ -53,17 +52,36 @@
               "id": 122,
               "start": "11:00",
               "end": "11:15",
-              "type": "break",
+              "type": "BREAK",
               "contents": {
-                "title": "Break",
-                "description": "Let's take five to talk about life"
+                "title": "Tea time like it's 1999"
               }
             }
 
           ]
         }
       ]
-    }
+    },
 
+    {
+      "id": 2,
+      "name": "Day 2",
+      "tracks": [
+        {
+          "id": 21,
+          "name": "Track 2-1",
+          "slots": [
+            {
+              "id": 111,
+              "start": "09:00",
+              "end": "10:00",
+              "type": "TALK",
+              "contents": {"id":1,"title":"Title for talk 1","description":"Description talk 1","creationDate":1435663557878,"authors":[{"id":31404001,"uuid":"juanmanuelserranohidalgo","name":"Juan Manuel Serrano Hidalgo","avatar":"//storage.googleapis.com/k-avatars/31404001-caa3596b","description":"Description speaker 1."}],"comments":"Comments 1","tags":{"Type of Proposal":["Workshop"],"Language of the talk/workshop":["Spanish"],"Technology":["Other"],"Language ":["JAVA and JVM languages"],"Level ":["Intermediate"]},"totalVotes":3}
+            }
+
+          ]
+        }
+      ]
+    }
   ]
 }
