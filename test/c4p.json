@@ -1,0 +1,78 @@
+{
+  "id":5685252034920448,
+  "name":"Call for papers for Codemotion Madrid 2015",
+  "description":"Codemotion Madrid IV edition will be held in *November 27- 28* in \thttp://www.uspceu.com/es/facultades-escuelas/escuela-politecnica-superior/index.php (Universidad CEU San Pablo, Campus de Montepríncipe). Send us your talk or workshop and be a part of the biggest IT event in Spain!\n\nTalks must be 40 minutes and workshops 1 hour and 45 minutes in length. Please use the field \"Comments\" if you have any specific requirement for your presentation.\n\n*This C4P closes on July 5* and we will take about one month to create the agenda, with the collaboration of our experts and communities. We will also launch a survey to ask the people what they prefer to see in the next Codemotion and the results will help us to make a better selection. We won't use your personal information for other purposes.\n\n*Codemotion Madrid won't pay for any talk, but will give the speakers coming from abroad a partial refund for the travel expenses*.\n\nPlease e-mail us at info@codemotion.es for any doubt. ",
+  "dateTime":1432512000000,
+  "endDateTime":1436140799999,
+  "tagCategories":{
+    "Type of Proposal":{
+      "tags":[
+        "Talk",
+        "Workshop"
+      ],
+      "multiple":false,
+      "required":true
+    },
+    "Language of the talk/workshop":{
+      "tags":[
+        "Spanish",
+        "English"
+      ],
+      "multiple":false,
+      "required":true
+    },
+    "Technology":{
+      "tags":[
+        "Agile and Lean",
+        "Big Data",
+        "Web",
+        "Cloud",
+        "SQL and NoSQL",
+        "Internet of Things",
+        "DevOps",
+        "Mobile",
+        "Other",
+        "Games"
+      ],
+      "multiple":true,
+      "required":true
+    },
+    "Language ":{
+      "tags":[
+        "Bash",
+        "PHP",
+        "Objective-C",
+        "C/C++",
+        ".Net",
+        "JAVA and JVM languages",
+        "Ruby",
+        "Other",
+        "Python",
+        "JavaScript"
+      ],
+      "multiple":true,
+      "required":true
+    },
+    "Level ":{
+      "tags":[
+        "Advanced",
+        "Intermediate"
+      ],
+      "multiple":false,
+      "required":true
+    }
+  },
+  "notifyNewProposals":true,
+  "event":{
+    "id":5769975163781120,
+    "name":"Call for papers for Codemotion Madrid 2015",
+    "uuid":"codemotion/codemotion-madrid"
+  },
+  "isPrivate":true,
+  "proposalsSubmitted":326,
+  "jury":[
+
+  ],
+  "votesPerUser":0,
+  "totalVotes":0
+}

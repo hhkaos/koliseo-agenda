@@ -1,0 +1,38 @@
+.kl-title {
+
+}
+
+.kl-container {
+  margin: 10em auto;
+  perspective: 50em;
+  width: 12em;
+
+  .kl-bar-part {
+    animation: loading 2s infinite linear;
+    background-color: darken(#0074d9, 30%);
+    backface-visibility: hidden;
+    display: block;
+    float: left;
+    height: 2em;
+    transition: all 1s ease 0s;
+    transform-origin: top center;
+    transform: rotateX(-90deg);
+    width: 2em;
+
+    &:nth-child(1) { animation-delay: 0.25s }
+    &:nth-child(2) { animation-delay: 0.50s }
+    &:nth-child(3) { animation-delay: 0.75s }
+    &:nth-child(4) { animation-delay: 1.00s }
+    &:nth-child(5) { animation-delay: 1.25s }
+    &:nth-child(6) { animation-delay: 1.50s }
+    &:nth-child(7) { animation-delay: 1.75s }
+    &:nth-child(8) { animation-delay: 2.00s }
+  }
+}
+
+@keyframes loading {
+  0%  { transform: rotateX(-90deg) }
+  30% { transform: rotateX(0deg); background-color: #0074d9 }
+  60% { transform: rotateX(0deg); background-color: #0074d9 }
+  90%, 100%{ transform: rotateX(91deg); transform-origin: bottom center }
+}

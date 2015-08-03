@@ -1,6 +1,7 @@
 <html>
 <head>
   <meta charset="utf-8">
+  <link rel="stylesheet" href="../build/styles.css">
 </head>
 <body>
   <div class="koliseo-agenda"></div>
@@ -23,15 +24,17 @@
   }
 
   function onLoad() {
-    if (K && K.agenda && typeof fetch !== 'undefined') {
-      K.agenda.render({
-        url: 'agenda.json'
+    if (typeof Koliseo !== 'undefined' && Koliseo.agenda && typeof fetch !== 'undefined') {
+      Koliseo.agenda.render({
+        c4pUrl: 'c4p.json',
+        agendaUrl: 'talks.json',
+        element: document.querySelector('.koliseo-agenda')
       })
     }
   }
 
-  (typeof fetch === 'undefined') && loadJS('../koliseo-polyfill.js', onLoad)
-  loadJS('../koliseo-agenda.js', onLoad)
+  (typeof fetch === 'undefined') && loadJS('../build/koliseo-polyfill.js', onLoad)
+  loadJS('../build/koliseo-agenda.js', onLoad)
 
   </script>
 </body>

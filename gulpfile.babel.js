@@ -2,14 +2,10 @@ const gulp = require('gulp');
 const del = require('del');
 const browserSync = require('browser-sync');
 const gulpLoadPlugins = require('gulp-load-plugins');
-//const path = require('path');
-//const fs = require('fs');
 const browserify = require("browserify");
 const babelify = require("babelify");
 const cmq = require('gulp-combine-media-queries');
-//const es = require('event-stream');
 const source = require('vinyl-source-stream')
-//const watchify = require('watchify')
 const buffer = require('vinyl-buffer')
 
 const $ = gulpLoadPlugins();
@@ -39,14 +35,13 @@ gulp.task('images', () => {
 
 gulp.task('styles', () => {
 
-  return gulp.src([ 'scss/*.scss' ])
+  return gulp.src([ 'scss/main.scss' ])
     .pipe($.sourcemaps.init())
     .pipe($.sass({
       precision: 10
-    }))
-    .on('error', $.sass.logError)
+    }).on('error', $.sass.logError))
     .pipe($.autoprefixer([
-      'ie >= 11',
+      'ie >= 8',
       'ie_mob >= 10',
       'ff >= 30',
       'chrome >= 34',
@@ -55,10 +50,10 @@ gulp.task('styles', () => {
       'android >= 4.4'
     ]))
     .pipe($.combineMediaQueries())
-    .pipe(gulp.dest('.tmp'))
     .pipe($.minifyCss())
-    .pipe($.sourcemaps.write())
-    .pipe(gulp.dest('.'))
+    .pipe($.sourcemaps.write('.'))
+    .pipe($.rename('styles.css'))
+    .pipe(gulp.dest('build'))
     .pipe($.size({title: 'styles'}));
 });
 
@@ -89,12 +84,12 @@ gulp.task('scripts', () => {
       .pipe(buffer())
       .pipe($.sourcemaps.init({
         loadMaps: true,
-        base: '.',
-        sourceRoot: '..'
+        base: '.'
+        //sourceRoot: '..'
       })) // loads map from browserify file
       .pipe($.uglify())
       .pipe($.sourcemaps.write('.')) // writes .map file
-      .pipe(gulp.dest('.'))
+      .pipe(gulp.dest('build/'))
 });
 
 /*
