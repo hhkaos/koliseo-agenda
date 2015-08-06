@@ -1,5 +1,6 @@
 {
-  "schedule": [
+  "name": "FooBar a muerte",
+  "days": [
     {
       "id": 1,
       "name": "Day 1",
@@ -13,14 +14,14 @@
               "start": "09:00",
               "end": "10:00",
               "type": "TALK",
-              "contents": {"id":1,"title":"Title for talk 1","description":"Description talk 1","creationDate":1435663557878,"authors":[{"id":31404001,"uuid":"juanmanuelserranohidalgo","name":"Juan Manuel Serrano Hidalgo","avatar":"//storage.googleapis.com/k-avatars/31404001-caa3596b","description":"Description speaker 1."}],"comments":"Comments 1","tags":{"Type of Proposal":["Workshop"],"Language of the talk/workshop":["Spanish"],"Technology":["Other"],"Language ":["JAVA and JVM languages"],"Level ":["Intermediate"]},"totalVotes":3}
+              "contents": {"id":1,"title":"Title for talk 1","description":"Description talk 1","creationDate":1435663557878,"authors":[{"id":31404001,"uuid":"icoloma","name":"Nacho Coloma","avatar":"//storage.googleapis.com/k-avatars/31404001-caa3596b","description":"Description speaker 1."}],"comments":"Comments 1","tags":{"Type of Proposal":["Workshop"],"Language of the talk/workshop":["Spanish"],"Technology":["Other"],"Language ":["JAVA and JVM languages"],"Level ":["Intermediate"]},"totalVotes":3}
             },
             {
               "id": 112,
               "start": "10:00",
               "end": "11:00",
               "type": "TALK",
-              "contents": {"id":2,"title":"Title for talk 2","description":"Description talk 2","creationDate":1435663557878,"authors":[{"id":31404001,"uuid":"juanmanuelserranohidalgo","name":"Juan Manuel Serrano Hidalgo","avatar":"//storage.googleapis.com/k-avatars/31404001-caa3596b","description":"Description speaker 1."}],"comments":"Comments 1","tags":{"Type of Proposal":["Workshop"],"Language of the talk/workshop":["Spanish"],"Technology":["Other"],"Language ":["JAVA and JVM languages"],"Level ":["Intermediate"]},"totalVotes":3}
+              "contents": {"id":2,"title":"Title for talk 2","description":"Description talk 2","creationDate":1435663557878,"authors":[{"id":31404001,"uuid":"icoloma","name":"Nacho Coloma","avatar":"//storage.googleapis.com/k-avatars/31404001-caa3596b","description":"Description speaker 1."}],"comments":"Comments 1","tags":{"Type of Proposal":["Workshop"],"Language of the talk/workshop":["Spanish"],"Technology":["Other"],"Language ":["JAVA and JVM languages"],"Level ":["Intermediate"]},"totalVotes":3}
             },
             {
               "id": 113,
@@ -43,10 +44,7 @@
               "start": "09:00",
               "end": "11:00",
               "type": "TALK",
-              "contents": {
-                "id": 243,
-                "title": "barbaz"
-              }
+              "contents": {"id":12,"title":"Title for talk 1.2","description":"Description talk 2","creationDate":1435663557878,"authors":[{"id":31404001,"uuid":"icoloma","name":"Nacho Coloma","avatar":"//storage.googleapis.com/k-avatars/31404001-caa3596b","description":"Description speaker 1."}],"comments":"Comments 1","tags":{"Type of Proposal":["Workshop"],"Language of the talk/workshop":["Spanish"],"Technology":["Other"],"Language ":["JAVA and JVM languages"],"Level ":["Intermediate"]},"totalVotes":3}
             },
             {
               "id": 122,
@@ -76,7 +74,7 @@
               "start": "09:00",
               "end": "10:00",
               "type": "TALK",
-              "contents": {"id":1,"title":"Title for talk 1","description":"Description talk 1","creationDate":1435663557878,"authors":[{"id":31404001,"uuid":"juanmanuelserranohidalgo","name":"Juan Manuel Serrano Hidalgo","avatar":"//storage.googleapis.com/k-avatars/31404001-caa3596b","description":"Description speaker 1."}],"comments":"Comments 1","tags":{"Type of Proposal":["Workshop"],"Language of the talk/workshop":["Spanish"],"Technology":["Other"],"Language ":["JAVA and JVM languages"],"Level ":["Intermediate"]},"totalVotes":3}
+              "contents": {"id":21,"title":"Title for talk 2.1","description":"Description talk 1","creationDate":1435663557878,"authors":[{"id":31404001,"uuid":"icoloma","name":"Nacho Coloma","avatar":"//storage.googleapis.com/k-avatars/31404001-caa3596b","description":"Description speaker 1."}],"comments":"Comments 1","tags":{"Type of Proposal":["Workshop"],"Language of the talk/workshop":["Spanish"],"Technology":["Other"],"Language ":["JAVA and JVM languages"],"Level ":["Intermediate"]},"totalVotes":3}
             }
 
           ]

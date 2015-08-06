@@ -26,11 +26,18 @@
     "gulp-sourcemaps": "^1.5.2",
     "gulp-streamify": "0.0.5",
     "gulp-uglify": "^1.0.1",
+    "mocha": "^2.2.5",
+    "node-inspector": "^0.12.2",
+    "q": "^1.4.1",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0"
   },
   "engines": {
     "node": ">=0.10.0",
     "npm": ">=2.1.18"
+  },
+  "scripts": {
+    "test": "mocha --compilers js:babel/register",
+    "debug": "node-inspector & mocha --compilers js:babel/register --ui bdd -d -g 'should X then Y' --debug-brk"
   }
 }
