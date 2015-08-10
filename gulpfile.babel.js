@@ -14,6 +14,12 @@ const reload = browserSync.reload;
 // break build if BrowserSync is not active
 function onError(err){
   console.log(err.message);
+
+  $.notify.onError({
+    title: "Compile Error",
+    message: "<%= error.message %>"
+  }).apply(this, Array.prototype.slice.call(arguments));
+
   if (browserSync.active) {
     this.emit('end');
   }
@@ -79,6 +85,7 @@ gulp.task('scripts', () => {
       })
       .transform([ babelify ])
       .bundle()
+
       .on('error', onError)
       .pipe(source('koliseo-agenda.js'))
       .pipe(buffer())
@@ -87,7 +94,7 @@ gulp.task('scripts', () => {
         base: '.'
         //sourceRoot: '..'
       })) // loads map from browserify file
-      .pipe($.uglify())
+      //.pipe($.uglify())
       .pipe($.sourcemaps.write('.')) // writes .map file
       .pipe(gulp.dest('build/'))
 });
