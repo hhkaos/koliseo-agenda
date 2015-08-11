@@ -5,12 +5,21 @@
 
 */
 
+$cellDuration1: .2s;
+$cellDuration2: .3s;
+$modalDelay: 0s;
+$modalDuration: .3s;
 
 .kagenda-cell-contents {
-  transition: color .2s .3s, width .3s 0s;
   overflow: hidden;
+  transition:
+    color $cellDuration1,
+    background-color $cellDuration1,
+    border-radius $cellDuration1,
+    width $cellDuration2 $cellDuration1,
+    height $cellDuration2 $cellDuration1;
 
-  &.to-circle {
+  &.selected {
 
     .kagenda-table-a {
       color: transparent !important;
@@ -21,7 +30,6 @@
     color: transparent;
     background-color: #222;
     border-radius: 50%;
-    transition: color .2s 0s, background-color .2s 0s, border-radius .2s, width .3s .2s, height .3s .2s;
     margin: 0 auto;
     vertical-align: middle;
   }
@@ -34,9 +42,17 @@
   z-index: 10;
   left: 0;
   top: 0;
-  right: 0;
-  bottom: 0;
+  width: 100%;
+  height: 100%;
   position: fixed;
+  transition:
+    color $modalDuration $modalDelay,
+    background-color $modalDuration $modalDelay,
+    border-radius $modalDuration $modalDelay,
+    left $modalDuration $modalDelay,
+    top $modalDuration $modalDelay,
+    width $modalDuration $modalDelay,
+    height $modalDuration $modalDelay;
 
   &.to-circle {
     width: 4em;
@@ -44,12 +60,14 @@
     color: transparent;
     background-color: #222;
     border-radius: 50%;
-    transition: color .2s 0s, background-color .2s 0s, border-radius .2s, width .3s .2s, height .3s .2s;
     position: fixed;
   }
 
   &.hidden {
-    display: none;
+    display: block;
+    opacity: 0;
+    pointer-events: none;
+    transition: none;
   }
 }
 
@@ -60,7 +78,6 @@
   width: 100%;
   height: 100%;
   opacity: 1;
-  pointer-events: none;
   background-color: #222;
   background-color: rgba(0, 0, 0, .5);
   transition: opacity .3s 0s;
@@ -69,7 +86,16 @@
   &.hidden {
     display: block;
     opacity: 0;
+    pointer-events: none;
   }
+}
+
+.kagenda-close {
+  display: block;
+  width: 30px;
+  height: 30px;
+  background-repeat: no-repeat;
+  background-image: url(close.svg?embed);
 }
 
 

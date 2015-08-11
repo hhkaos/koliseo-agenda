@@ -59,6 +59,9 @@ gulp.task('styles', () => {
     .pipe($.minifyCss())
     .pipe($.sourcemaps.write('.'))
     .pipe($.rename('styles.css'))
+    .pipe($.cssInlineImages({
+      path: 'scss'
+    }))
     .pipe(gulp.dest('build'))
     .pipe($.size({title: 'styles'}));
 });
