@@ -59,6 +59,9 @@ $selectedColor: #fff;
   background-color: $shadedBackground;
   text-transform: uppercase;
 }
+.kagenda-table-td.hidden {
+  visibility: hidden;
+}
 
 .kagenda-table-td.selected {
   background: $selectedBorderColor;
@@ -72,6 +75,7 @@ $selectedColor: #fff;
 }
 .kagenda-talk-details-td {
   border: 4px solid $selectedBorderColor;
+  padding: .7rem;
 }
 
 
