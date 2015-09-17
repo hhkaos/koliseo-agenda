@@ -115,7 +115,8 @@ gulp.task('serve', ['styles', 'polyfill', 'scripts'], () => {
     notify: false,
     // https: true,
     server: [ '.' ],
-    directory: true
+    directory: true,
+    startPath: '/test/index.html'
   });
 
   gulp.watch(['test/*.html'], [ reload ]);
