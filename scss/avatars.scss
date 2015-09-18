@@ -1,0 +1,29 @@
+.kagenda-avatar {
+  border-radius: 50%;
+  max-width: 50px;
+  max-height: 50px;
+  margin-right: $td-padding;
+  //margin-bottom: 0;
+  width: auto;
+}
+.kagenda-avatars {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border-top: 1px solid $gray-lighter;
+}
+.kagenda-avatar-li {
+  display: inline-block;
+  position: relative;
+  margin: 0;
+  padding: 12px;
+}
+.kagenda-avatar-and-text {
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+  line-height: 1.5;
+}
+.kagenda-author-name {
+  display: block;
+}

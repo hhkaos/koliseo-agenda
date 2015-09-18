@@ -44,7 +44,7 @@
               "start": "09:00",
               "end": "11:00",
               "type": "TALK",
-              "contents": {"id":12,"title":"Title for talk 1.2","description":"Description talk 1.2","creationDate":1435663557878,"authors":[{"id":31404001,"uuid":"icoloma","name":"Nacho Coloma","avatar":"//storage.googleapis.com/k-avatars/31404001-caa3596b","description":"Description speaker 1."}],"comments":"Comments 1","tags":{"Type of Proposal":["Workshop"],"Language of the talk/workshop":["Spanish"],"Technology":["Other"],"Language ":["JAVA and JVM languages"],"Level ":["Intermediate"]},"totalVotes":3}
+              "contents": {"id":12,"title":"Title for talk 1.2","description":"Description talk 1.2","creationDate":1435663557878,"authors":[{"id":31404001,"uuid":"icoloma","name":"Nacho Coloma","avatar":"//storage.googleapis.com/k-avatars/31404001-caa3596b","description":"Description speaker 1."}, {"id":31404001,"uuid":"icoloma","name":"Nacho Coloma","avatar":"//storage.googleapis.com/k-avatars/31404001-caa3596b","description":"Description speaker 2."}],"comments":"Comments 1","tags":{"Type of Proposal":["Workshop"],"Language of the talk/workshop":["Spanish"],"Technology":["Other"],"Language ":["JAVA and JVM languages"],"Level ":["Intermediate"]},"totalVotes":3}
             },
             {
               "id": 122,

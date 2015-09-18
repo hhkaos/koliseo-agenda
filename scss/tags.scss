@@ -1,0 +1,61 @@
+.kagenda-tags {
+  margin: $td-padding;
+}
+.tag {
+  -webkit-user-select: none;
+  user-select: none;
+
+  border: 1px solid #e7e7e7;
+  border-radius: 3px;
+
+  display: inline-block;
+  font-weight: 400;
+  line-height: 1;
+  margin-bottom: 5px;
+  white-space: nowrap;
+  padding: .5714285714rem;
+  background-color: #008CBA;
+  color: #fff;
+
+  &:hover {
+    border-color: #C2C2C2;
+  }
+
+  &.tag0 {
+    background-color: #008CBA;
+    border-color: #008CBA;
+  }
+
+  &.tag1 {
+    background-color: $orange-dark;
+    border-color: $orange-dark;
+  }
+  &.tag2 {
+    background-color: $teal-dark;
+    border-color: $teal-dark;
+  }
+  &.tag3 {
+    background-color: $red-dark;
+    border-color: $red-dark;
+  }
+  &.tag4 {
+    background-color: $green;
+    border-color:  $green;
+  }
+  &.tag5 {
+    background-color: $pink-dark;
+    border-color: $pink-dark;
+  }
+  &.tag6 {
+    background-color: $brown-dark;
+    border-color: $brown-dark;
+  }
+  &.tag7 {
+    background-color: $purple-dark;
+    border-color: $purple-dark;
+  }
+  &.tag8 {
+    background-color: $gray-dark;
+    border-color: $gray-dark;
+  }
+}
