@@ -21,9 +21,24 @@
 .kagenda-avatar-and-text {
   display: flex;
   flex-flow: row;
-  align-items: center;
+  align-items: top;
   line-height: 1.5;
 }
 .kagenda-author-name {
   display: block;
+}
+
+@media #{$medium-up} {
+  .kagenda-talk-details-td {
+    display: table-cell;
+  }
+  .kagenda-avatars {
+    border-top: 0;
+    border-left: 1px solid $gray-lighter;
+    width: 30%;
+  }
+  .kagenda-avatars, .kagenda-talk-details-contents {
+    display: table-cell;
+    vertical-align: top;
+  }
 }

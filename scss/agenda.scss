@@ -3,6 +3,10 @@
   font-family: Roboto, 'Helvetica Neue', sans-serif;
   color: $font-color;
   line-height: 1.2;
+
+  p {
+    margin-top: 0;
+  }
 }
 .kagenda-tabs {
   list-style: none;
@@ -59,7 +63,7 @@
   background: $selected-border-color;
   color: $selected-color;
 
-  & > .kagenda-talk-title {
+  & .kagenda-talk-title {
     color: #fff !important;
     color: rgba(255, 255, 255, .8) !important;
     font-weight: bold;
@@ -72,6 +76,9 @@
 .kagenda-talk-details-title,
 .kagenda-talk-details-description {
   margin: $td-padding;
+  & > ul {
+    padding-left: 20px;
+  }
 }
 .hint-p {
   line-height: 1.2;

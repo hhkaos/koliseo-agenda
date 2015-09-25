@@ -31,3 +31,7 @@ $selected-border-color: $link-color;
 $selected-color: #fff;
 
 $td-padding: .7rem;
+
+// screen sizes
+$medium-up: "only screen and (min-width: 700px)";
+$large-up: "only screen and (min-width: 1024px)";
