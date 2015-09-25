@@ -46,14 +46,38 @@
   border: 1px solid $border-color;
   padding: $td-padding;
   box-sizing: border-box;
+  vertical-align: top;
+  position: relative;
+
 }
 .kagenda-table-th {
   white-space: nowrap;
   font-weight: bold;
 }
+.kagenda-author-brief {
+  text-transform: uppercase;
+  line-height: 1;
+  font-size: 10px;
+  color: $gray;
+  position: absolute;
+  bottom: 0;
+  height: $td-padding;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
+  margin-left: -$td-padding;
+  padding-left: $td-padding;
+  padding-right: $td-padding;
+}
+.kagenda-table-td.talk {
+  padding-bottom: 30px;
+}
 .kagenda-table-td.break {
   background-color: $shaded-background;
   text-transform: uppercase;
+  color: $gray;
+  text-align: center;
 }
 .kagenda-table-td.hidden {
   visibility: hidden;
@@ -61,6 +85,7 @@
 
 .kagenda-table-td.selected {
   background: $selected-border-color;
+  border-color: $selected-border-color;
   color: $selected-color;
 
   & .kagenda-talk-title {
@@ -68,10 +93,15 @@
     color: rgba(255, 255, 255, .8) !important;
     font-weight: bold;
   }
+  & .kagenda-author-brief {
+    color: $selected-color;
+  }
 }
 .kagenda-talk-details-td {
-  border: 4px solid $selected-border-color;
   padding: 0;
+}
+.kagenda-talk-details-td-inner {
+  border: 4px solid $selected-border-color;
 }
 .kagenda-talk-details-title,
 .kagenda-talk-details-description {
