@@ -58,7 +58,7 @@ gulp.task('styles', () => {
     .pipe($.combineMediaQueries())
     .pipe($.minifyCss())
     .pipe($.sourcemaps.write('.'))
-    .pipe($.rename('styles.css'))
+    .pipe($.rename('kagenda-styles.css'))
     .pipe($.cssInlineImages({
       path: 'scss'
     }))
@@ -77,7 +77,7 @@ gulp.task('polyfill', () => {
       .pipe(source('koliseo-polyfill.js'))
       .pipe(buffer())
       .pipe($.uglify())
-      .pipe(gulp.dest('.'))
+      .pipe(gulp.dest('build/'))
 });
 
 gulp.task('scripts', () => {
