@@ -1,0 +1,66 @@
+.ka-overlay {
+  opacity: .5;
+  background: #000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+.ka-talk-details {
+  border: 4px solid $selected-border-color;
+  background: $white;
+  z-index: 1;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  box-shadow: 0 0 1px #000, 0 0 50px rgba(0, 0, 0, .2);
+  transform: translate(-50%, -50%);
+}
+.ka-hidden {
+  display: none;
+}
+.ka-talk-details-title,
+.ka-talk-details-description {
+
+}
+.ka-talk-details-contents,
+.ka-avatars {
+  padding: $td-padding;
+  & > ul {
+    padding-left: 20px;
+  }
+}
+.ka-close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  color: gray;
+  font-weight: bold;
+  float: right;
+  padding: $td-padding;
+  cursor: pointer;
+  z-index: 2;
+}
+
+@media #{$medium-up} {
+  .ka-talk-details {
+    max-width: 900px;
+    max-height: 700px;
+  }
+  .ka-talk-details-inner {
+    display: table;
+  }
+  .ka-avatars {
+    border-top: 0;
+    border-left: 1px solid $gray-lighter;
+    width: 30%;
+  }
+  .ka-avatars, .ka-talk-details-contents {
+    display: table-cell;
+    vertical-align: top;
+  }
+}

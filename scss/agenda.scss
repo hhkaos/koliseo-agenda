@@ -1,5 +1,5 @@
 
-.kagenda {
+.ka {
   font-family: Roboto, 'Helvetica Neue', sans-serif;
   color: $font-color;
   line-height: 1.2;
@@ -8,110 +8,7 @@
     margin-top: 0;
   }
 }
-.kagenda-tabs {
-  list-style: none;
-  border-bottom: 2px solid #ddd;
-  margin: 0;
-  padding: 0;
-  font-family: inherit;
-}
-.kagenda-tab-li {
-  display: inline-block;
-}
-
-.kagenda-tab-a {
-  display: block;
-  color: $font-color;
-  padding: 1rem 2rem;
-  &.selected {
-    background: #fff;
-    border-bottom: 2px solid #3DC0E3;
-    margin-bottom: -2px;
-  }
-}
-.kagenda-table {
-  background: $table-background;
-  margin-top: 1.5rem;
-  margin-bottom: 1.5rem;
-  border: solid 1px $border-color;
-  border-collapse: collapse;
-  border-spacing: 0;
-  font-size: inherit;
-}
-.kagenda-head {
-  background-color: $shaded-background;
-
-}
-.kagenda-table-td, .kagenda-table-th {
-  border: 1px solid $border-color;
-  padding: $td-padding;
-  box-sizing: border-box;
-  vertical-align: top;
-  position: relative;
-
-}
-.kagenda-table-th {
-  white-space: nowrap;
-  font-weight: bold;
-}
-.kagenda-author-brief {
-  text-transform: uppercase;
-  line-height: 1;
-  font-size: 10px;
-  color: $gray;
-  position: absolute;
-  bottom: 0;
-  height: $td-padding;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  width: 100%;
-  margin-left: -$td-padding;
-  padding-left: $td-padding;
-  padding-right: $td-padding;
-}
-.kagenda-table-td.talk {
-  padding-bottom: 30px;
-}
-.kagenda-table-td.break {
-  background-color: $shaded-background;
-  text-transform: uppercase;
-  color: $gray;
-  text-align: center;
-}
-.kagenda-table-td.hidden {
-  visibility: hidden;
-}
-
-.kagenda-table-td.selected {
-  background: $selected-border-color;
-  border-color: $selected-border-color;
-  color: $selected-color;
-
-  & .kagenda-talk-title {
-    color: #fff !important;
-    color: rgba(255, 255, 255, .8) !important;
-    font-weight: bold;
-  }
-  & .kagenda-author-brief {
-    color: $selected-color;
-  }
-}
-.kagenda-talk-details-td {
-  padding: 0;
-  background: $white;
-}
-.kagenda-talk-details-td-inner {
-  border: 4px solid $selected-border-color;
-}
-.kagenda-talk-details-title,
-.kagenda-talk-details-description {
-  margin: $td-padding;
-  & > ul {
-    padding-left: 20px;
-  }
-}
-.hint-p {
+.ka-hint-p {
   line-height: 1.2;
   margin: 0 0 4px;
   &.small {
@@ -119,7 +16,7 @@
     color: $gray;
   }
 }
-.kagenda-logo {
+.ka-logo {
   float: left;
   margin-right: 10px;
   width: 100px;

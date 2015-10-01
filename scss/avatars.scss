@@ -1,4 +1,4 @@
-.kagenda-avatar {
+.ka-avatar {
   border-radius: 50%;
   max-width: 50px;
   max-height: 50px;
@@ -6,39 +6,25 @@
   //margin-bottom: 0;
   width: auto;
 }
-.kagenda-avatars {
+.ka-avatars {
   list-style: none;
   padding: 0;
   margin: 0;
   border-top: 1px solid $gray-lighter;
 }
-.kagenda-avatar-li {
+.ka-avatar-li {
   display: inline-block;
   position: relative;
   margin: 0;
   padding: 12px;
 }
-.kagenda-avatar-and-text {
+.ka-avatar-and-text {
   display: flex;
   flex-flow: row;
   align-items: top;
   line-height: 1.5;
 }
-.kagenda-author-name {
+.ka-author-name {
   display: block;
 }
 
-@media #{$medium-up} {
-  .kagenda-talk-details-td {
-    display: table-cell;
-  }
-  .kagenda-avatars {
-    border-top: 0;
-    border-left: 1px solid $gray-lighter;
-    width: 30%;
-  }
-  .kagenda-avatars, .kagenda-talk-details-contents {
-    display: table-cell;
-    vertical-align: top;
-  }
-}

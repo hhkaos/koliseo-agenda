@@ -1,0 +1,68 @@
+.ka-table {
+  background: $table-background;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+  border: solid 1px $border-color;
+  border-collapse: collapse;
+  border-spacing: 0;
+  font-size: inherit;
+}
+.ka-head {
+  background-color: $shaded-background;
+
+}
+.ka-table-td, .ka-table-th {
+  border: 1px solid $border-color;
+  padding: $td-padding;
+  box-sizing: border-box;
+  vertical-align: top;
+  position: relative;
+
+}
+.ka-table-th {
+  white-space: nowrap;
+  font-weight: bold;
+}
+.ka-author-brief {
+  text-transform: uppercase;
+  line-height: 1;
+  font-size: 10px;
+  color: $gray;
+  position: absolute;
+  bottom: 0;
+  height: $td-padding;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
+  margin-left: -$td-padding;
+  padding-left: $td-padding;
+  padding-right: $td-padding;
+}
+.ka-table-td.talk {
+  padding-bottom: 30px;
+}
+.ka-table-td.break {
+  background-color: $shaded-background;
+  text-transform: uppercase;
+  color: $gray;
+  text-align: center;
+}
+.ka-table-td.hidden {
+  visibility: hidden;
+}
+
+.ka-table-td.selected {
+  background: $selected-border-color;
+  border-color: $selected-border-color;
+  color: $selected-color;
+
+  & .ka-talk-title {
+    color: #fff !important;
+    color: rgba(255, 255, 255, .8) !important;
+    font-weight: bold;
+  }
+  & .ka-author-brief {
+    color: $selected-color;
+  }
+}
