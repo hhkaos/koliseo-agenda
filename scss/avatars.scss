@@ -1,10 +1,24 @@
-.ka-avatar {
+.ka-avatar-a {
+  display: block;
+  line-height: 1.5;
+}
+
+.ka-avatar-a {
+  display: table;
+  width: 100%
+}
+.ka-avatar-img, .ka-author-name {
+  display: table-cell;
+  vertical-align: middle;
+  text-align: left;
+}
+
+.ka-avatar-img {
   border-radius: 50%;
-  max-width: 50px;
-  max-height: 50px;
+  width: 50px;
+  height: 50px;
   margin-right: $td-padding;
-  //margin-bottom: 0;
-  width: auto;
+  vertical-align: middle;
 }
 .ka-avatars {
   list-style: none;
@@ -17,14 +31,5 @@
   position: relative;
   margin: 0;
   padding: 12px;
-}
-.ka-avatar-and-text {
-  display: flex;
-  flex-flow: row;
-  align-items: top;
-  line-height: 1.5;
-}
-.ka-author-name {
-  display: block;
 }
 
