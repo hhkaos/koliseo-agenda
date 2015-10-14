@@ -1,8 +1,10 @@
 A client library to embed a Koliseo event agenda in any website. You can visit [the demo](http://icoloma.github.io/koliseo-agenda) to see how it looks like.
 
-Koliseo is a ticketing platform for events with an interface to manage the event agenda: Call for Proposals, vote proposals, create days, tracks and slots, and move talks between slots. This widget displays the final agenda as a table, including deep linking and other awesome features.
+![Snapshot of the agenda](http://icoloma.github.io/koliseo-agenda/agenda-screenshot.png)
 
-The library has one small polyfill dependency (the Fetch API) and is 9K gzipped. It has been tested (to the best of our knowledge) in Chrome, Firefox, IE 10+, Edge and Safari.
+Koliseo is a ticketing platform for events with an interface to manage the event agenda: call for proposals, vote talks, create tracks and slots, and move talks between slots. This widget displays the final agenda as a table, including deep linking and other awesome features.
+
+The library includes one small polyfill dependency and is 9K gzipped. It has been tested (to the best of our knowledge) in Chrome, Firefox, IE 10+, Edge and Safari.
 
 ## Usage
 
@@ -19,7 +21,7 @@ The simplest thing to make it work:
 </script>
 ```
 
-This component requires browser support for `Promises` and the `Fetch API`. In practice, that means [Chrome, Firefox and Opera](http://caniuse.com/#feat=fetch). For other browsers, this requires loading certain polyfills:
+This component requires browser support for `Promises` and the `Fetch API`, currently included in [Chrome, Firefox and Opera](http://caniuse.com/#feat=fetch). For other browsers, some polyfills might be needed:
 
 ```JavaScript
   /*! loadJS: load a JS file asynchronously. [c]2014 @scottjehl, Filament Group, Inc. (Based on http://goo.gl/REQGQ by Paul Irish). Licensed MIT */
@@ -51,9 +53,7 @@ This component requires browser support for `Promises` and the `Fetch API`. In p
 
 ## Deep linking
 
-To link to a talk, just select the talk in the table and copy the resulting link. If the talk moves around the link will adapt, as long as it belongs to the same day.
-
-If no talk is present in the URL, the first day will be selected.
+To link to a talk, just select the talk in the table and copy the resulting link. If no talk is present in the URL, the first day will be selected.
 
 ## Develop
 
