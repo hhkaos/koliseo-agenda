@@ -1,4 +1,4 @@
-build
+build/*.map
 *.orig
 *.sublime-workspace
 *.log

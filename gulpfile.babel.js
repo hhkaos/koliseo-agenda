@@ -27,18 +27,6 @@ function onError(err){
 
 gulp.task('clean', () => del([ 'build' ], { dot: true }));
 
-/*
-gulp.task('images', () => {
-  return gulp.src('app/img/** /*')
-    .pipe($.cache($.imagemin({
-      progressive: true,
-      interlaced: true
-    })))
-    .pipe(gulp.dest('build/img'))
-    .pipe($.size({title: 'images'}));
-});
-*/
-
 gulp.task('styles', () => {
 
   return gulp.src([ 'scss/main.scss' ])
@@ -102,12 +90,12 @@ gulp.task('scripts', () => {
       .pipe(gulp.dest('build/'))
 });
 
-/*
-gulp.task('test', () => {
-  return gulp.src('src/test/js/q-*.html')
-    .pipe($.qunit());
+gulp.task('compress', function() {
+  return gulp.src('build/koliseo-agenda.js')
+    .pipe($.uglify())
+    .pipe($.rename('koliseo-agenda.min.js'))
+    .pipe(gulp.dest('build/'));
 });
-*/
 
 // Watch Files For Changes & Reload
 gulp.task('serve', ['styles', 'polyfill', 'scripts'], () => {
@@ -125,4 +113,4 @@ gulp.task('serve', ['styles', 'polyfill', 'scripts'], () => {
   gulp.watch(['img/**/*'], [ 'images', reload ]);
 });
 
-gulp.task('default', ['clean', 'styles', 'polyfill', 'scripts']);
+gulp.task('default', ['clean', 'styles', 'polyfill', 'scripts', 'compress']);
