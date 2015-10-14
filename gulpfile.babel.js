@@ -90,7 +90,7 @@ gulp.task('scripts', () => {
       .pipe(gulp.dest('build/'))
 });
 
-gulp.task('compress', function() {
+gulp.task('compress', () => {
   return gulp.src('build/koliseo-agenda.js')
     .pipe($.uglify())
     .pipe($.rename('koliseo-agenda.min.js'))
@@ -98,7 +98,7 @@ gulp.task('compress', function() {
 });
 
 // Watch Files For Changes & Reload
-gulp.task('serve', ['styles', 'polyfill', 'scripts'], () => {
+gulp.task('serve', ['styles', 'polyfill', 'scripts', 'compress'], () => {
   browserSync({
     notify: false,
     // https: true,
@@ -109,7 +109,7 @@ gulp.task('serve', ['styles', 'polyfill', 'scripts'], () => {
 
   gulp.watch(['test/*.html'], [ reload ]);
   gulp.watch(['scss/**/*.scss'], [ 'styles', reload ]);
-  gulp.watch(['lib/**'], [ 'scripts', reload ]);
+  gulp.watch(['lib/**'], [ 'scripts', 'compress', reload ]);
   gulp.watch(['img/**/*'], [ 'images', reload ]);
 });
 
