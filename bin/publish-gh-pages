@@ -1,5 +1,6 @@
 #!/bin/bash
 # Push into gh-pages the updated library from master
+# Optional argument $1: commit message
 set -e
 FOLDER=.gh-pages
 
@@ -13,6 +14,6 @@ fi
 cp build/* ${FOLDER}/js/
 cd ${FOLDER}
 git add .
-git commit -m "${1:Update library}"
+git commit -m "${1:-Update library}"
 git push
 cd ..
