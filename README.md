@@ -1,6 +1,6 @@
 A client library to embed a Koliseo event agenda in any website. You can visit [the demo](http://icoloma.github.io/koliseo-agenda) to see how it looks like.
 
-![Snapshot of the agenda](http://icoloma.github.io/koliseo-agenda/agenda-screenshot.png)
+[![Snapshot of the agenda](http://icoloma.github.io/koliseo-agenda/agenda-screenshot.png)](http://icoloma.github.io/koliseo-agenda)
 
 Koliseo is a ticketing platform for events with an interface to manage the event agenda: call for proposals, vote talks, create tracks and slots, and move talks between slots. This widget displays the final agenda as a table, including deep linking and other awesome features.
 
