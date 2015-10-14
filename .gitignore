@@ -5,3 +5,4 @@ build/*.map
 *.map
 node_modules
 .tmp
+.gh-pages
