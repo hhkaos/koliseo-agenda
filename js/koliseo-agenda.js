@@ -890,7 +890,7 @@ exports["default"] = {
       return el.closest(selector);
     }
 
-    var matches = el.matches || el.msMatchesSelector;
+    var matches = el.matches || el.msMatchesSelector || el.webkitMatchesSelector;
 
     do {
       if (el.nodeType != 1) continue;
