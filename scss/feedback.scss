@@ -1,0 +1,110 @@
+$ratingSize: 80px;
+$starActive: $orange;
+$starInactive: #666666;
+
+.ka-star-rating, .ka-star {
+    display: inline-block;
+    height: ($ratingSize / 5);
+    position: relative;
+    width: $ratingSize;
+    &:before {
+        background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" width="929" height="886" viewBox="0 0 929 886"><style>path { fill: #{$starInactive} !important }</style><path fill="#ffffff" d="M929 343c0 8-5 17-15 27L711 567l48 279c1 3 1 7 1 12 0 15-8 27-22 27-7 1-15-1-23-6L464 747 214 879c-9 5-16 7-23 7-14 0-23-15-23-28 0-3 0-7 1-12l48-279L14 370c-9-10-14-19-14-27 0-14 10-23 31-26l280-40L437 23c7-15 16-23 27-23s20 8 28 23l125 254 280 40c21 3 32 12 32 26z"/></svg>') !important;
+        background-repeat: repeat-x;
+        background-size: ($ratingSize / 5);
+        bottom: 0;
+        content: "";
+        display: block;
+        height: ($ratingSize / 5);
+        left: 0;
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: $ratingSize;
+    }
+}
+
+.ka-star-rating {
+    vertical-align: middle;
+}
+
+.ka-star {
+    width: ($ratingSize / 5);
+
+    &:before {
+        background-repeat: no-repeat;
+        width: ($ratingSize / 5);
+    }
+
+    &.active:before {
+      background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" width="929" height="886" viewBox="0 0 929 886"><style>path { fill: #{$starActive} !important }</style><path fill="#ffffff" d="M929 343c0 8-5 17-15 27L711 567l48 279c1 3 1 7 1 12 0 15-8 27-22 27-7 1-15-1-23-6L464 747 214 879c-9 5-16 7-23 7-14 0-23-15-23-28 0-3 0-7 1-12l48-279L14 370c-9-10-14-19-14-27 0-14 10-23 31-26l280-40L437 23c7-15 16-23 27-23s20 8 28 23l125 254 280 40c21 3 32 12 32 26z"/></svg>') !important;
+    }
+}
+
+.ka-star-bar {
+    display: block;
+    text-indent: -10000px;
+    width: $ratingSize;
+    height: ($ratingSize / 5);
+    position: absolute;
+    overflow: hidden;
+    &:before {
+        background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" width="929" height="886" viewBox="0 0 929 886"><style>path { fill: #{$starActive} !important }</style><path fill="#000000" d="M929 343c0 8-5 17-15 27L711 567l48 279c1 3 1 7 1 12 0 15-8 27-22 27-7 1-15-1-23-6L464 747 214 879c-9 5-16 7-23 7-14 0-23-15-23-28 0-3 0-7 1-12l48-279L14 370c-9-10-14-19-14-27 0-14 10-23 31-26l280-40L437 23c7-15 16-23 27-23s20 8 28 23l125 254 280 40c21 3 32 12 32 26z"/></svg>') !important;
+        background-repeat: repeat-x;
+        background-size: ($ratingSize / 5);
+        bottom: 0;
+        content: "";
+        display: block;
+        height: ($ratingSize / 5);
+        left: 0;
+        position: absolute;
+        right: 0;
+        text-indent: 10000px;
+        top: 0;
+    }
+}
+
+.ka-stars-container {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.ka-comment {
+    width: 100%;
+    margin: 10px 0;
+    height: 40px;
+    padding: 5px;
+    resize: vertical;
+}
+
+.ka-star-cell {
+    display: table-cell;
+    vertical-align: middle;
+    padding-left: 10px;
+}
+
+ul.ka-entries {
+    padding-left: 0;
+    li {
+        border-top: 1px solid $gray-light;
+        width: 100%;
+        &:last-child {
+            border-bottom: 1px solid $gray-light;
+        }
+    }
+    .ka-avatar-container {
+        margin: 0;
+    }
+    .ka-entry-details {
+        display: table-row;
+    }
+    .ka-feedback-entry {
+        display: table-cell;
+        vertical-align: middle;
+    }
+}
+
+.ka-feedback-form {
+    border-top: 1px solid $gray-light;
+    padding: 10px 10px 0;
+    margin-top: 10px;
+}

@@ -33,9 +33,18 @@
   background-color: $blue;
   border: 1px solid $blue-dark;
   color: $white;
-  border-radius: 3px;
+  border-radius: 2px;
   transition: background-color 300ms ease-out;
   font-weight: bold;
+
+  &:hover, &:focus {
+    background-color: scale-color($blue, $lightness: -25%);
+  }
+
+  &[disabled], &.disabled {
+    background-color: scale-color($blue, $lightness: 25%);
+    border-color: scale-color($blue-dark, $lightness: 25%);
+  }
 
   &.ka-button-secondary {
     background-color: $gray-lighter;
