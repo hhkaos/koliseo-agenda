@@ -716,11 +716,12 @@ var getRatingTemplate = function getRatingTemplate(_ref) {
   var rating = _ref.rating;
   var _ref$comment = _ref.comment;
   var comment = _ref$comment === undefined ? '' : _ref$comment;
+  var user = _ref.user;
 
   var renderSingleStar = function renderSingleStar(value) {
     return '<a data-rating="' + value + '" class="ka-star ' + (rating >= value ? 'active' : '') + '"></a>';
   };
-  return '\n    <div class="ka-feedback-form">\n      <div>\n        ' + [1, 2, 3, 4, 5].map(renderSingleStar).join('') + '\n      </div>\n      <textarea name="comment" class="ka-comment" placeholder="Comment" maxlength="255">' + comment + '</textarea>\n      <br>\n      <button class="ka-button" ' + (!rating ? 'disabled' : '') + '>Send</button>\n    </div>\n  ';
+  return '\n    <li class="ka-avatar-li">\n      <div class="ka-entry-details">\n        <a href="https://www.koliseo.com/' + user.uuid + '" class="ka-avatar-container">\n          <img class="ka-avatar-img" src="' + user.avatar + '">\n        </a>\n        <div class="ka-feedback-entry">\n          <span class="ka-author-name">' + user.name + '</span>\n          ' + [1, 2, 3, 4, 5].map(renderSingleStar).join('') + '\n          <textarea name="comment" class="ka-comment" placeholder="Comment" maxlength="255">' + comment + '</textarea>\n          <br>\n          <button class="ka-button" ' + (!rating ? 'disabled' : '') + '>Send</button>\n        </div>\n      </div>\n    </li>\n  ';
 };
 
 var getStarBarTemplate = function getStarBarTemplate(width) {
@@ -733,7 +734,7 @@ var getUserFeedbackTemplate = function getUserFeedbackTemplate(_ref2) {
   var user = _ref2.user;
 
   if (Koliseo.auth.currentUser && user.id === Koliseo.auth.currentUser.id) {
-    return '';
+    return undefined;
   }
   var width = rating * 100 / 5;
   return '\n    <li class="ka-avatar-li">\n      <div class="ka-entry-details">\n        <a href="https://www.koliseo.com/' + user.uuid + '" class="ka-avatar-container">\n          <img class="ka-avatar-img" src="' + user.avatar + '">\n        </a>\n        <div class="ka-feedback-entry">\n          <span class="ka-author-name">' + user.name + '</span>\n          <div class="ka-star-cell">' + getStarBarTemplate(width) + '</div>\n          ' + (comment ? '<p>' + comment + '</p>' : '') + '\n        </div>\n      </div>\n    </li>\n  ';
@@ -758,20 +759,23 @@ var TalkFeedback = (function () {
       var _this = this;
 
       var renderFeedbackEntries = (function (element) {
-        element.innerHTML = undefined;
+        console.log(element);
+        element.innerHTML = '';
+        element.insertAdjacentHTML('beforeend', '<ul class="ka-entries"></ul>');
+        var $feedbackEntries = element.querySelector('.ka-entries');
         if (Koliseo.auth.currentUser) {
           (function () {
             var render = function render(entry) {
               var html = getRatingTemplate(entry);
-              element.innerHTML = html;
-              Array.prototype.forEach.call(element.querySelectorAll('.ka-star'), function (item) {
+              $feedbackEntries.insertAdjacentHTML('afterbegin', html);
+              Array.prototype.forEach.call($feedbackEntries.querySelectorAll('.ka-star'), function (item) {
                 item.onclick = (function (e) {
                   var rating = e.target.dataset.rating;
-                  render({ rating: rating, comment: element.querySelector('.ka-comment').value });
+                  render({ rating: rating, comment: $feedbackEntries.querySelector('.ka-comment').value });
                 }).bind(_this);
               });
-              element.querySelector('.ka-button').onclick = (function () {
-                var comment = element.querySelector('.ka-comment').value;
+              $feedbackEntries.querySelector('.ka-button').onclick = (function () {
+                var comment = $feedbackEntries.querySelector('.ka-comment').value;
                 Koliseo.auth.sendFeedback({ id: _this.talk.id, rating: entry.rating, comment: comment }, function (resp) {
                   console.log('Feedback received!');
                 });
@@ -780,14 +784,11 @@ var TalkFeedback = (function () {
             Koliseo.auth.getCurrentUserFeedbackEntry(_this.talk, render);
           })();
         }
-        var $feedbackEntries = element.parentElement.querySelector('.ka-entries');
-        if (!$feedbackEntries) {
-          element.insertAdjacentHTML('afterend', '<ul class="ka-entries"></ul>');
-          $feedbackEntries = element.parentElement.querySelector('.ka-entries');
-        }
+
         Koliseo.auth.getFeedbackEntries(_this.talk.id, undefined, function (entries) {
           entries.forEach(function (entry) {
-            $feedbackEntries.insertAdjacentHTML('beforeend', getUserFeedbackTemplate(entry));
+            var html = getUserFeedbackTemplate(entry);
+            html && $feedbackEntries.insertAdjacentHTML('beforeend', html);
           });
         });
       }).bind(this);
@@ -920,8 +921,7 @@ _hellojs2['default'].init({
       version: 2,
       auth: HOSTNAME + 'login/auth',
       grant: HOSTNAME + 'login/auth/token',
-      redirect_uri: window.location.href.split('#')[0],
-      display: 'page'
+      redirect_uri: window.location.href.split('#')[0]
     },
 
     scope: {
@@ -963,7 +963,8 @@ _hellojs2['default'].init({
   }
 }, {
   display: 'page',
-  default_service: 'koliseo'
+  default_service: 'koliseo',
+  force: false
 });
 
 var currentUser = undefined;
