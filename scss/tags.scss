@@ -5,15 +5,16 @@
   -webkit-user-select: none;
   user-select: none;
 
-  border: 1px solid #e7e7e7;
+  border: 1px solid scale-color(#e7e7e7, $lightness: -25%);
   border-radius: 3px;
 
   display: inline-block;
   font-weight: 400;
-  line-height: 1;
+  font-size: 11px;
+  line-height: 1.2rem;
   margin-bottom: 5px;
   white-space: nowrap;
-  padding: .5714285714rem;
+  padding: 3px 7px;
   background-color: #008CBA;
   color: #fff;
 
@@ -23,39 +24,39 @@
 
   &.tag0 {
     background-color: #008CBA;
-    border-color: #008CBA;
+    border-color: scale-color(#008CBA, $lightness: -25%);
   }
 
   &.tag1 {
     background-color: $orange-dark;
-    border-color: $orange-dark;
+    border-color: scale-color($orange-dark, $lightness: -25%);
   }
   &.tag2 {
     background-color: $teal-dark;
-    border-color: $teal-dark;
+    border-color: scale-color($teal-dark, $lightness: -25%);
   }
   &.tag3 {
     background-color: $red-dark;
-    border-color: $red-dark;
+    border-color: scale-color($red-dark, $lightness: -25%);
   }
   &.tag4 {
     background-color: $green;
-    border-color:  $green;
+    border-color: scale-color($green, $lightness: -25%);
   }
   &.tag5 {
     background-color: $pink-dark;
-    border-color: $pink-dark;
+    border-color: scale-color($pink-dark, $lightness: -25%);
   }
   &.tag6 {
     background-color: $brown-dark;
-    border-color: $brown-dark;
+    border-color: scale-color($brown-dark, $lightness: -25%);
   }
   &.tag7 {
     background-color: $purple-dark;
-    border-color: $purple-dark;
+    border-color: scale-color($purple-dark, $lightness: -25%);
   }
   &.tag8 {
     background-color: $gray-dark;
-    border-color: $gray-dark;
+    border-color: scale-color($gray-dark, $lightness: -25%);
   }
 }

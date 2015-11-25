@@ -315,7 +315,7 @@ var AgendaDayTemplate = (function () {
       var tags = _ref3.tags;
       var feedback = _ref3.feedback;
 
-      return '\n      <p>\n        <a href="#' + hash + '" data-id="' + id + '" data-hash="' + hash + '" class="ka-talk-title">' + title + '</a>\n      </p>\n      ' + new _feedback.TalkFeedback(arguments[0]).renderFeedback() + '\n      <p class="ka-author-brief">' + authors.map(function (a) {
+      return '\n      <p>\n        <a href="#' + hash + '" data-id="' + id + '" data-hash="' + hash + '" class="ka-talk-title">' + title + '</a>\n      </p>\n      <div class="ka-feedback-footer">' + new _feedback.TalkFeedback(arguments[0]).renderFeedback() + '</div>\n      <p class="ka-author-brief">' + authors.map(function (a) {
         return _this2.renderAuthor(a);
       }).join(', ') + '</p>\n      ';
     }
@@ -723,6 +723,10 @@ var getStarBarTemplate = function getStarBarTemplate(width, isEditing) {
   }).join('')) + '\n    </div>\n  ';
 };
 
+var getAnonymousUserFeedbackTemplate = function getAnonymousUserFeedbackTemplate() {
+  return '\n    <li class="ka-avatar-li ka-editing">\n      <div class="ka-entry-details">\n        <span class="ka-avatar-container">\n          <img class="ka-avatar-img" src="https://www.koliseo.com/less/img/avatar.gif">\n        </span>\n        <div class="ka-feedback-entry">\n          <a class="ka-button ka-right" onclick="Koliseo.auth.login()">Sign in</a>\n          <div class="ka-author-name">\n            <span class="ka-author">You must sign in to provide feedback</span>\n          </div>\n          <div class="ka-star-cell">' + getStarBarTemplate(0) + '</div>\n        </div>\n      </div>\n    </li>\n  ';
+};
+
 var getUserFeedbackTemplate = function getUserFeedbackTemplate(_ref, isEditing) {
   var _ref$rating = _ref.rating;
   var rating = _ref$rating === undefined ? 0 : _ref$rating;
@@ -732,13 +736,13 @@ var getUserFeedbackTemplate = function getUserFeedbackTemplate(_ref, isEditing) 
   var user = _ref.user;
 
   var width = rating * 100 / 5;
-  var $comment = isEditing ? '\n    <p>\n      <textarea name="comment" class="ka-comment" placeholder="Comment your feedback" maxlength="255">' + comment + '</textarea>\n      <br>\n      <button class="ka-button" ' + (!rating ? 'disabled' : '') + '>Send</button>\n      <span class="ka-messages ka-hide"></span>\n    </p>\n  ' : comment ? '<p>' + comment + '</p>' : '';
+  var $comment = isEditing ? '\n    <p>\n      <textarea name="comment" class="ka-comment" placeholder="Share your thoughts" maxlength="255">' + comment + '</textarea>\n      <br>\n      <button class="ka-button" ' + (!rating ? 'disabled' : '') + '>Send</button>\n      <span class="ka-messages ka-hide"></span>\n    </p>\n  ' : comment ? '<p>' + comment + '</p>' : '';
   var timestamp = '';
   if (lastModified) {
     var date = new Date(lastModified);
-    timestamp = '<span class="ka-feedback-time ka-right">' + date.getDate() + '/' + date.getMonth() + '/' + date.getFullYear() + '</span>';
+    timestamp = '<span class="ka-feedback-time">' + date.getDate() + '/' + date.getMonth() + '/' + date.getFullYear() + '</span>';
   }
-  return '\n    <li class="ka-avatar-li ' + (isEditing ? 'ka-editing' : '') + '">\n      <div class="ka-entry-details">\n        <a href="https://www.koliseo.com/' + user.uuid + '" class="ka-avatar-container">\n          <img class="ka-avatar-img" src="' + user.avatar + '">\n        </a>\n        <div class="ka-feedback-entry">\n          ' + timestamp + '\n          <span class="ka-author-name">' + user.name + '</span>\n          <div class="ka-star-cell">' + getStarBarTemplate(width, isEditing) + '</div>\n          ' + $comment + '\n        </div>\n      </div>\n    </li>\n  ';
+  return '\n    <li class="ka-avatar-li ' + (isEditing ? 'ka-editing' : '') + '">\n      <div class="ka-entry-details">\n        <a href="https://www.koliseo.com/' + user.uuid + '" class="ka-avatar-container">\n          <img class="ka-avatar-img" src="' + user.avatar + '">\n        </a>\n        <div class="ka-feedback-entry">\n          <div class="ka-author-name">\n            <span class="ka-author">' + user.name + '</span>\n            ' + timestamp + '\n          </div>\n          <div class="ka-star-cell">' + getStarBarTemplate(width, isEditing) + '</div>\n          ' + $comment + '\n        </div>\n      </div>\n    </li>\n  ';
 };
 
 var TalkFeedback = (function () {
@@ -802,6 +806,8 @@ var TalkFeedback = (function () {
             };
             Koliseo.auth.getCurrentUserFeedbackEntry(_this.talk, render);
           })();
+        } else {
+          $feedbackEntries.insertAdjacentHTML('beforeend', getAnonymousUserFeedbackTemplate());
         }
 
         Koliseo.auth.getFeedbackEntries(_this.talk.id, undefined, function (entries) {
