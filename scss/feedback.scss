@@ -1,7 +1,5 @@
 $ratingSize: 80px;
 $starSize: $ratingSize / 5;
-$starActive: $orange;
-$starInactive: #666666;
 
 .ka-star-rating {
     display: inline-block;
@@ -10,7 +8,7 @@ $starInactive: #666666;
     width: $ratingSize;
     vertical-align: middle;
     &:before {
-        background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" width="929" height="886" viewBox="0 0 929 886"><style>path { fill: #{$starInactive} !important }</style><path fill="#ffffff" d="M929 343c0 8-5 17-15 27L711 567l48 279c1 3 1 7 1 12 0 15-8 27-22 27-7 1-15-1-23-6L464 747 214 879c-9 5-16 7-23 7-14 0-23-15-23-28 0-3 0-7 1-12l48-279L14 370c-9-10-14-19-14-27 0-14 10-23 31-26l280-40L437 23c7-15 16-23 27-23s20 8 28 23l125 254 280 40c21 3 32 12 32 26z"/></svg>') !important;
+        background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" width="929" height="886" viewBox="0 0 929 886"><style>path { fill: %23666666 !important }</style><path fill="%23ffffff" d="M929 343c0 8-5 17-15 27L711 567l48 279c1 3 1 7 1 12 0 15-8 27-22 27-7 1-15-1-23-6L464 747 214 879c-9 5-16 7-23 7-14 0-23-15-23-28 0-3 0-7 1-12l48-279L14 370c-9-10-14-19-14-27 0-14 10-23 31-26l280-40L437 23c7-15 16-23 27-23s20 8 28 23l125 254 280 40c21 3 32 12 32 26z"/></svg>') !important;
         background-repeat: repeat-x;
         background-size: $starSize;
         bottom: 0;
@@ -47,7 +45,7 @@ $starInactive: #666666;
     position: absolute;
     overflow: hidden;
     &:before {
-        background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" width="929" height="886" viewBox="0 0 929 886"><style>path { fill: #{$starActive} !important }</style><path fill="#000000" d="M929 343c0 8-5 17-15 27L711 567l48 279c1 3 1 7 1 12 0 15-8 27-22 27-7 1-15-1-23-6L464 747 214 879c-9 5-16 7-23 7-14 0-23-15-23-28 0-3 0-7 1-12l48-279L14 370c-9-10-14-19-14-27 0-14 10-23 31-26l280-40L437 23c7-15 16-23 27-23s20 8 28 23l125 254 280 40c21 3 32 12 32 26z"/></svg>') !important;
+        background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" width="929" height="886" viewBox="0 0 929 886"><style>path { fill: %23f98220 !important }</style><path fill="%23000000" d="M929 343c0 8-5 17-15 27L711 567l48 279c1 3 1 7 1 12 0 15-8 27-22 27-7 1-15-1-23-6L464 747 214 879c-9 5-16 7-23 7-14 0-23-15-23-28 0-3 0-7 1-12l48-279L14 370c-9-10-14-19-14-27 0-14 10-23 31-26l280-40L437 23c7-15 16-23 27-23s20 8 28 23l125 254 280 40c21 3 32 12 32 26z"/></svg>') !important;
         background-repeat: repeat-x;
         background-size: $starSize;
         bottom: 0;
