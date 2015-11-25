@@ -419,7 +419,7 @@ var AgendaView = (function () {
     value: function render() {
       var dayId = !location.hash ? '' : /#([^\/]+)(\/.+)?/.exec(location.hash)[1];
       var talkHash = dayId && location.hash.substring(1);
-      var html = (this.days.length > 1 ? this.renderDayTabs() : '<h2 class="kday-title">' + this.days[0].name + '</h2>') + this.renderWorkspace() + this.renderHint();
+      var html = (this.days.length > 1 ? this.renderDayTabs() : '<div class="ka-right" id="ka-user-info"></div><h2 class="kday-title">' + this.days[0].name + '</h2>') + this.renderWorkspace() + this.renderHint();
       this.element.classList.add('ka');
       this.element.innerHTML = html;
       document.body.addEventListener('click', this.onClick.bind(this));
@@ -448,7 +448,7 @@ var AgendaView = (function () {
     key: 'renderUserInfo',
     value: function renderUserInfo() {
       var container = document.getElementById('ka-user-info');
-      container.innerHTML = !Koliseo.auth.currentUser ? '<button onclick="Koliseo.auth.login()" class="ka-button">Log in</button>' : '<button onclick="Koliseo.auth.logout()" class="ka-button ka-button-secondary">Log out</button>';
+      container.innerHTML = !Koliseo.auth.currentUser ? '<button onclick="Koliseo.auth.login()" class="ka-button">Sign in</button>' : '<button onclick="Koliseo.auth.logout()" class="ka-button ka-button-secondary">Sign out</button>';
     }
   }, {
     key: 'renderWorkspace',
@@ -860,15 +860,17 @@ Koliseo.agenda = {};
   Renders an agenda.
 
 */
-Koliseo.agenda.render = function (_ref) // {String} The element to use to render the agenda
-// {String} The Koliseo OAuth client ID
+Koliseo.agenda.render = function (_ref) // {String} The Koliseo OAuth client ID
+// {String} optional. URL to make the security requests
 {
   var c4pUrl = _ref.c4pUrl;
   var // {String} URL to retrieve the C4P
   agendaUrl = _ref.agendaUrl;
   var // {String} URL to retrieve the list of talks
   element = _ref.element;
-  var oauthClientId = _ref.oauthClientId;
+  var // {String} The element to use to render the agenda
+  oauthClientId = _ref.oauthClientId;
+  var baseUrl = _ref.baseUrl;
 
   // todo: add error handling
   // todo: add proper argument assertions
@@ -884,7 +886,7 @@ Koliseo.agenda.render = function (_ref) // {String} The element to use to render
 
   _hellojs2['default'].init({ koliseo: oauthClientId });
 
-  Koliseo.auth = new _security.Security({ c4pUrl: c4pUrl });
+  Koliseo.auth = new _security.Security({ c4pUrl: c4pUrl, baseUrl: baseUrl });
 
   agendaUrl = agendaUrl || c4pUrl + '/agenda';
 
@@ -932,162 +934,176 @@ var _hellojs2 = _interopRequireDefault(_hellojs);
 
 var HOSTNAME = location.hostname == 'localhost' ? 'http://localhost:8888/' : 'https://www.koliseo.com/';
 
-_hellojs2['default'].init({
+var getSecurityInstance = function getSecurityInstance(_ref) {
+  var _ref$baseUrl = _ref.baseUrl;
+  var baseUrl = _ref$baseUrl === undefined ? HOSTNAME : _ref$baseUrl;
+  var c4pUrl = _ref.c4pUrl;
 
-  koliseo: {
+  if (this.instance) {
+    return this.instance;
+  }
 
-    name: 'Koliseo',
+  _hellojs2['default'].init({
 
-    oauth: {
-      version: 2,
-      auth: HOSTNAME + 'login/auth',
-      grant: HOSTNAME + 'login/auth/token',
-      redirect_uri: window.location.href.split('#')[0]
-    },
+    koliseo: {
 
-    scope: {
-      basic: 'talks.feedback'
-    },
+      name: 'Koliseo',
 
-    // API base URI
-    base: HOSTNAME,
+      oauth: {
+        version: 2,
+        auth: baseUrl + 'login/auth',
+        grant: baseUrl + 'login/auth/token',
+        redirect_uri: window.location.href.split('#')[0]
+      },
 
-    // Map GET requests
-    get: {
-      me: 'users/current'
-    },
+      scope: {
+        basic: 'talks.feedback'
+      },
 
-    // Map POST requests
-    post: {},
+      // API base URI
+      base: baseUrl,
 
-    // Map PUT requests
-    put: {},
+      // Map GET requests
+      get: {
+        me: 'users/current'
+      },
 
-    // Map DELETE requests
-    del: {},
+      // Map POST requests
+      post: {},
 
-    xhr: function xhr(p) {
-      var token = p.query.access_token;
-      delete p.query.access_token;
-      if (token) {
-        p.headers = {
-          "Authorization": "Bearer " + token
-        };
+      // Map PUT requests
+      put: {},
+
+      // Map DELETE requests
+      del: {},
+
+      xhr: function xhr(p) {
+        var token = p.query.access_token;
+        delete p.query.access_token;
+        p.headers = p.headers || {};
+        if (token) {
+          p.headers["Authorization"] = "Bearer " + token;
+        }
+        p.headers['Content-Type'] = 'application/json';
+        p.headers['Accept'] = 'application/json';
+        if (p.method === 'post' || p.method === 'put') {
+          p.data = JSON.stringify(p.data);
+        }
+        return true;
       }
-      p.headers['Content-Type'] = 'application/json';
-      p.headers['Accept'] = 'application/json';
-      if (p.method === 'post' || p.method === 'put') {
-        p.data = JSON.stringify(p.data);
+
+    }
+  }, {
+    display: 'page',
+    default_service: 'koliseo',
+    force: false
+  });
+
+  var defaultErrorHandler = function defaultErrorHandler(e, successCallback) {
+    if (e && e.error) {
+      // check some UC that hellojs see as errors and we do not
+      if ("empty_response" === e.error.code) {
+        successCallback && successCallback(undefined);
       }
-      return true;
+    }
+    return e;
+  };
+
+  var currentUser = undefined;
+
+  var Security = (function () {
+    function Security(c4pUrl) {
+      _classCallCheck(this, Security);
+
+      this.c4pUrl = c4pUrl;
+
+      _hellojs2['default'].on('auth.login', function (auth) {
+        (0, _hellojs2['default'])(auth.network).api('me').then(function (user) {
+          currentUser = user;
+          _hellojs2['default'].emit('koliseo.login');
+        }, defaultErrorHandler);
+      });
+
+      _hellojs2['default'].on('auth.logout', function (r) {
+        currentUser = undefined;
+        _hellojs2['default'].emit('koliseo.logout');
+      });
     }
 
-  }
-}, {
-  display: 'page',
-  default_service: 'koliseo',
-  force: false
-});
+    _createClass(Security, [{
+      key: 'on',
+      value: function on(eventName, callback) {
+        _hellojs2['default'].on(eventName, callback);
+      }
+    }, {
+      key: 'off',
+      value: function off(eventName, callback) {
+        _hellojs2['default'].off(eventName, callback);
+      }
+    }, {
+      key: 'login',
+      value: function login(e) {
+        e && e.preventDefault();
+        _hellojs2['default'].login();
+      }
+    }, {
+      key: 'logout',
+      value: function logout(e) {
+        e && e.preventDefault();
+        _hellojs2['default'].logout();
+      }
+    }, {
+      key: 'sendFeedback',
+      value: function sendFeedback(_ref2, callback) {
+        var id = _ref2.id;
+        var rating = _ref2.rating;
+        var comment = _ref2.comment;
 
-var defaultErrorHandler = function defaultErrorHandler(e, successCallback) {
-  if (e && e.error) {
-    // check some UC that hellojs see as errors and we do not
-    if ("empty_response" === e.error.code) {
-      successCallback && successCallback(undefined);
-    }
-  }
-  return e;
+        _hellojs2['default'].api(this.c4pUrl + '/proposals/@{id}/feedback', 'post', { id: id, rating: rating, comment: comment }).then(callback, function (error) {
+          defaultErrorHandler(error, callback);
+        });
+      }
+    }, {
+      key: 'getFeedbackEntries',
+      value: function getFeedbackEntries(id, cursor, callback) {
+        var _this = this;
+
+        var successCallback = (function (resp) {
+          callback(resp.data);
+          if (resp.cursor) {
+            _this.getFeedbackEntries(id, resp.cursor, callback);
+          }
+        }).bind(this);
+        _hellojs2['default'].api(this.c4pUrl + '/proposals/' + id + '/feedback?' + (cursor ? 'cursor=' + cursor : '')).then(successCallback, function (error) {
+          defaultErrorHandler(error, callback);
+        });
+      }
+    }, {
+      key: 'getCurrentUserFeedbackEntry',
+      value: function getCurrentUserFeedbackEntry(_ref3, callback) {
+        var id = _ref3.id;
+
+        _hellojs2['default'].api(this.c4pUrl + '/proposals/@{id}/feedback/@{entryId}', 'get', { id: id, entryId: currentUser.id + '-' + id }).then(callback, function (error) {
+          defaultErrorHandler(error, callback);
+        });
+      }
+    }, {
+      key: 'currentUser',
+      get: function get() {
+        return currentUser;
+      }
+    }]);
+
+    return Security;
+  })();
+
+  this.instance = new Security(c4pUrl);
+
+  return this.instance;
 };
 
-var currentUser = undefined;
-
-var Security = (function () {
-  function Security(_ref) {
-    var c4pUrl = _ref.c4pUrl;
-
-    _classCallCheck(this, Security);
-
-    this.c4pUrl = c4pUrl;
-
-    _hellojs2['default'].on('auth.login', function (auth) {
-      (0, _hellojs2['default'])(auth.network).api('me').then(function (user) {
-        currentUser = user;
-        _hellojs2['default'].emit('koliseo.login');
-      }, defaultErrorHandler);
-    });
-
-    _hellojs2['default'].on('auth.logout', function (r) {
-      currentUser = undefined;
-      _hellojs2['default'].emit('koliseo.logout');
-    });
-  }
-
-  _createClass(Security, [{
-    key: 'on',
-    value: function on(eventName, callback) {
-      _hellojs2['default'].on(eventName, callback);
-    }
-  }, {
-    key: 'off',
-    value: function off(eventName, callback) {
-      _hellojs2['default'].off(eventName, callback);
-    }
-  }, {
-    key: 'login',
-    value: function login() {
-      _hellojs2['default'].login();
-    }
-  }, {
-    key: 'logout',
-    value: function logout() {
-      _hellojs2['default'].logout();
-    }
-  }, {
-    key: 'sendFeedback',
-    value: function sendFeedback(_ref2, callback) {
-      var id = _ref2.id;
-      var rating = _ref2.rating;
-      var comment = _ref2.comment;
-
-      _hellojs2['default'].api(this.c4pUrl + '/proposals/@{id}/feedback', 'post', { id: id, rating: rating, comment: comment }).then(callback, function (error) {
-        defaultErrorHandler(error, callback);
-      });
-    }
-  }, {
-    key: 'getFeedbackEntries',
-    value: function getFeedbackEntries(id, cursor, callback) {
-      var _this = this;
-
-      var successCallback = (function (resp) {
-        callback(resp.data);
-        if (resp.cursor) {
-          _this.getFeedbackEntries(id, resp.cursor, callback);
-        }
-      }).bind(this);
-      _hellojs2['default'].api(this.c4pUrl + '/proposals/' + id + '/feedback?' + (cursor ? 'cursor=' + cursor : '')).then(successCallback, function (error) {
-        defaultErrorHandler(error, callback);
-      });
-    }
-  }, {
-    key: 'getCurrentUserFeedbackEntry',
-    value: function getCurrentUserFeedbackEntry(_ref3, callback) {
-      var id = _ref3.id;
-
-      _hellojs2['default'].api(this.c4pUrl + '/proposals/@{id}/feedback/@{entryId}', 'get', { id: id, entryId: currentUser.id + '-' + id }).then(callback, function (error) {
-        defaultErrorHandler(error, callback);
-      });
-    }
-  }, {
-    key: 'currentUser',
-    get: function get() {
-      return currentUser;
-    }
-  }]);
-
-  return Security;
-})();
-
-exports.Security = Security;
+exports['default'] = { Security: getSecurityInstance };
+module.exports = exports['default'];
 
 },{"hellojs":11}],8:[function(require,module,exports){
 'use strict';
