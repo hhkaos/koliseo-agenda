@@ -1005,6 +1005,11 @@ var getSecurityInstance = function getSecurityInstance(_ref) {
       if ("empty_response" === e.error.code) {
         successCallback && successCallback(undefined);
       }
+      // usually this is because of an invalid token or an expired token
+      if ("access_denied" === e.error.code) {
+        _hellojs2['default'].logout();
+        return false;
+      }
     }
     return e;
   };
