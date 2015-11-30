@@ -26,7 +26,7 @@
 }
 .ka-feedback-footer {
   position: absolute;
-  bottom: $td-padding + 1;
+  bottom: 1.3rem;
 }
 .ka-author-brief {
   text-transform: uppercase;
@@ -34,7 +34,7 @@
   font-size: 10px;
   color: $gray;
   position: absolute;
-  bottom: 0;
+  bottom: 3px;
   height: $td-padding;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -43,6 +43,7 @@
   margin-left: -$td-padding;
   padding-left: $td-padding;
   padding-right: $td-padding;
+  margin-bottom: 0;
 }
 .ka-table-td.talk {
   padding-bottom: 50px;

@@ -314,8 +314,10 @@ var AgendaDayTemplate = (function () {
       var authors = _ref3.authors;
       var tags = _ref3.tags;
       var feedback = _ref3.feedback;
+      var videoUrl = _ref3.videoUrl;
+      var slidesUrl = _ref3.slidesUrl;
 
-      return '\n      <p>\n        <a href="#' + hash + '" data-id="' + id + '" data-hash="' + hash + '" class="ka-talk-title">' + title + '</a>\n      </p>\n      <div class="ka-feedback-footer">' + new _feedback.TalkFeedback(arguments[0]).renderFeedback() + '</div>\n      <p class="ka-author-brief">' + authors.map(function (a) {
+      return '\n      <p>\n        <a href="#' + hash + '" data-id="' + id + '" data-hash="' + hash + '" class="ka-talk-title">' + title + '</a>\n      </p>\n      ' + (!videoUrl && !slidesUrl ? '' : '<p class="ka-links">\n        ' + (!slidesUrl ? '' : '<a href="' + slidesUrl + '" target="_blank" class="icon-slideshare" title="Slides"></a>') + '\n        ' + (!videoUrl ? '' : '<a href="' + videoUrl + '" target="_blank" class="icon-youtube-play" title="Video"></a>') + '\n      </p>') + '\n      <div class="ka-feedback-footer">' + new _feedback.TalkFeedback(arguments[0]).renderFeedback() + '</div>\n      <p class="ka-author-brief">' + authors.map(function (a) {
         return _this2.renderAuthor(a);
       }).join(', ') + '</p>\n      ';
     }
@@ -659,7 +661,8 @@ var TalkDetailsPopup = (function () {
     value: function render() {
 
       var talk = this.talk;
-      var html = '\n      <div class="ka-talk-details-window">\n        <a class="ka-close" title="close"></a>\n        <div class="ka-talk-details-viewport">\n          <div class="ka-talk-details-inner">\n            <div class="ka-talk-details-contents">\n              <h2 class="ka-talk-details-title">' + talk.title + ' ' + this.feedback.renderFeedback() + '</h2>\n              <div class="ka-talk-details-description">' + (0, _stringutils.formatMarkdown)(talk.description) + '</div>\n              ' + this.renderTags(talk.tags) + '\n              <div class="ka-feedback-entries"></div>\n            </div>\n            <ul class="ka-avatars">\n              ' + talk.authors.map(this.renderAuthor).join('') + '\n            </ul>\n          </div>\n        </div>\n      </div>\n    ';
+      var links = !talk.videoUrl && !talk.slidesUrl ? '' : '<div class="ka-links ka-right">\n      ' + (!talk.slidesUrl ? '' : '<a href="' + talk.slidesUrl + '" target="_blank" class="icon-slideshare" title="Slides"></a>') + '\n      ' + (!talk.videoUrl ? '' : '<a href="' + talk.videoUrl + '" target="_blank" class="icon-youtube-play" title="Video"></a>') + '\n    </div>';
+      var html = '\n      <div class="ka-talk-details-window">\n        <a class="ka-close" title="close"></a>\n        <div class="ka-talk-details-viewport">\n          <div class="ka-talk-details-inner">\n            <div class="ka-talk-details-contents">\n              <h2 class="ka-talk-details-title">' + links + ' ' + talk.title + ' ' + this.feedback.renderFeedback() + '</h2>\n              <div class="ka-talk-details-description">' + (0, _stringutils.formatMarkdown)(talk.description) + '</div>\n              ' + this.renderTags(talk.tags) + '\n              <div class="ka-feedback-entries"></div>\n            </div>\n            <ul class="ka-avatars">\n              ' + talk.authors.map(this.renderAuthor).join('') + '\n            </ul>\n          </div>\n        </div>\n      </div>\n    ';
       document.body.insertAdjacentHTML('beforeend', html);
       document.querySelector('.ka-overlay').classList.remove('ka-hidden');
       this.feedback.renderFeedbackEntries(document.querySelector('.ka-feedback-entries'));
