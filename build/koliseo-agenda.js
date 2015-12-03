@@ -743,7 +743,7 @@ var getUserFeedbackTemplate = function getUserFeedbackTemplate(_ref, isEditing) 
   var timestamp = '';
   if (lastModified) {
     var date = new Date(lastModified);
-    timestamp = '<span class="ka-feedback-time">' + date.getDate() + '/' + date.getMonth() + '/' + date.getFullYear() + '</span>';
+    timestamp = '<span class="ka-feedback-time">' + date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear() + '</span>';
   }
   return '\n    <li class="ka-avatar-li ' + (isEditing ? 'ka-editing' : '') + '">\n      <div class="ka-entry-details">\n        <a href="https://www.koliseo.com/' + user.uuid + '" class="ka-avatar-container">\n          <img class="ka-avatar-img" src="' + user.avatar + '">\n        </a>\n        <div class="ka-feedback-entry">\n          <div class="ka-author-name">\n            <span class="ka-author">' + user.name + '</span>\n            ' + timestamp + '\n          </div>\n          <div class="ka-star-cell">' + getStarBarTemplate(width, isEditing) + '</div>\n          ' + $comment + '\n        </div>\n      </div>\n    </li>\n  ';
 };
