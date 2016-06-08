@@ -95,9 +95,25 @@ $starSize: $ratingSize / 5;
     visibility: visible;
     opacity: 1;
     transition: visibility 0s, opacity 0.5s linear;
+    .ka-message {
+        padding: .5rem;
+        border-radius: 3px;
+        display: block;
+        &.alert {
+            background-color: $red-dark;
+            color: white;
+        }
+        &.warn {
+            background-color: $orange;
+            color: white;
+        }
+    }
     &.ka-hide {
         visibility: hidden;
         opacity: 0;
+        .ka-message {
+            display: none;
+        }
     }
 }
 

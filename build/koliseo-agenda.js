@@ -412,8 +412,10 @@ var AgendaView = (function () {
     // the DOM element to modify
     this.element = element;
 
-    Koliseo.auth.on('koliseo.login', this.renderUserInfo);
-    Koliseo.auth.on('koliseo.logout', this.renderUserInfo);
+    if (Koliseo.auth.isOAuthConfigured()) {
+      Koliseo.auth.on('koliseo.login', this.renderUserInfo);
+      Koliseo.auth.on('koliseo.logout', this.renderUserInfo);
+    }
   }
 
   _createClass(AgendaView, [{
@@ -431,7 +433,9 @@ var AgendaView = (function () {
       var talk = this.selectTalk(talkHash);
       this.scrollToTalk(talk);
 
-      this.renderUserInfo();
+      if (Koliseo.auth.isOAuthConfigured()) {
+        this.renderUserInfo();
+      }
     }
   }, {
     key: 'renderDayTabs',
@@ -720,6 +724,8 @@ var _util = require('./util');
 
 var _util2 = _interopRequireDefault(_util);
 
+var MIN_STARS_WIHOUT_COMMENT = 3;
+
 var getStarBarTemplate = function getStarBarTemplate(width, isEditing) {
   return '\n    <div class="ka-star-rating">\n      <span class="ka-star-bar" style="width: ' + width + '%"></span>\n      ' + (!isEditing ? '' : [1, 2, 3, 4, 5].map(function (star) {
     return '<a data-rating="' + star + '" title="' + star + ' ' + (star > 1 ? 'stars' : 'star') + '" class="ka-star ka-star-' + star + '"></a>';
@@ -728,6 +734,10 @@ var getStarBarTemplate = function getStarBarTemplate(width, isEditing) {
 
 var getAnonymousUserFeedbackTemplate = function getAnonymousUserFeedbackTemplate() {
   return '\n    <li class="ka-avatar-li ka-editing">\n      <div class="ka-entry-details">\n        <span class="ka-avatar-container">\n          <img class="ka-avatar-img" src="https://www.koliseo.com/less/img/avatar.gif">\n        </span>\n        <div class="ka-feedback-entry">\n          <a class="ka-button ka-right" onclick="Koliseo.auth.login()">Sign in</a>\n          <div class="ka-author-name">\n            <span class="ka-author">You must sign in to provide feedback</span>\n          </div>\n          <div class="ka-star-cell">' + getStarBarTemplate(0) + '</div>\n        </div>\n      </div>\n    </li>\n  ';
+};
+
+var canSendFeedback = function canSendFeedback(rating, comment) {
+  return rating >= MIN_STARS_WIHOUT_COMMENT || rating >= 1 && !!comment.trim();
 };
 
 var getUserFeedbackTemplate = function getUserFeedbackTemplate(_ref, isEditing) {
@@ -739,13 +749,28 @@ var getUserFeedbackTemplate = function getUserFeedbackTemplate(_ref, isEditing) 
   var user = _ref.user;
 
   var width = rating * 100 / 5;
-  var $comment = isEditing ? '\n    <p>\n      <textarea name="comment" class="ka-comment" placeholder="Share your thoughts" maxlength="255">' + comment + '</textarea>\n      <br>\n      <button class="ka-button" ' + (!rating ? 'disabled' : '') + '>Send</button>\n      <span class="ka-messages ka-hide"></span>\n    </p>\n  ' : comment ? '<p>' + comment + '</p>' : '';
+  // comment is required with 2 stars or less
+  var $comment = isEditing ? '\n    <p>\n      <textarea name="comment" class="ka-comment" placeholder="Share your thoughts" maxlength="255">' + comment + '</textarea>\n      <br>\n      <button class="ka-button" ' + (!canSendFeedback(rating, comment) ? 'disabled' : '') + '>Send</button>\n      <span class="ka-messages ka-hide"></span>\n    </p>\n  ' : comment ? '<p>' + comment + '</p>' : '';
   var timestamp = '';
   if (lastModified) {
     var date = new Date(lastModified);
     timestamp = '<span class="ka-feedback-time">' + date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear() + '</span>';
   }
   return '\n    <li class="ka-avatar-li ' + (isEditing ? 'ka-editing' : '') + '">\n      <div class="ka-entry-details">\n        <a href="https://www.koliseo.com/' + user.uuid + '" class="ka-avatar-container">\n          <img class="ka-avatar-img" src="' + user.avatar + '">\n        </a>\n        <div class="ka-feedback-entry">\n          <div class="ka-author-name">\n            <span class="ka-author">' + user.name + '</span>\n            ' + timestamp + '\n          </div>\n          <div class="ka-star-cell">' + getStarBarTemplate(width, isEditing) + '</div>\n          ' + $comment + '\n        </div>\n      </div>\n    </li>\n  ';
+};
+
+var showMessage = function showMessage(_ref2) {
+  var element = _ref2.element;
+  var message = _ref2.message;
+  var level = _ref2.level;
+  var _ref2$hide = _ref2.hide;
+  var hide = _ref2$hide === undefined ? true : _ref2$hide;
+
+  element.innerHTML = '<span class="ka-message ' + level + '">' + message + '</span>';
+  _util2['default'].transitionFrom(element, 'ka-hide');
+  hide && setTimeout(function () {
+    _util2['default'].transitionTo(element, 'ka-hide');
+  }, 3000);
 };
 
 var TalkFeedback = (function () {
@@ -782,10 +807,40 @@ var TalkFeedback = (function () {
                 $li && $feedbackEntries.removeChild($li);
               }
               $feedbackEntries.insertAdjacentHTML('afterbegin', html);
+              var $comment = $feedbackEntries.querySelector('.ka-comment');
+              var $sendButton = $feedbackEntries.querySelector('.ka-button');
+              var $messages = $feedbackEntries.querySelector('.ka-messages');
+              var showCommentMessage = function showCommentMessage(_ref3) {
+                var _ref3$comment = _ref3.comment;
+                var comment = _ref3$comment === undefined ? '' : _ref3$comment;
+                var rating = _ref3.rating;
+
+                $messages.innerHTML && ($messages.innerHTML = '');
+                if (!comment.trim() && rating > 0 && rating < 5) {
+                  if (rating >= MIN_STARS_WIHOUT_COMMENT) {
+                    showMessage({
+                      message: 'The author would appreciate your comment',
+                      element: $messages,
+                      level: 'warn',
+                      hide: false
+                    });
+                  } else {
+                    showMessage({
+                      message: 'Comment is required for 2 stars or less',
+                      element: $messages,
+                      level: 'alert',
+                      hide: false
+                    });
+                  }
+                }
+              };
+              showCommentMessage(entry);
               Array.prototype.forEach.call($feedbackEntries.querySelectorAll('.ka-star'), function (item) {
                 item.onclick = (function (e) {
                   var rating = e.target.dataset.rating;
-                  render({ rating: rating, comment: $feedbackEntries.querySelector('.ka-comment').value, user: entry.user });
+                  var comment = $comment.value;
+                  render({ rating: rating, comment: comment, user: entry.user });
+                  showCommentMessage({ rating: rating, comment: comment });
                 }).bind(_this);
                 item.onmouseover = function (e) {
                   var rating = e.target.dataset.rating;
@@ -795,21 +850,30 @@ var TalkFeedback = (function () {
                   $feedbackEntries.querySelector('.ka-star-bar').style.width = entry.rating * 100 / 5 + '%';
                 };
               });
-              $feedbackEntries.querySelector('.ka-button').onclick = (function () {
-                var comment = $feedbackEntries.querySelector('.ka-comment').value;
+              $comment.onkeyup = (function (e) {
+                if (canSendFeedback(entry.rating, $comment.value)) {
+                  $sendButton.removeAttribute('disabled');
+                } else {
+                  $sendButton.disabled = true;
+                }
+                showCommentMessage({
+                  comment: $comment.value,
+                  rating: entry.rating
+                });
+              }).bind(_this);
+              $sendButton.onclick = (function () {
+                var comment = $comment.value;
                 Koliseo.auth.sendFeedback({ id: _this.talk.id, rating: entry.rating, comment: comment }, function (resp) {
-                  var messages = $feedbackEntries.querySelector('.ka-messages');
-                  messages.innerHTML = 'Thanks for your feedback!';
-                  _util2['default'].transitionFrom(messages, 'ka-hide');
-                  setTimeout(function () {
-                    _util2['default'].transitionTo(messages, 'ka-hide');
-                  }, 3000);
+                  showMessage({
+                    message: 'Thanks for your feedback!',
+                    element: $messages
+                  });
                 });
               }).bind(_this);
             };
             Koliseo.auth.getCurrentUserFeedbackEntry(_this.talk, render);
           })();
-        } else {
+        } else if (Koliseo.auth.isOAuthConfigured()) {
           $feedbackEntries.insertAdjacentHTML('beforeend', getAnonymousUserFeedbackTemplate());
         }
 
@@ -869,7 +933,7 @@ Koliseo.agenda = {};
   Renders an agenda.
 
 */
-Koliseo.agenda.render = function (_ref) // {String} The Koliseo OAuth client ID
+Koliseo.agenda.render = function (_ref) // {String} optional. The Koliseo OAuth client ID
 // {String} optional. URL to make the security requests
 {
   var c4pUrl = _ref.c4pUrl;
@@ -893,9 +957,7 @@ Koliseo.agenda.render = function (_ref) // {String} The Koliseo OAuth client ID
     }
   };
 
-  _hellojs2['default'].init({ koliseo: oauthClientId });
-
-  Koliseo.auth = new _security.Security({ c4pUrl: c4pUrl, baseUrl: baseUrl });
+  Koliseo.auth = new _security.Security({ c4pUrl: c4pUrl, baseUrl: baseUrl, oauthClientId: oauthClientId });
 
   agendaUrl = agendaUrl || c4pUrl + '/agenda';
 
@@ -947,9 +1009,16 @@ var getSecurityInstance = function getSecurityInstance(_ref) {
   var _ref$baseUrl = _ref.baseUrl;
   var baseUrl = _ref$baseUrl === undefined ? HOSTNAME : _ref$baseUrl;
   var c4pUrl = _ref.c4pUrl;
+  var oauthClientId = _ref.oauthClientId;
 
   if (this.instance) {
     return this.instance;
+  }
+
+  if (oauthClientId) {
+    _hellojs2['default'].init({ koliseo: oauthClientId });
+  } else {
+    console.warn('Feedback is disabled because oauthClientId has not been declared');
   }
 
   _hellojs2['default'].init({
@@ -1053,6 +1122,11 @@ var getSecurityInstance = function getSecurityInstance(_ref) {
       key: 'off',
       value: function off(eventName, callback) {
         _hellojs2['default'].off(eventName, callback);
+      }
+    }, {
+      key: 'isOAuthConfigured',
+      value: function isOAuthConfigured() {
+        return !!oauthClientId;
       }
     }, {
       key: 'login',
