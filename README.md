@@ -16,7 +16,8 @@ The simplest thing to make it work:
 <script>
   Koliseo.agenda.render({
     c4pUrl: '<your c4p URL>',
-    element: document.querySelector('.ka')
+    element: document.querySelector('.ka'),
+    oauthClientId: '<Your Koliseo OAuth token ID>'
   });
 </script>
 ```
@@ -42,7 +43,8 @@ This component requires browser support for `Promises` and the `Fetch API`, curr
     if (typeof Koliseo !== 'undefined' && Koliseo.agenda && typeof fetch !== 'undefined') {
       Koliseo.agenda.render({
         c4pUrl: '<your C4P URL>',
-        element: document.querySelector('.ka')
+        element: document.querySelector('.ka'),
+        oauthClientId: '<Your Koliseo OAuth token ID>'
       });
     }
   }
@@ -54,6 +56,10 @@ This component requires browser support for `Promises` and the `Fetch API`, curr
 ## Deep linking
 
 To link to a talk, just select the talk in the table and copy the resulting link. If no talk is present in the URL, the first day will be selected.
+
+## Assistants authentication
+
+If you want to receive feedback from assistants about talks, you need to specify a Koliseo token id. You can create your [OAuth 2.0](http://tools.ietf.org/html/rfc6749) token at the `Applications` section of your Koliseo user profile. More info [here](http://help.koliseo.com/en/developers)
 
 ## Develop
 
