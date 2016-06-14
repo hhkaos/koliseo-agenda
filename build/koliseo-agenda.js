@@ -694,9 +694,11 @@ var TalkDetailsPopup = (function () {
       var name = _ref2.name;
       var avatar = _ref2.avatar;
       var description = _ref2.description;
+      var twitterAccount = _ref2.twitterAccount;
 
       avatar = avatar.indexOf('//') == 0 ? 'https:' + avatar : avatar;
-      return '\n      <li class="ka-avatar-li ka-avatar-and-text">\n        <a href="https://www.koliseo.com/' + uuid + '" class="ka-avatar-container">\n          <span style="display:table-row">\n            <img class="ka-avatar-img" src="' + avatar + '">\n            <span class="ka-author-name">' + name + '</a>\n          </span>\n        </a>\n        <div class="ka-author-data">\n          <div class="ka-author-description">' + (0, _stringutils.formatMarkdown)(description) + '</div>\n        </div>\n      </li>\n    ';
+      var $name = '<a href="https://www.koliseo.com/' + uuid + '" class="ka-author-name">' + name + '</a>';
+      return '\n      <li class="ka-avatar-li ka-avatar-and-text">\n        <span class="ka-avatar-container">\n          <span style="display:table-row">\n            <a href="https://www.koliseo.com/' + uuid + '" class="ka-avatar-img"><img src="' + avatar + '" class="ka-avatar-img"></a>\n            ' + (!twitterAccount ? $name : '\n              <span class="ka-author-name-container">\n                ' + $name + '\n                <a href="https://twitter.com/' + twitterAccount + '" class="ka-author-twitter" target="_blank">@' + twitterAccount + '</a>\n              </span>') + '\n          </span>\n        </span>\n        <div class="ka-author-data">\n          <div class="ka-author-description">' + (0, _stringutils.formatMarkdown)(description) + '</div>\n        </div>\n      </li>\n    ';
     }
   }]);
 

@@ -16,7 +16,10 @@
   vertical-align: middle;
   text-align: left;
 }
-
+.ka-author-name-container {
+  display: table-cell;
+  vertical-align: middle;
+}
 .ka-avatar-img {
   border-radius: 50%;
   width: 50px;
