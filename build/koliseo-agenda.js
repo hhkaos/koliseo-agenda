@@ -783,6 +783,11 @@ var TalkFeedback = (function () {
   }
 
   _createClass(TalkFeedback, [{
+    key: 'isFeedbackEnabled',
+    value: function isFeedbackEnabled() {
+      return Koliseo.agenda.model.feedbackEnabled;
+    }
+  }, {
     key: 'renderFeedback',
     value: function renderFeedback() {
       var width = this.talk.feedback && this.talk.feedback.ratingAverage * 100 / 5 || 0;
@@ -793,108 +798,112 @@ var TalkFeedback = (function () {
     value: function renderFeedbackEntries(element) {
       var _this = this;
 
-      var renderFeedbackEntries = (function (element) {
-        element.innerHTML = '';
-        element.insertAdjacentHTML('beforeend', '<ul class="ka-entries"></ul>');
-        var $feedbackEntries = element.querySelector('.ka-entries');
-        if (Koliseo.auth.currentUser) {
-          (function () {
-            var render = function render(entry) {
-              entry.user = entry.user || Koliseo.auth.currentUser;
-              entry.rating = entry.rating || 0;
-              var html = getUserFeedbackTemplate(entry, true);
-              var $li = undefined;
-              if ($feedbackEntries.children.length) {
-                $li = $feedbackEntries.querySelector('.ka-avatar-li.ka-editing');
-                $li && $feedbackEntries.removeChild($li);
-              }
-              $feedbackEntries.insertAdjacentHTML('afterbegin', html);
-              var $comment = $feedbackEntries.querySelector('.ka-comment');
-              var $sendButton = $feedbackEntries.querySelector('.ka-button');
-              var $messages = $feedbackEntries.querySelector('.ka-messages');
-              var showCommentMessage = function showCommentMessage(_ref3) {
-                var _ref3$comment = _ref3.comment;
-                var comment = _ref3$comment === undefined ? '' : _ref3$comment;
-                var rating = _ref3.rating;
-
-                $messages.innerHTML && ($messages.innerHTML = '');
-                if (!comment.trim() && rating > 0 && rating < 5) {
-                  if (rating >= MIN_STARS_WIHOUT_COMMENT) {
-                    showMessage({
-                      message: 'The author would appreciate your comment',
-                      element: $messages,
-                      level: 'warn',
-                      hide: false
-                    });
-                  } else {
-                    showMessage({
-                      message: 'Comment is required for 2 stars or less',
-                      element: $messages,
-                      level: 'alert',
-                      hide: false
-                    });
+      if (this.isFeedbackEnabled()) {
+        (function () {
+          var renderFeedbackEntries = (function (element) {
+            element.innerHTML = '';
+            element.insertAdjacentHTML('beforeend', '<ul class="ka-entries"></ul>');
+            var $feedbackEntries = element.querySelector('.ka-entries');
+            if (Koliseo.auth.currentUser) {
+              (function () {
+                var render = function render(entry) {
+                  entry.user = entry.user || Koliseo.auth.currentUser;
+                  entry.rating = entry.rating || 0;
+                  var html = getUserFeedbackTemplate(entry, true);
+                  var $li = undefined;
+                  if ($feedbackEntries.children.length) {
+                    $li = $feedbackEntries.querySelector('.ka-avatar-li.ka-editing');
+                    $li && $feedbackEntries.removeChild($li);
                   }
-                }
-              };
-              showCommentMessage(entry);
-              Array.prototype.forEach.call($feedbackEntries.querySelectorAll('.ka-star'), function (item) {
-                item.onclick = (function (e) {
-                  var rating = e.target.dataset.rating;
-                  var comment = $comment.value;
-                  render({ rating: rating, comment: comment, user: entry.user });
-                  showCommentMessage({ rating: rating, comment: comment });
-                }).bind(_this);
-                item.onmouseover = function (e) {
-                  var rating = e.target.dataset.rating;
-                  $feedbackEntries.querySelector('.ka-star-bar').style.width = rating * 100 / 5 + '%';
-                };
-                item.onmouseleave = function (e) {
-                  $feedbackEntries.querySelector('.ka-star-bar').style.width = entry.rating * 100 / 5 + '%';
-                };
-              });
-              $comment.onkeyup = (function (e) {
-                if (canSendFeedback(entry.rating, $comment.value)) {
-                  $sendButton.removeAttribute('disabled');
-                } else {
-                  $sendButton.disabled = true;
-                }
-                showCommentMessage({
-                  comment: $comment.value,
-                  rating: entry.rating
-                });
-              }).bind(_this);
-              $sendButton.onclick = (function () {
-                var comment = $comment.value;
-                Koliseo.auth.sendFeedback({ id: _this.talk.id, rating: entry.rating, comment: comment }, function (resp) {
-                  showMessage({
-                    message: 'Thanks for your feedback!',
-                    element: $messages
-                  });
-                });
-              }).bind(_this);
-            };
-            Koliseo.auth.getCurrentUserFeedbackEntry(_this.talk, render);
-          })();
-        } else if (Koliseo.auth.isOAuthConfigured()) {
-          $feedbackEntries.insertAdjacentHTML('beforeend', getAnonymousUserFeedbackTemplate());
-        }
+                  $feedbackEntries.insertAdjacentHTML('afterbegin', html);
+                  var $comment = $feedbackEntries.querySelector('.ka-comment');
+                  var $sendButton = $feedbackEntries.querySelector('.ka-button');
+                  var $messages = $feedbackEntries.querySelector('.ka-messages');
+                  var showCommentMessage = function showCommentMessage(_ref3) {
+                    var _ref3$comment = _ref3.comment;
+                    var comment = _ref3$comment === undefined ? '' : _ref3$comment;
+                    var rating = _ref3.rating;
 
-        Koliseo.auth.getFeedbackEntries(_this.talk.id, undefined, function (entries) {
-          entries.forEach(function (entry) {
-            if (!Koliseo.auth.currentUser || entry.user.id !== Koliseo.auth.currentUser.id) {
-              var html = getUserFeedbackTemplate(entry);
-              html && $feedbackEntries.insertAdjacentHTML('beforeend', html);
+                    $messages.innerHTML && ($messages.innerHTML = '');
+                    if (!comment.trim() && rating > 0 && rating < 5) {
+                      if (rating >= MIN_STARS_WIHOUT_COMMENT) {
+                        showMessage({
+                          message: 'The author would appreciate your comment',
+                          element: $messages,
+                          level: 'warn',
+                          hide: false
+                        });
+                      } else {
+                        showMessage({
+                          message: 'Comment is required for 2 stars or less',
+                          element: $messages,
+                          level: 'alert',
+                          hide: false
+                        });
+                      }
+                    }
+                  };
+                  showCommentMessage(entry);
+                  Array.prototype.forEach.call($feedbackEntries.querySelectorAll('.ka-star'), function (item) {
+                    item.onclick = (function (e) {
+                      var rating = e.target.dataset.rating;
+                      var comment = $comment.value;
+                      render({ rating: rating, comment: comment, user: entry.user });
+                      showCommentMessage({ rating: rating, comment: comment });
+                    }).bind(_this);
+                    item.onmouseover = function (e) {
+                      var rating = e.target.dataset.rating;
+                      $feedbackEntries.querySelector('.ka-star-bar').style.width = rating * 100 / 5 + '%';
+                    };
+                    item.onmouseleave = function (e) {
+                      $feedbackEntries.querySelector('.ka-star-bar').style.width = entry.rating * 100 / 5 + '%';
+                    };
+                  });
+                  $comment.onkeyup = (function (e) {
+                    if (canSendFeedback(entry.rating, $comment.value)) {
+                      $sendButton.removeAttribute('disabled');
+                    } else {
+                      $sendButton.disabled = true;
+                    }
+                    showCommentMessage({
+                      comment: $comment.value,
+                      rating: entry.rating
+                    });
+                  }).bind(_this);
+                  $sendButton.onclick = (function () {
+                    var comment = $comment.value;
+                    Koliseo.auth.sendFeedback({ id: _this.talk.id, rating: entry.rating, comment: comment }, function (resp) {
+                      showMessage({
+                        message: 'Thanks for your feedback!',
+                        element: $messages
+                      });
+                    });
+                  }).bind(_this);
+                };
+                Koliseo.auth.getCurrentUserFeedbackEntry(_this.talk, render);
+              })();
+            } else if (Koliseo.auth.isOAuthConfigured()) {
+              $feedbackEntries.insertAdjacentHTML('beforeend', getAnonymousUserFeedbackTemplate());
             }
-          });
-        });
-      }).bind(this);
-      renderFeedbackEntries(element);
-      Koliseo.auth.on('koliseo.login', (function () {
-        renderFeedbackEntries(element);
-      }).bind(this));
-      Koliseo.auth.on('koliseo.logout', (function () {
-        renderFeedbackEntries(element);
-      }).bind(this));
+
+            Koliseo.auth.getFeedbackEntries(_this.talk.id, undefined, function (entries) {
+              entries.forEach(function (entry) {
+                if (!Koliseo.auth.currentUser || entry.user.id !== Koliseo.auth.currentUser.id) {
+                  var html = getUserFeedbackTemplate(entry);
+                  html && $feedbackEntries.insertAdjacentHTML('beforeend', html);
+                }
+              });
+            });
+          }).bind(_this);
+          renderFeedbackEntries(element);
+          Koliseo.auth.on('koliseo.login', (function () {
+            renderFeedbackEntries(element);
+          }).bind(_this));
+          Koliseo.auth.on('koliseo.logout', (function () {
+            renderFeedbackEntries(element);
+          }).bind(_this));
+        })();
+      }
     }
   }]);
 
@@ -976,6 +985,7 @@ Koliseo.agenda.render = function (_ref) // {String} optional. The Koliseo OAuth 
     var c4p = _ref32[0];
     var agenda = _ref32[1];
 
+    Koliseo.agenda.model = agenda;
     new _AgendaView.AgendaView({
       c4p: c4p,
       agenda: agenda,

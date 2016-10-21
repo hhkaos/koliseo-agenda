@@ -1,5 +1,6 @@
 {
   "name": "FooBar a muerte",
+  "feedbackEnabled": true,
   "days": [
     {
       "id": 1,
