@@ -472,7 +472,8 @@ var AgendaView = (function () {
     key: 'renderUserInfo',
     value: function renderUserInfo() {
       var container = document.getElementById('ka-user-info');
-      container.innerHTML = !_KoliseoAPI2['default'].currentUser ? '<button onclick="KoliseoAPI.login()" class="ka-button">Sign in</button>' : '<button onclick="KoliseoAPI.logout()" class="ka-button ka-button-secondary">Sign out</button>';
+      container.innerHTML = !_KoliseoAPI2['default'].currentUser ? '<button class="ka-button">Sign in</button>' : '<button class="ka-button ka-button-secondary">Sign out</button>';
+      container.onclick = !_KoliseoAPI2['default'].currentUser ? _KoliseoAPI2['default'].login : _KoliseoAPI2['default'].logout;
     }
   }, {
     key: 'renderWorkspace',
@@ -1063,7 +1064,7 @@ var getStarBarTemplate = function getStarBarTemplate(width, isEditing) {
 };
 
 var getAnonymousUserFeedbackTemplate = function getAnonymousUserFeedbackTemplate() {
-  return '\n    <li class="ka-avatar-li ka-editing">\n      <div class="ka-entry-details">\n        <span class="ka-avatar-container">\n          <img class="ka-avatar-img" src="https://www.koliseo.com/less/img/avatar.gif">\n        </span>\n        <div class="ka-feedback-entry">\n          <a class="ka-button ka-right" onclick="KoliseoAPI.login()">Sign in</a>\n          <div class="ka-author-name">\n            <span class="ka-author">You must sign in to provide feedback</span>\n          </div>\n          <div class="ka-star-cell">' + getStarBarTemplate(0) + '</div>\n        </div>\n      </div>\n    </li>\n  ';
+  return '\n    <li class="ka-avatar-li ka-editing">\n      <div class="ka-entry-details">\n        <span class="ka-avatar-container">\n          <img class="ka-avatar-img" src="https://www.koliseo.com/less/img/avatar.gif">\n        </span>\n        <div class="ka-feedback-entry">\n          <a class="ka-button ka-right">Sign in</a>\n          <div class="ka-author-name">\n            <span class="ka-author">You must sign in to provide feedback</span>\n          </div>\n          <div class="ka-star-cell">' + getStarBarTemplate(0) + '</div>\n        </div>\n      </div>\n    </li>\n  ';
 };
 
 var canSendFeedback = function canSendFeedback(rating, comment) {
@@ -1212,6 +1213,7 @@ var TalkFeedback = (function () {
               })();
             } else if (_KoliseoAPI2['default'].isOAuthConfigured()) {
               $feedbackEntries.insertAdjacentHTML('beforeend', getAnonymousUserFeedbackTemplate());
+              $feedbackEntries.querySelector('.ka-button').onclick = _KoliseoAPI2['default'].login;
             }
 
             _KoliseoAPI2['default'].getFeedbackEntries(_this.talk.id, undefined, function (entries) {
