@@ -17,6 +17,12 @@
       "css": "youtube-play",
       "code": 59393,
       "src": "fontawesome"
+    },
+    {
+      "uid": "d73eceadda1f594cec0536087539afbf",
+      "css": "heart",
+      "code": 59395,
+      "src": "fontawesome"
     }
   ]
 }
