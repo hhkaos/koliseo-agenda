@@ -921,11 +921,11 @@ var LikeButtonUtils = {
     }
   },
 
-  update: function update(element) {
-    var talk = +element.dataset.talk;
+  update: function update(item) {
+    var talk = +item.dataset.talk;
     var config = getConfig(talk);
-    element.dataset.state = config.state;
-    element.title = config.text;
+    item.dataset.state = config.state;
+    item.title = config.text;
   },
 
   addUpdateListener: function addUpdateListener(element) {
@@ -933,7 +933,12 @@ var LikeButtonUtils = {
 
     _likesCollection2['default'].onUpdate(function (talk) {
       var selector = !talk ? '.ka-like' : '.ka-like[data-talk="' + talk + '"]';
-      element.querySelectorAll(selector).forEach(_this.update);
+      var items = element.querySelectorAll(selector);
+      if (items.forEach) {
+        items.forEach(_this.update);
+      } else {
+        Array.forEach(items, _this.update);
+      }
     });
   }
 
