@@ -1132,113 +1132,111 @@ var TalkFeedback = (function () {
     value: function renderFeedbackEntries(element) {
       var _this = this;
 
-      if (this.isFeedbackEnabled()) {
-        (function () {
-          var renderFeedbackEntries = (function (element) {
-            element.innerHTML = '';
-            element.insertAdjacentHTML('beforeend', '<ul class="ka-entries"></ul>');
-            var $feedbackEntries = element.querySelector('.ka-entries');
-            if (_KoliseoAPI2['default'].currentUser) {
-              (function () {
-                var render = function render(entry) {
-                  entry.user = entry.user || _KoliseoAPI2['default'].currentUser;
-                  entry.rating = entry.rating || 0;
-                  var html = getUserFeedbackTemplate(entry, true);
-                  var $li = undefined;
-                  if ($feedbackEntries.children.length) {
-                    $li = $feedbackEntries.querySelector('.ka-avatar-li.ka-editing');
-                    $li && $feedbackEntries.removeChild($li);
-                  }
-                  $feedbackEntries.insertAdjacentHTML('afterbegin', html);
-                  var $comment = $feedbackEntries.querySelector('.ka-comment');
-                  var $sendButton = $feedbackEntries.querySelector('.ka-button');
-                  var $messages = $feedbackEntries.querySelector('.ka-messages');
-                  var showCommentMessage = function showCommentMessage(_ref3) {
-                    var _ref3$comment = _ref3.comment;
-                    var comment = _ref3$comment === undefined ? '' : _ref3$comment;
-                    var rating = _ref3.rating;
-
-                    $messages.innerHTML && ($messages.innerHTML = '');
-                    if (!comment.trim() && rating > 0 && rating < 5) {
-                      if (rating >= MIN_STARS_WIHOUT_COMMENT) {
-                        showMessage({
-                          message: 'The author would appreciate your comment',
-                          element: $messages,
-                          level: 'warn',
-                          hide: false
-                        });
-                      } else {
-                        showMessage({
-                          message: 'Comment is required for 2 stars or less',
-                          element: $messages,
-                          level: 'alert',
-                          hide: false
-                        });
-                      }
-                    }
-                  };
-                  showCommentMessage(entry);
-                  Array.prototype.forEach.call($feedbackEntries.querySelectorAll('.ka-star'), function (item) {
-                    item.onclick = (function (e) {
-                      var rating = e.target.dataset.rating;
-                      var comment = $comment.value;
-                      render({ rating: rating, comment: comment, user: entry.user });
-                      showCommentMessage({ rating: rating, comment: comment });
-                    }).bind(_this);
-                    item.onmouseover = function (e) {
-                      var rating = e.target.dataset.rating;
-                      $feedbackEntries.querySelector('.ka-star-bar').style.width = rating * 100 / 5 + '%';
-                    };
-                    item.onmouseleave = function (e) {
-                      $feedbackEntries.querySelector('.ka-star-bar').style.width = entry.rating * 100 / 5 + '%';
-                    };
-                  });
-                  $comment.onkeyup = (function (e) {
-                    if (canSendFeedback(entry.rating, $comment.value)) {
-                      $sendButton.removeAttribute('disabled');
-                    } else {
-                      $sendButton.disabled = true;
-                    }
-                    showCommentMessage({
-                      comment: $comment.value,
-                      rating: entry.rating
-                    });
-                  }).bind(_this);
-                  $sendButton.onclick = (function () {
-                    var comment = $comment.value;
-                    _KoliseoAPI2['default'].sendFeedback({ id: _this.talk.id, rating: entry.rating, comment: comment }, function (resp) {
-                      showMessage({
-                        message: 'Thanks for your feedback!',
-                        element: $messages
-                      });
-                    });
-                  }).bind(_this);
-                };
-                _KoliseoAPI2['default'].getCurrentUserFeedbackEntry(_this.talk, render);
-              })();
-            } else if (_KoliseoAPI2['default'].isOAuthConfigured()) {
-              $feedbackEntries.insertAdjacentHTML('beforeend', getAnonymousUserFeedbackTemplate());
-              $feedbackEntries.querySelector('.ka-button').onclick = _KoliseoAPI2['default'].login;
-            }
-
-            _KoliseoAPI2['default'].getFeedbackEntries(_this.talk.id, undefined, function (entries) {
-              entries.forEach(function (entry) {
-                if (!_KoliseoAPI2['default'].currentUser || entry.user.id !== _KoliseoAPI2['default'].currentUser.id) {
-                  var html = getUserFeedbackTemplate(entry);
-                  html && $feedbackEntries.insertAdjacentHTML('beforeend', html);
+      var renderFeedbackEntries = (function (element) {
+        element.innerHTML = '';
+        element.insertAdjacentHTML('beforeend', '<ul class="ka-entries"></ul>');
+        var $feedbackEntries = element.querySelector('.ka-entries');
+        if (_this.isFeedbackEnabled()) {
+          if (_KoliseoAPI2['default'].currentUser) {
+            (function () {
+              var render = function render(entry) {
+                entry.user = entry.user || _KoliseoAPI2['default'].currentUser;
+                entry.rating = entry.rating || 0;
+                var html = getUserFeedbackTemplate(entry, true);
+                var $li = undefined;
+                if ($feedbackEntries.children.length) {
+                  $li = $feedbackEntries.querySelector('.ka-avatar-li.ka-editing');
+                  $li && $feedbackEntries.removeChild($li);
                 }
-              });
-            });
-          }).bind(_this);
-          renderFeedbackEntries(element);
-          _KoliseoAPI2['default'].on('login', (function () {
-            renderFeedbackEntries(element);
-          }).bind(_this));
-          _KoliseoAPI2['default'].on('logout', (function () {
-            renderFeedbackEntries(element);
-          }).bind(_this));
-        })();
-      }
+                $feedbackEntries.insertAdjacentHTML('afterbegin', html);
+                var $comment = $feedbackEntries.querySelector('.ka-comment');
+                var $sendButton = $feedbackEntries.querySelector('.ka-button');
+                var $messages = $feedbackEntries.querySelector('.ka-messages');
+                var showCommentMessage = function showCommentMessage(_ref3) {
+                  var _ref3$comment = _ref3.comment;
+                  var comment = _ref3$comment === undefined ? '' : _ref3$comment;
+                  var rating = _ref3.rating;
+
+                  $messages.innerHTML && ($messages.innerHTML = '');
+                  if (!comment.trim() && rating > 0 && rating < 5) {
+                    if (rating >= MIN_STARS_WIHOUT_COMMENT) {
+                      showMessage({
+                        message: 'The author would appreciate your comment',
+                        element: $messages,
+                        level: 'warn',
+                        hide: false
+                      });
+                    } else {
+                      showMessage({
+                        message: 'Comment is required for 2 stars or less',
+                        element: $messages,
+                        level: 'alert',
+                        hide: false
+                      });
+                    }
+                  }
+                };
+                showCommentMessage(entry);
+                Array.prototype.forEach.call($feedbackEntries.querySelectorAll('.ka-star'), function (item) {
+                  item.onclick = (function (e) {
+                    var rating = e.target.dataset.rating;
+                    var comment = $comment.value;
+                    render({ rating: rating, comment: comment, user: entry.user });
+                    showCommentMessage({ rating: rating, comment: comment });
+                  }).bind(_this);
+                  item.onmouseover = function (e) {
+                    var rating = e.target.dataset.rating;
+                    $feedbackEntries.querySelector('.ka-star-bar').style.width = rating * 100 / 5 + '%';
+                  };
+                  item.onmouseleave = function (e) {
+                    $feedbackEntries.querySelector('.ka-star-bar').style.width = entry.rating * 100 / 5 + '%';
+                  };
+                });
+                $comment.onkeyup = (function (e) {
+                  if (canSendFeedback(entry.rating, $comment.value)) {
+                    $sendButton.removeAttribute('disabled');
+                  } else {
+                    $sendButton.disabled = true;
+                  }
+                  showCommentMessage({
+                    comment: $comment.value,
+                    rating: entry.rating
+                  });
+                }).bind(_this);
+                $sendButton.onclick = (function () {
+                  var comment = $comment.value;
+                  _KoliseoAPI2['default'].sendFeedback({ id: _this.talk.id, rating: entry.rating, comment: comment }, function (resp) {
+                    showMessage({
+                      message: 'Thanks for your feedback!',
+                      element: $messages
+                    });
+                  });
+                }).bind(_this);
+              };
+              _KoliseoAPI2['default'].getCurrentUserFeedbackEntry(_this.talk, render);
+            })();
+          } else if (_KoliseoAPI2['default'].isOAuthConfigured()) {
+            $feedbackEntries.insertAdjacentHTML('beforeend', getAnonymousUserFeedbackTemplate());
+            $feedbackEntries.querySelector('.ka-button').onclick = _KoliseoAPI2['default'].login;
+          }
+        }
+
+        _KoliseoAPI2['default'].getFeedbackEntries(_this.talk.id, undefined, function (entries) {
+          entries.forEach(function (entry) {
+            if (!_KoliseoAPI2['default'].currentUser || entry.user.id !== _KoliseoAPI2['default'].currentUser.id) {
+              var html = getUserFeedbackTemplate(entry);
+              html && $feedbackEntries.insertAdjacentHTML('beforeend', html);
+            }
+          });
+        });
+      }).bind(this);
+      renderFeedbackEntries(element);
+      _KoliseoAPI2['default'].on('login', (function () {
+        renderFeedbackEntries(element);
+      }).bind(this));
+      _KoliseoAPI2['default'].on('logout', (function () {
+        renderFeedbackEntries(element);
+      }).bind(this));
     }
   }]);
 
