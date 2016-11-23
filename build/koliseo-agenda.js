@@ -626,19 +626,31 @@ var AgendaView = (function () {
       if (this.selectedTalkHash && !event.altKey && !event.ctrlKey && !event.shiftKey) {
         var keyCode = event.keyCode;
         if (keyCode == 27) {
-          this.modal.close();
+          this.onClose();
         }
-
-        var rowDelta = keyCode == 38 ? -1 : keyCode == 40 ? 1 : 0;
-        var colDelta = keyCode == 37 ? -1 : keyCode == 39 ? 1 : 0;
+        /*
+        const rowDelta =
+          keyCode == 38? -1 :
+          keyCode == 40? 1 :
+          0;
+        const colDelta =
+          keyCode == 37? -1 :
+          keyCode == 39? 1 :
+          0;
         if (rowDelta || colDelta) {
-          var fadeInClass = rowDelta == -1 ? 'up' : rowDelta == 1 ? 'down' : colDelta == -1 ? 'left' : colDelta == 1 ? 'right' : '';
-          var talk = this.getSelectedTableModel().findTalk(this.selectedTalkCoords, { rowDelta: rowDelta, colDelta: colDelta });
+          const fadeInClass =
+            rowDelta == -1? 'up' :
+            rowDelta == 1? 'down' :
+            colDelta == -1? 'left' :
+            colDelta == 1? 'right' :
+            '';
+          const talk = this.getSelectedTableModel().findTalk(this.selectedTalkCoords, { rowDelta, colDelta});
           if (talk) {
             this.selectTalk(talk.contents.hash, fadeInClass);
             event.preventDefault();
           }
         }
+        */
       }
     }
   }]);
