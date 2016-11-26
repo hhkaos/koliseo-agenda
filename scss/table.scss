@@ -17,11 +17,16 @@
   box-sizing: border-box;
   vertical-align: top;
   position: relative;
+  min-width: 100px;
 
 }
 .ka-table-th {
   white-space: nowrap;
   font-weight: bold;
+}
+.ka-feedback-footer {
+  position: absolute;
+  bottom: $td-padding + 1;
 }
 .ka-author-brief {
   text-transform: uppercase;
@@ -40,7 +45,7 @@
   padding-right: $td-padding;
 }
 .ka-table-td.talk {
-  padding-bottom: 30px;
+  padding-bottom: 50px;
 }
 .ka-table-td.break {
   background-color: $shaded-background;
