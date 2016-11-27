@@ -43,7 +43,7 @@ gulp.task('styles', () => {
       'ios >= 7',
       'android >= 4.4'
     ]))
-    .pipe($.combineMediaQueries())
+//    .pipe($.combineMediaQueries())
     .pipe($.minifyCss())
     .pipe($.sourcemaps.write('.'))
     .pipe($.rename('kagenda-styles.css'))
