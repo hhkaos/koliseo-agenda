@@ -286,20 +286,58 @@ var AgendaDayTemplate = (function () {
         var end = _ref.end;
 
         var row = _this.model.data[rowIndex];
-        // TODO render time metadata. Hell, render all scema metadata, right?
-        return '\n          <tr class="ka-table-tr">\n          <th class="ka-table-th">' + start + '-' + end + '</th>\n          ' + (!row ? '' : row.map(function (cell) {
-          return !cell ? '' : _this.renderCell(cell);
-        }).join('')) + '\n          </tr>\n          ';
+        return '\n          <tr class="ka-table-tr">\n          <th class="ka-table-th">' + start + '-' + end + '</th>\n          ' + _this.renderRow(row, rowIndex) + '\n          </tr>\n          ';
       }).join('');
     }
   }, {
+    key: 'renderRow',
+    value: function renderRow(row, rowIndex) {
+      // TODO render time metadata. Hell, render all schema metadata, right?
+      var rowContent = '';
+      // DONT USE forEach here
+      for (var colIndex = 0; colIndex < row.length; colIndex++) {
+        var cell = row[colIndex];
+        if (cell) {
+          // if we have to leave a blank space before
+          var colOffset = this.calculateColOffset({ rowIndex: rowIndex, colIndex: colIndex });
+          if (colOffset > 0) {
+            rowContent += '<td class="ka-table-td-empty" colSpan="' + colOffset + '"></td>';
+          }
+          rowContent += this.renderCell(cell);
+        }
+      }
+      return rowContent;
+    }
+  }, {
+    key: 'calculateColOffset',
+    value: function calculateColOffset(_ref2) {
+      var rowIndex = _ref2.rowIndex;
+      var colIndex = _ref2.colIndex;
+
+      var offset = colIndex;
+      var maxOffset = colIndex;
+      if (rowIndex >= 0 && colIndex > 0) {
+        // for this row and the ones before
+        for (var rIndex = rowIndex; rIndex >= 0; rIndex--) {
+          // for each previous column on that row
+          for (var cIndex = colIndex - 1; cIndex >= 0; cIndex--) {
+            var cell = this.model.data[rIndex][cIndex];
+            if (cell && cell.rowSpan - rowIndex + rIndex >= 0) {
+              offset--;
+            }
+          }
+        }
+      }
+      return offset;
+    }
+  }, {
     key: 'renderCell',
-    value: function renderCell(_ref2) {
-      var start = _ref2.start;
-      var end = _ref2.end;
-      var contents = _ref2.contents;
-      var rowSpan = _ref2.rowSpan;
-      var colSpan = _ref2.colSpan;
+    value: function renderCell(_ref3) {
+      var start = _ref3.start;
+      var end = _ref3.end;
+      var contents = _ref3.contents;
+      var rowSpan = _ref3.rowSpan;
+      var colSpan = _ref3.colSpan;
 
       var type = contents && contents.type;
       var $contents = type === 'TALK' ? this.renderTalk(contents) : type === 'BREAK' ? contents.title : type === 'EXTEND' ? 'Extended from <b>' + this.model.tracks.find(function (track) {
@@ -310,18 +348,18 @@ var AgendaDayTemplate = (function () {
     }
   }, {
     key: 'renderTalk',
-    value: function renderTalk(_ref3) {
+    value: function renderTalk(_ref4) {
       var _this2 = this;
 
-      var id = _ref3.id;
-      var hash = _ref3.hash;
-      var title = _ref3.title;
-      var description = _ref3.description;
-      var authors = _ref3.authors;
-      var tags = _ref3.tags;
-      var feedback = _ref3.feedback;
-      var videoUrl = _ref3.videoUrl;
-      var slidesUrl = _ref3.slidesUrl;
+      var id = _ref4.id;
+      var hash = _ref4.hash;
+      var title = _ref4.title;
+      var description = _ref4.description;
+      var authors = _ref4.authors;
+      var tags = _ref4.tags;
+      var feedback = _ref4.feedback;
+      var videoUrl = _ref4.videoUrl;
+      var slidesUrl = _ref4.slidesUrl;
 
       return '\n      ' + _LikeButtonUtils2['default'].renderButton(id) + '\n      <p>\n        <a href="#' + hash + '" data-id="' + id + '" data-hash="' + hash + '" class="ka-talk-title">' + title + '</a>\n      </p>\n      ' + (!videoUrl && !slidesUrl ? '' : '<p class="ka-links">\n        ' + (!slidesUrl ? '' : '<a href="' + slidesUrl + '" target="_blank" class="icon-slideshare" title="Slides"><span class="sr-only">Slides in new window of "' + title + '"</span></a>') + '\n        ' + (!videoUrl ? '' : '<a href="' + videoUrl + '" target="_blank" class="icon-youtube-play" title="Video"><span class="sr-only">Video in new window of "' + title + '"</span></a>') + '\n      </p>') + '\n      <div class="ka-feedback-footer">' + new _feedback.TalkFeedback(arguments[0]).renderFeedback() + '</div>\n      <p class="ka-author-brief">' + authors.map(function (a) {
         return _this2.renderAuthor(a);
@@ -329,12 +367,12 @@ var AgendaDayTemplate = (function () {
     }
   }, {
     key: 'renderAuthor',
-    value: function renderAuthor(_ref4) {
-      var id = _ref4.id;
-      var uuid = _ref4.uuid;
-      var name = _ref4.name;
-      var avatar = _ref4.avatar;
-      var description = _ref4.description;
+    value: function renderAuthor(_ref5) {
+      var id = _ref5.id;
+      var uuid = _ref5.uuid;
+      var name = _ref5.name;
+      var avatar = _ref5.avatar;
+      var description = _ref5.description;
 
       return '' + name;
     }
