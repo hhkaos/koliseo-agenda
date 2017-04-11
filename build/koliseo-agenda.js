@@ -241,6 +241,8 @@ Object.defineProperty(exports, '__esModule', {
   value: true
 });
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -264,7 +266,7 @@ var AgendaDayTemplate = (function () {
     key: 'render',
     value: function render() {
       var model = this.model;
-      return this.model.isEmpty() ? '<h3>Nothing to see here</h3><p>There are no entries scheduled for this day.</p>' : '\n      <table class="ka-table">\n      <thead class="ka-head"><tr>' + this.renderColLabels() + '</tr></thead>\n      <tbody>' + this.renderBody() + '</tbody>\n      </table>\n      ';
+      return this.model.isEmpty() ? '<h3>Nothing to see here</h3><p>There are no entries scheduled for this day.</p>' : '\n      <table class="ka-table">\n      <thead class="ka-head"><tr>' + this.renderColLabels() + '</tr></thead>\n      <tbody class="ka-body">' + this.renderBody() + '</tbody>\n      </table>\n      ';
     }
   }, {
     key: 'renderColLabels',
@@ -286,7 +288,7 @@ var AgendaDayTemplate = (function () {
         var end = _ref.end;
 
         var row = _this.model.data[rowIndex];
-        return '\n          <tr class="ka-table-tr">\n          <th class="ka-table-th">' + start + '-' + end + '</th>\n          ' + _this.renderRow(row, rowIndex) + '\n          </tr>\n          ';
+        return '\n          <tr class="ka-table-tr">\n          <th class="ka-table-th">' + start + '<span class="ka-mobile-hidden">-' + end + '</span></th>\n          ' + _this.renderRow(row, rowIndex) + '\n          </tr>\n          ';
       }).join('');
     }
   }, {
@@ -303,7 +305,7 @@ var AgendaDayTemplate = (function () {
           if (colOffset > 0) {
             rowContent += '<td class="ka-table-td-empty" colSpan="' + colOffset + '"></td>';
           }
-          rowContent += this.renderCell(cell);
+          rowContent += this.renderCell(_extends({}, cell, { trackIndex: colIndex }));
         }
       }
       return rowContent;
@@ -338,9 +340,10 @@ var AgendaDayTemplate = (function () {
       var contents = _ref3.contents;
       var rowSpan = _ref3.rowSpan;
       var colSpan = _ref3.colSpan;
+      var trackIndex = _ref3.trackIndex;
 
       var type = contents && contents.type;
-      var $contents = type === 'TALK' ? this.renderTalk(contents) : type === 'BREAK' ? contents.title : type === 'EXTEND' ? 'Extended from <b>' + this.model.tracks.find(function (track) {
+      var $contents = type === 'TALK' ? this.renderTalk(_extends({}, contents, { trackIndex: trackIndex })) : type === 'BREAK' ? contents.title : type === 'EXTEND' ? 'Extended from <b>' + this.model.tracks.find(function (track) {
         return track.id == contents.trackId;
       }).name + '</b>' : 'Empty slot';
 
@@ -360,8 +363,13 @@ var AgendaDayTemplate = (function () {
       var feedback = _ref4.feedback;
       var videoUrl = _ref4.videoUrl;
       var slidesUrl = _ref4.slidesUrl;
+      var trackIndex = _ref4.trackIndex;
 
-      return '\n      ' + _LikeButtonUtils2['default'].renderButton(id) + '\n      <p>\n        <a href="#' + hash + '" data-id="' + id + '" data-hash="' + hash + '" class="ka-talk-title">' + title + '</a>\n      </p>\n      ' + (!videoUrl && !slidesUrl ? '' : '<p class="ka-links">\n        ' + (!slidesUrl ? '' : '<a href="' + slidesUrl + '" target="_blank" class="icon-slideshare" title="Slides"><span class="sr-only">Slides in new window of "' + title + '"</span></a>') + '\n        ' + (!videoUrl ? '' : '<a href="' + videoUrl + '" target="_blank" class="icon-youtube-play" title="Video"><span class="sr-only">Video in new window of "' + title + '"</span></a>') + '\n      </p>') + '\n      <div class="ka-feedback-footer">' + new _feedback.TalkFeedback(arguments[0]).renderFeedback() + '</div>\n      <p class="ka-author-brief">' + authors.map(function (a) {
+      var track = this.model.tracks[trackIndex];
+      var slot = track.slots.find(function (slot) {
+        return slot.contents.id == id;
+      });
+      return '\n      ' + _LikeButtonUtils2['default'].renderButton(id) + '\n      <p>\n        <a href="#' + hash + '" data-id="' + id + '" data-hash="' + hash + '" class="ka-talk-title">' + title + '</a>\n      </p>\n      ' + (!videoUrl && !slidesUrl ? '' : '<p class="ka-links">\n        ' + (!slidesUrl ? '' : '<a href="' + slidesUrl + '" target="_blank" class="icon-slideshare" title="Slides"><span class="sr-only">Slides in new window of "' + title + '"</span></a>') + '\n        ' + (!videoUrl ? '' : '<a href="' + videoUrl + '" target="_blank" class="icon-youtube-play" title="Video"><span class="sr-only">Video in new window of "' + title + '"</span></a>') + '\n      </p>') + '\n      <p class="ka-mobile-only">\n        <span class="ka-label ka-label-' + trackIndex + '">' + track.name + '</span>\n        <span class="ka-time">' + slot.start + ' - ' + slot.end + '</span>\n      </p>\n      <div class="ka-feedback-footer">' + new _feedback.TalkFeedback(arguments[0]).renderFeedback() + '</div>\n      <p class="ka-author-brief">' + authors.map(function (a) {
         return _this2.renderAuthor(a);
       }).join(', ') + '</p>\n      ';
     }
@@ -650,6 +658,13 @@ var AgendaView = (function () {
           this.selectDay(target.getAttribute('data-day-id'));
         } else if (classList.contains('ka-close') || classList.contains('ka-overlay')) {
           this.unselectTalk();
+        } else if (classList.contains('ka-table-th')) {
+          var parentClassList = target.parentElement.classList;
+          if (parentClassList.contains('ka-expanded')) {
+            parentClassList.remove('ka-expanded');
+          } else {
+            parentClassList.add('ka-expanded');
+          }
         }
       }
     }
@@ -1042,7 +1057,7 @@ var TalkDetailsPopup = (function () {
       talk.slidesUrl && links.push('<a href="' + talk.slidesUrl + '" target="_blank" class="icon-slideshare" title="Slides"><span class="sr-only">Slides in new window of "' + talk.title + '"</span></a>');
       talk.videoUrl && links.push('<a href="' + talk.videoUrl + '" target="_blank" class="icon-youtube-play" title="Video"><span class="sr-only">Video in new window of "' + talk.title + '"</span></a>');
       var linkContainer = !links.length ? '' : '<div class="ka-links ka-right">\n      ' + links.join('') + '\n    </div>';
-      var html = '\n      <div class="ka-talk-details-window">\n        <a class="ka-close" title="close"></a>\n        <div class="ka-talk-details-viewport">\n          <div class="ka-talk-details-inner">\n            <div class="ka-talk-details-contents">\n              <h2 class="ka-talk-details-title">' + linkContainer + ' ' + talk.title + ' ' + this.feedback.renderFeedback() + '</h2>\n              <div class="ka-talk-details-description">' + (0, _stringutils.formatMarkdown)(talk.description) + '</div>\n              ' + this.renderTags(talk.tags) + '\n              <div class="ka-feedback-entries"></div>\n            </div>\n            <ul class="ka-avatars">\n              ' + talk.authors.map(this.renderAuthor).join('') + '\n            </ul>\n          </div>\n        </div>\n      </div>\n    ';
+      var html = '\n      <div class="ka-talk-details-window">\n        <a class="ka-close" title="close"></a>\n        <div class="ka-talk-details-viewport">\n          <div class="ka-talk-details-inner">\n            <div class="ka-talk-details-contents">\n              <h2 class="ka-talk-details-title">' + linkContainer + ' ' + talk.title + ' ' + this.feedback.renderFeedback() + '</h2>\n              <div class="ka-talk-details-description">' + (0, _stringutils.formatMarkdown)(talk.description) + '</div>\n              ' + this.renderTags(talk.tags) + '\n              ' + this.renderAuthors('ka-medium-down') + '\n              <div class="ka-feedback-entries"></div>\n            </div>\n            ' + this.renderAuthors('ka-medium-up') + '\n          </div>\n        </div>\n      </div>\n    ';
       document.body.insertAdjacentHTML('beforeend', html);
       document.querySelector('.ka-overlay').classList.remove('ka-hidden');
       this.feedback.renderFeedbackEntries(document.querySelector('.ka-feedback-entries'));
@@ -1050,6 +1065,11 @@ var TalkDetailsPopup = (function () {
       var detailsContent = document.querySelector('.ka-talk-details-contents');
       _LikeButtonUtils2['default'].addUpdateListener(detailsContent);
       detailsContent.querySelector('.ka-like').onclick = _LikeButtonUtils2['default'].onClickListener;
+    }
+  }, {
+    key: 'renderAuthors',
+    value: function renderAuthors(className) {
+      return '\n      <ul class="ka-avatars ' + className + '">\n        ' + this.talk.authors.map(this.renderAuthor).join('') + '\n      </ul>\n    ';
     }
   }, {
     key: 'renderTags',

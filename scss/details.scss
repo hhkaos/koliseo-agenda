@@ -36,12 +36,13 @@
 .ka-talk-details-description {
 
 }
-.ka-talk-details-contents,
-.ka-avatars {
+.ka-talk-details-contents {
   padding: $td-padding * 2;
-  & > ul {
-    padding-left: 20px;
-  }
+}
+.ka-avatars {
+  margin-top: 20px;
+  padding: $td-padding 0 0 0;
+  border-bottom: 1px solid $gray-lighter;
 }
 .ka-author-description > ul {
   padding-left: 20px;
@@ -69,7 +70,17 @@ $close-width: 30px;
 
 }
 
+.ka-medium-up {
+  display: none;
+}
+
 @media #{$medium-up} {
+  .ka-medium-up {
+    display: block;
+  }
+  .ka-medium-down {
+    display: none !important;
+  }
   .ka-talk-details-window {
     max-width: 980px;
     max-height: 700px;
@@ -81,6 +92,9 @@ $close-width: 30px;
     border-top: 0;
     border-left: 1px solid $gray-lighter;
     width: 30%;
+    padding: 0;
+    padding-left: $td-padding;
+    margin-top: 0;
   }
   .ka-avatars, .ka-talk-details-contents {
     display: table-cell;
