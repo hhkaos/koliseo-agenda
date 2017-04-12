@@ -529,7 +529,7 @@ var AgendaView = (function () {
   }, {
     key: 'renderHint',
     value: function renderHint() {
-      return '\n      <div class="ka-hint">\n        <a href="http://koliseo.com" target="_blank" class="ka-logo"></a>\n        <p class="ka-hint-p">Using a keyboard? Try using the cursors to move between talks</p>\n        <p class="ka-hint-p small">Handcrafted with ♥ at 30,000 feet of altitude, some point between Madrid and Berlin</p>\n      </div>\n    ';
+      return '\n      <div class="ka-hint">\n        <a href="http://koliseo.com" target="_blank" class="ka-logo"></a>\n        <p class="ka-hint-p small">Handcrafted with ♥ at 30,000 feet of altitude, some point between Madrid and Berlin</p>\n      </div>\n    ';
     }
 
     // Select a day from the agenda
