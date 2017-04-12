@@ -1,0 +1,76 @@
+.ka-overlay {
+  background: transparent;
+  background: rgba(0,0,0, .2);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 1;
+  transition: opacity .5s cubic-bezier(0.23, 1, 0.32, 1);
+}
+.ka-hidden {
+  opacity: 0;
+}
+.ka-dialog {
+  padding: 30px 4px 4px;
+  z-index: 100;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  box-shadow: 0 0 50px rgba(0, 0, 0, .5);
+  transform: translate(-50%, -50%);
+  background: $white;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.ka-dialog-title,
+.ka-dialog-description {
+
+}
+.ka-dialog-contents,
+.ka-avatars {
+  padding: $td-padding * 2;
+  & > ul {
+    padding-left: 20px;
+  }
+}
+.ka-author-description > ul {
+  padding-left: 20px;
+  list-style-type: disc;
+}
+$close-width: 60px;
+.ka-close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: $close-width;
+  height: $close-width;
+  cursor: pointer;
+  z-index: 2;
+  color: #888;
+  transition: color .5s ease-out;
+
+  &:before {
+    content: '×';
+    display: block;
+    font-size: 40px;
+    padding: 10px 6px;
+    text-align: center;
+    line-height: 1;
+
+  }
+  &:hover, &:active {
+    color: #000;
+  }
+
+}
+
+@media #{$medium-up} {
+  .ka-dialog {
+    max-width: 980px;
+    max-height: 700px;
+  }
+}
