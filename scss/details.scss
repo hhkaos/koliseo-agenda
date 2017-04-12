@@ -32,9 +32,10 @@
 .ka-hidden {
   display: none;
 }
-.ka-talk-details-title,
-.ka-talk-details-description {
-
+.ka-talk-details-title {
+  .ka-like-container {
+    padding-left: 5px;
+  }
 }
 .ka-talk-details-contents {
   padding: $td-padding * 2;

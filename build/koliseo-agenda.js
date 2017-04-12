@@ -953,10 +953,7 @@ var _KoliseoAPI = require('./KoliseoAPI');
 var _KoliseoAPI2 = _interopRequireDefault(_KoliseoAPI);
 
 var getConfig = function getConfig(talkId) {
-  return !_KoliseoAPI2['default'].currentUser ? {
-    state: 'hidden',
-    text: ''
-  } : _likesCollection2['default'].isSelected(talkId) ? {
+  return _likesCollection2['default'].isSelected(talkId) ? {
     state: 'selected',
     text: "I am planning to attend this talk"
   } : {
@@ -969,7 +966,7 @@ var LikeButtonUtils = {
 
   renderButton: function renderButton(talkId) {
     var config = getConfig(talkId);
-    return '\n      <span class="ka-like-container">\n        <a class="ka-like icon-heart"\n            title="' + config.text + '"\n            data-talk="' + talkId + '"\n            data-state="' + config.state + '">\n        </a>\n      </span>\n    ';
+    return !_KoliseoAPI2['default'].isOAuthConfigured() ? '' : '\n      <span class="ka-like-container">\n        <a class="ka-like icon-heart"\n            title="' + config.text + '"\n            data-talk="' + talkId + '"\n            data-state="' + config.state + '">\n        </a>\n      </span>\n    ';
   },
 
   onClickListener: function onClickListener(e) {
@@ -977,11 +974,15 @@ var LikeButtonUtils = {
     var target = e.target;
     // assert it is a like button
     if (target.classList.contains('ka-like')) {
-      var talk = +target.dataset.talk;
-      if (!_likesCollection2['default'].isSelected(talk)) {
-        _KoliseoAPI2['default'].addLike(talk);
+      if (_KoliseoAPI2['default'].currentUser) {
+        var talk = +target.dataset.talk;
+        if (!_likesCollection2['default'].isSelected(talk)) {
+          _KoliseoAPI2['default'].addLike(talk);
+        } else {
+          _KoliseoAPI2['default'].removeLike(talk);
+        }
       } else {
-        _KoliseoAPI2['default'].removeLike(talk);
+        _KoliseoAPI2['default'].login();
       }
     }
   },
@@ -1064,7 +1065,10 @@ var TalkDetailsPopup = (function () {
 
       var detailsContent = document.querySelector('.ka-talk-details-contents');
       _LikeButtonUtils2['default'].addUpdateListener(detailsContent);
-      detailsContent.querySelector('.ka-like').onclick = _LikeButtonUtils2['default'].onClickListener;
+      var likeButton = detailsContent.querySelector('.ka-like');
+      if (likeButton) {
+        likeButton.onclick = _LikeButtonUtils2['default'].onClickListener;
+      }
     }
   }, {
     key: 'renderAuthors',
