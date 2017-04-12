@@ -3,7 +3,10 @@ const del = require('del');
 const browserSync = require('browser-sync');
 const gulpLoadPlugins = require('gulp-load-plugins');
 const browserify = require("browserify");
-const babelify = require("babelify");
+const babelify = require("babelify").configure({
+  presets: ["es2015"],
+  plugins: [ "transform-object-rest-spread" ]
+});
 const mmq = require('gulp-merge-media-queries');
 const source = require('vinyl-source-stream')
 const buffer = require('vinyl-buffer')
