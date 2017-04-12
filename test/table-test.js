@@ -38,29 +38,4 @@ describe('AgendaDayTableModel', () => {
     })
   });
 
-  describe('findTalk', _ => {
-    const UP = { rowDelta: -1, colDelta: 0 };
-    const DOWN = { rowDelta: 1, colDelta: 0 };
-    const LEFT = { rowDelta: 0, colDelta: -1 };
-    const RIGHT = { rowDelta: 0, colDelta: 1 };
-
-    it('should find the next vertical talk, gaps or not', function() {
-      assert.equal(112, model.findTalk({ row: 0, col: 0 }, DOWN ).id);
-      assert.equal(null, model.findTalk({ row: 1, col: 0 }, DOWN ));
-    })
-
-    it('should find the next horizontal talk, gaps or not', function() {
-      assert.equal(121, model.findTalk({ row: 0, col: 0 }, RIGHT ).id);
-      assert.equal(121, model.findTalk({ row: 1, col: 0 }, RIGHT ).id);
-    })
-
-    it('should respect boundaries', function() {
-      assert.equal(null, model.findTalk({ row: 3, col: 0 }, DOWN ));
-      assert.equal(null, model.findTalk({ row: 0, col: 0 }, UP ));
-      assert.equal(null, model.findTalk({ row: 0, col: 0 }, LEFT ));
-      assert.equal(null, model.findTalk({ row: 0, col: 1 }, RIGHT ));
-    })
-
-  })
-
 });
