@@ -10,22 +10,29 @@ export default {
           "id": 111,
           "start": "09:00",
           "end": "10:00",
-          "type": "TALK",
-          "contents": {"id":1,"title":"Title for talk 1","description":"Description talk 1","creationDate":1435663557878,"authors":[{"id":31404001,"uuid":"icoloma","name":"Nacho Coloma","avatar":"//storage.googleapis.com/k-avatars/31404001-caa3596b","description":"Description speaker 1."}],"comments":"Comments 1","tags":{"Type of Proposal":["Workshop"],"Language of the talk/workshop":["Spanish"],"Technology":["Other"],"Language ":["JAVA and JVM languages"],"Level ":["Intermediate"]},"totalVotes":3}
+          "contents": { 
+            "id": 1, 
+            "type": "TALK", 
+            "title":"Title for talk 1","description":"Description talk 1","creationDate":1435663557878,"authors":[{"id":31404001,"uuid":"icoloma","name":"Nacho Coloma","avatar":"//storage.googleapis.com/k-avatars/31404001-caa3596b","description":"Description speaker 1."}],"comments":"Comments 1","tags":{"Type of Proposal":["Workshop"],"Language of the talk/workshop":["Spanish"],"Technology":["Other"],"Language ":["JAVA and JVM languages"],"Level ":["Intermediate"]},"totalVotes":3
+          }
         },
         {
           "id": 112,
           "start": "10:00",
           "end": "11:00",
-          "type": "TALK",
-          "contents": {"id":2,"title":"Title for talk 2","description":"Description talk 2","creationDate":1435663557878,"authors":[{"id":31404001,"uuid":"icoloma","name":"Nacho Coloma","avatar":"//storage.googleapis.com/k-avatars/31404001-caa3596b","description":"Description speaker 1."}],"comments":"Comments 1","tags":{"Type of Proposal":["Workshop"],"Language of the talk/workshop":["Spanish"],"Technology":["Other"],"Language ":["JAVA and JVM languages"],"Level ":["Intermediate"]},"totalVotes":3}
+          "contents": {
+            "id":2,
+            "type": "TALK",
+            "title":"Title for talk 2",
+            "description":"Description talk 2","creationDate":1435663557878,"authors":[{"id":31404001,"uuid":"icoloma","name":"Nacho Coloma","avatar":"//storage.googleapis.com/k-avatars/31404001-caa3596b","description":"Description speaker 1."}],"comments":"Comments 1","tags":{"Type of Proposal":["Workshop"],"Language of the talk/workshop":["Spanish"],"Technology":["Other"],"Language ":["JAVA and JVM languages"],"Level ":["Intermediate"]},"totalVotes":3
+          }
         },
         {
           "id": 113,
           "start": "11:00",
           "end": "11:15",
-          "type": "BREAK",
           "contents": {
+            "type": "BREAK",
             "title": "Tea time like it's 1999"
           }
         }
@@ -40,8 +47,8 @@ export default {
           "id": 121,
           "start": "09:00",
           "end": "11:00",
-          "type": "TALK",
           "contents": {
+            "type": "TALK",
             "id": 243,
             "title": "barbaz"
           }
@@ -50,9 +57,9 @@ export default {
           "id": 122,
           "start": "11:00",
           "end": "11:15",
-          "type": "BREAK",
           "contents": {
-            "title": "Tea time like it's 1999"
+            "type": "EXTEND",
+            "trackId": 11
           }
         }
 
