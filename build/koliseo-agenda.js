@@ -1,32 +1,26 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
 /**
 
   Bidimensional array of talks. Represents the contents of an agenda for a day.
 
 */
-'use strict';
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-var _lodashCollectionFind = require('lodash/collection/find');
-
-var _lodashCollectionFind2 = _interopRequireDefault(_lodashCollectionFind);
 
 // Data for a cell. Can be a talk or information about a break
-
 var TalkTableCell = function TalkTableCell(_ref) {
-  var id = _ref.id;
-  var start = _ref.start;
-  var end = _ref.end;
-  var contents = _ref.contents;
+  var id = _ref.id,
+      start = _ref.start,
+      end = _ref.end,
+      contents = _ref.contents;
 
   _classCallCheck(this, TalkTableCell);
 
@@ -53,13 +47,13 @@ var TalkTableCell = function TalkTableCell(_ref) {
   this.contents = contents;
 };
 
-var AgendaDayTableModel = (function () {
+var AgendaDayTableModel = function () {
   function AgendaDayTableModel(_ref2) {
     var _this = this;
 
-    var id = _ref2.id;
-    var name = _ref2.name;
-    var tracks = _ref2.tracks;
+    var id = _ref2.id,
+        name = _ref2.name,
+        tracks = _ref2.tracks;
 
     _classCallCheck(this, AgendaDayTableModel);
 
@@ -89,8 +83,8 @@ var AgendaDayTableModel = (function () {
       var slots = _ref3.slots;
 
       slots.forEach(function (_ref4) {
-        var start = _ref4.start;
-        var end = _ref4.end;
+        var start = _ref4.start,
+            end = _ref4.end;
 
         addRowLabel(start);
         addRowLabel(end);
@@ -116,9 +110,9 @@ var AgendaDayTableModel = (function () {
 
     // transform data from columns into rows, including rowspans
     tracks.forEach(function (_ref5, colIndex) {
-      var id = _ref5.id;
-      var name = _ref5.name;
-      var slots = _ref5.slots;
+      var id = _ref5.id,
+          name = _ref5.name,
+          slots = _ref5.slots;
 
       colLabels.push(name);
       slots.forEach(function (slot) {
@@ -155,10 +149,16 @@ var AgendaDayTableModel = (function () {
   // label.start
   // label.end
 
+
   _createClass(AgendaDayTableModel, [{
     key: 'getRowLabelIndex',
-    value: function getRowLabelIndex(label) {
-      return this.rowLabels.indexOf((0, _lodashCollectionFind2['default'])(this.rowLabels, label));
+    value: function getRowLabelIndex(_ref6) {
+      var start = _ref6.start,
+          end = _ref6.end;
+
+      return this.rowLabels.indexOf(this.rowLabels.find(function (label) {
+        return (!start || label.start == start) && (!end || label.end == end);
+      }));
     }
   }, {
     key: 'getCoords',
@@ -181,79 +181,42 @@ var AgendaDayTableModel = (function () {
     value: function isEmpty() {
       return this.colLabels.length === 0;
     }
-
-    // find the first talk starting at row, col and moving in rowDelta, colDelta direction
-    // ignores breaks and gaps in the calendar
-  }, {
-    key: 'findTalk',
-    value: function findTalk(_ref6, _ref7) {
-      var row = _ref6.row;
-      var col = _ref6.col;
-      var rowDelta = _ref7.rowDelta;
-      var colDelta = _ref7.colDelta;
-
-      var newRowIndex = row + rowDelta;
-      var newColIndex = col + colDelta;
-
-      if (newColIndex > -1 && newRowIndex > -1) {
-
-        if (colDelta) {
-          var _row = this.data[newRowIndex];
-          var cell = _row && _row[newColIndex];
-          if (cell && cell.type == 'TALK') {
-            return cell;
-          } else {
-            // there is nothing on this cell. Search this new column up or down
-            return this.findTalk({ row: newRowIndex, col: newColIndex }, { rowDelta: 1, colDelta: 0 }) || this.findTalk({ row: newRowIndex, col: newColIndex }, { rowDelta: -1, colDelta: 0 });
-          }
-        }
-
-        if (rowDelta) {
-          while (newRowIndex >= 0 && newRowIndex < this.data.length) {
-            var _row2 = this.data[newRowIndex];
-            var cell = _row2 && _row2[newColIndex];
-            if (cell && cell.type == 'TALK') {
-              return cell;
-            }
-            newRowIndex += rowDelta;
-          }
-        }
-      }
-      return null;
-    }
   }]);
 
   return AgendaDayTableModel;
-})();
+}();
 
 exports.AgendaDayTableModel = AgendaDayTableModel;
 
-},{"lodash/collection/find":14}],2:[function(require,module,exports){
-/**
-
-  Render a day table of talks as HTML
-
-*/
-
+},{}],2:[function(require,module,exports){
 'use strict';
 
-Object.defineProperty(exports, '__esModule', {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.AgendaDayTemplate = undefined;
 
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       Render a day table of talks as HTML
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     */
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+var _TalkFeedback = require('./TalkFeedback');
 
-var _feedback = require('./feedback');
+var _TalkFeedback2 = _interopRequireDefault(_TalkFeedback);
 
 var _LikeButtonUtils = require('./LikeButtonUtils');
 
 var _LikeButtonUtils2 = _interopRequireDefault(_LikeButtonUtils);
 
-var AgendaDayTemplate = (function () {
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var AgendaDayTemplate = function () {
   function AgendaDayTemplate(model) {
     _classCallCheck(this, AgendaDayTemplate);
 
@@ -264,7 +227,7 @@ var AgendaDayTemplate = (function () {
     key: 'render',
     value: function render() {
       var model = this.model;
-      return this.model.isEmpty() ? '<h3>Nothing to see here</h3><p>There are no entries scheduled for this day.</p>' : '\n      <table class="ka-table">\n      <thead class="ka-head"><tr>' + this.renderColLabels() + '</tr></thead>\n      <tbody>' + this.renderBody() + '</tbody>\n      </table>\n      ';
+      return this.model.isEmpty() ? '<h3>Nothing to see here</h3><p>There are no entries scheduled for this day.</p>' : '\n      <table class="ka-table">\n      <thead class="ka-head"><tr>' + this.renderColLabels() + '</tr></thead>\n      <tbody class="ka-body">' + this.renderBody() + '</tbody>\n      </table>\n      ';
     }
   }, {
     key: 'renderColLabels',
@@ -282,11 +245,11 @@ var AgendaDayTemplate = (function () {
 
       var rowLabels = this.model.rowLabels;
       return rowLabels.map(function (_ref, rowIndex) {
-        var start = _ref.start;
-        var end = _ref.end;
+        var start = _ref.start,
+            end = _ref.end;
 
         var row = _this.model.data[rowIndex];
-        return '\n          <tr class="ka-table-tr">\n          <th class="ka-table-th">' + start + '-' + end + '</th>\n          ' + _this.renderRow(row, rowIndex) + '\n          </tr>\n          ';
+        return '\n          <tr class="ka-table-tr">\n          <th class="ka-table-th">' + start + '<span class="ka-mobile-hidden">-' + end + '</span></th>\n          ' + _this.renderRow(row, rowIndex) + '\n          </tr>\n          ';
       }).join('');
     }
   }, {
@@ -303,7 +266,7 @@ var AgendaDayTemplate = (function () {
           if (colOffset > 0) {
             rowContent += '<td class="ka-table-td-empty" colSpan="' + colOffset + '"></td>';
           }
-          rowContent += this.renderCell(cell);
+          rowContent += this.renderCell(_extends({}, cell, { trackIndex: colIndex }));
         }
       }
       return rowContent;
@@ -311,8 +274,8 @@ var AgendaDayTemplate = (function () {
   }, {
     key: 'calculateColOffset',
     value: function calculateColOffset(_ref2) {
-      var rowIndex = _ref2.rowIndex;
-      var colIndex = _ref2.colIndex;
+      var rowIndex = _ref2.rowIndex,
+          colIndex = _ref2.colIndex;
 
       var offset = colIndex;
       var maxOffset = colIndex;
@@ -333,14 +296,15 @@ var AgendaDayTemplate = (function () {
   }, {
     key: 'renderCell',
     value: function renderCell(_ref3) {
-      var start = _ref3.start;
-      var end = _ref3.end;
-      var contents = _ref3.contents;
-      var rowSpan = _ref3.rowSpan;
-      var colSpan = _ref3.colSpan;
+      var start = _ref3.start,
+          end = _ref3.end,
+          contents = _ref3.contents,
+          rowSpan = _ref3.rowSpan,
+          colSpan = _ref3.colSpan,
+          trackIndex = _ref3.trackIndex;
 
       var type = contents && contents.type;
-      var $contents = type === 'TALK' ? this.renderTalk(contents) : type === 'BREAK' ? contents.title : type === 'EXTEND' ? 'Extended from <b>' + this.model.tracks.find(function (track) {
+      var $contents = type === 'TALK' ? this.renderTalk(_extends({}, contents, { trackIndex: trackIndex })) : type === 'BREAK' ? contents.title : type === 'EXTEND' ? 'Extended from <b>' + this.model.tracks.find(function (track) {
         return track.id == contents.trackId;
       }).name + '</b>' : 'Empty slot';
 
@@ -351,52 +315,54 @@ var AgendaDayTemplate = (function () {
     value: function renderTalk(_ref4) {
       var _this2 = this;
 
-      var id = _ref4.id;
-      var hash = _ref4.hash;
-      var title = _ref4.title;
-      var description = _ref4.description;
-      var authors = _ref4.authors;
-      var tags = _ref4.tags;
-      var feedback = _ref4.feedback;
-      var videoUrl = _ref4.videoUrl;
-      var slidesUrl = _ref4.slidesUrl;
+      var id = _ref4.id,
+          hash = _ref4.hash,
+          title = _ref4.title,
+          description = _ref4.description,
+          authors = _ref4.authors,
+          tags = _ref4.tags,
+          feedback = _ref4.feedback,
+          videoUrl = _ref4.videoUrl,
+          slidesUrl = _ref4.slidesUrl,
+          trackIndex = _ref4.trackIndex;
 
-      return '\n      ' + _LikeButtonUtils2['default'].renderButton(id) + '\n      <p>\n        <a href="#' + hash + '" data-id="' + id + '" data-hash="' + hash + '" class="ka-talk-title">' + title + '</a>\n      </p>\n      ' + (!videoUrl && !slidesUrl ? '' : '<p class="ka-links">\n        ' + (!slidesUrl ? '' : '<a href="' + slidesUrl + '" target="_blank" class="icon-slideshare" title="Slides"><span class="sr-only">Slides in new window of "' + title + '"</span></a>') + '\n        ' + (!videoUrl ? '' : '<a href="' + videoUrl + '" target="_blank" class="icon-youtube-play" title="Video"><span class="sr-only">Video in new window of "' + title + '"</span></a>') + '\n      </p>') + '\n      <div class="ka-feedback-footer">' + new _feedback.TalkFeedback(arguments[0]).renderFeedback() + '</div>\n      <p class="ka-author-brief">' + authors.map(function (a) {
+      var track = this.model.tracks[trackIndex];
+      var slot = track.slots.find(function (slot) {
+        return slot.contents.id == id;
+      });
+      return '\n      ' + _LikeButtonUtils2.default.renderButton(id) + '\n      <p>\n        <a href="#' + hash + '" data-id="' + id + '" data-hash="' + hash + '" class="ka-talk-title">' + title + '</a>\n      </p>\n      ' + (!videoUrl && !slidesUrl ? '' : '<p class="ka-links">\n        ' + (!slidesUrl ? '' : '<a href="' + slidesUrl + '" target="_blank" class="icon-slideshare" title="Slides"><span class="sr-only">Slides in new window of "' + title + '"</span></a>') + '\n        ' + (!videoUrl ? '' : '<a href="' + videoUrl + '" target="_blank" class="icon-youtube-play" title="Video"><span class="sr-only">Video in new window of "' + title + '"</span></a>') + '\n      </p>') + '\n      <p class="ka-mobile-only">\n        <span class="ka-label ka-label-' + trackIndex + '">' + track.name + '</span>\n        <span class="ka-time">' + slot.start + ' - ' + slot.end + '</span>\n      </p>\n      <div class="ka-feedback-footer">' + new _TalkFeedback2.default(arguments[0]).renderFeedback() + '</div>\n      <p class="ka-author-brief">' + authors.map(function (a) {
         return _this2.renderAuthor(a);
       }).join(', ') + '</p>\n      ';
     }
   }, {
     key: 'renderAuthor',
     value: function renderAuthor(_ref5) {
-      var id = _ref5.id;
-      var uuid = _ref5.uuid;
-      var name = _ref5.name;
-      var avatar = _ref5.avatar;
-      var description = _ref5.description;
+      var id = _ref5.id,
+          uuid = _ref5.uuid,
+          name = _ref5.name,
+          avatar = _ref5.avatar,
+          description = _ref5.description;
 
       return '' + name;
     }
   }]);
 
   return AgendaDayTemplate;
-})();
+}();
 
 ;
 
 exports.AgendaDayTemplate = AgendaDayTemplate;
 
-},{"./LikeButtonUtils":5,"./feedback":7}],3:[function(require,module,exports){
+},{"./LikeButtonUtils":5,"./TalkFeedback":7}],3:[function(require,module,exports){
 'use strict';
 
-Object.defineProperty(exports, '__esModule', {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.AgendaView = undefined;
 
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _AgendaDayTemplate = require('./AgendaDayTemplate');
 
@@ -404,7 +370,9 @@ var _AgendaDayTableModel = require('./AgendaDayTableModel');
 
 var _util = require('./util');
 
-var _TalkDetailsPopup = require('./TalkDetailsPopup');
+var _TalkDialog = require('./TalkDialog');
+
+var _TalkDialog2 = _interopRequireDefault(_TalkDialog);
 
 var _KoliseoAPI = require('./KoliseoAPI');
 
@@ -414,22 +382,23 @@ var _LikeButtonUtils = require('./LikeButtonUtils');
 
 var _LikeButtonUtils2 = _interopRequireDefault(_LikeButtonUtils);
 
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
 /**
 
   Displays an entire agenda, including multiple days
 
 */
 
-var AgendaView = (function () {
-  function AgendaView(_ref) // contents of the agenda as JSON
-  // DOM node to render everything into
-  {
+var AgendaView = function () {
+  function AgendaView(_ref) {
     var _this = this;
 
-    var c4p = _ref.c4p;
-    var // JSON for the C4P
-    agenda = _ref.agenda;
-    var element = _ref.element;
+    var c4p = _ref.c4p,
+        agenda = _ref.agenda,
+        element = _ref.element;
 
     _classCallCheck(this, AgendaView);
 
@@ -466,11 +435,11 @@ var AgendaView = (function () {
     // the DOM element to modify
     this.element = element;
 
-    if (_KoliseoAPI2['default'].isOAuthConfigured()) {
-      _KoliseoAPI2['default'].on('login', this.renderUserInfo);
-      _KoliseoAPI2['default'].on('logout', this.renderUserInfo);
-      this.element.onclick = _LikeButtonUtils2['default'].onClickListener;
-      _LikeButtonUtils2['default'].addUpdateListener(this.element);
+    if (_KoliseoAPI2.default.isOAuthConfigured()) {
+      _KoliseoAPI2.default.on('login', this.renderUserInfo);
+      _KoliseoAPI2.default.on('logout', this.renderUserInfo);
+      this.element.onclick = _LikeButtonUtils2.default.onClickListener;
+      _LikeButtonUtils2.default.addUpdateListener(this.element);
     }
   }
 
@@ -489,7 +458,7 @@ var AgendaView = (function () {
       var talk = this.selectTalk(talkHash);
       this.scrollToTalk(talk);
 
-      if (_KoliseoAPI2['default'].isOAuthConfigured()) {
+      if (_KoliseoAPI2.default.isOAuthConfigured()) {
         this.renderUserInfo();
       }
     }
@@ -498,8 +467,8 @@ var AgendaView = (function () {
     value: function renderDayTabs() {
 
       var tabLinks = this.days.map(function (_ref2) {
-        var id = _ref2.id;
-        var name = _ref2.name;
+        var id = _ref2.id,
+            name = _ref2.name;
 
         return '\n        <li class="ka-tab-li">\n        <a class="ka-tab-a" data-day-id="' + id + '" href="#' + id + '">' + name + '</a>\n        </li>\n      ';
       }).join('');
@@ -510,22 +479,23 @@ var AgendaView = (function () {
     key: 'renderUserInfo',
     value: function renderUserInfo() {
       var container = document.getElementById('ka-user-info');
-      container.innerHTML = !_KoliseoAPI2['default'].currentUser ? '<button class="ka-button">Sign in</button>' : '<button class="ka-button ka-button-secondary">Sign out</button>';
-      container.onclick = !_KoliseoAPI2['default'].currentUser ? _KoliseoAPI2['default'].login : _KoliseoAPI2['default'].logout;
+      container.innerHTML = !_KoliseoAPI2.default.currentUser ? '<button class="ka-button">Sign in</button>' : '<button class="ka-button ka-button-secondary">Sign out</button>';
+      container.onclick = !_KoliseoAPI2.default.currentUser ? _KoliseoAPI2.default.login : _KoliseoAPI2.default.logout;
     }
   }, {
     key: 'renderWorkspace',
     value: function renderWorkspace() {
-      return '<div class="kworkspace"></div><div class="ka-overlay ka-hidden"></div>';
+      return '<div class="kworkspace"></div>';
     }
   }, {
     key: 'renderHint',
     value: function renderHint() {
-      return '\n      <div class="ka-hint">\n        <a href="http://koliseo.com" target="_blank" class="ka-logo"></a>\n        <p class="ka-hint-p">Using a keyboard? Try using the cursors to move between talks</p>\n        <p class="ka-hint-p small">Handcrafted with ♥ at 30,000 feet of altitude, some point between Madrid and Berlin</p>\n      </div>\n    ';
+      return '\n      <div class="ka-hint">\n        <a href="http://koliseo.com" target="_blank" class="ka-logo"></a>\n        <p class="ka-hint-p small">Handcrafted with \u2665 at 30,000 feet of altitude, some point between Madrid and Berlin</p>\n      </div>\n    ';
     }
 
     // Select a day from the agenda
     // dayId the identifier of this day. May include a hash
+
   }, {
     key: 'selectDay',
     value: function selectDay(dayId) {
@@ -556,6 +526,7 @@ var AgendaView = (function () {
 
     // render a talk as modal window, by hash
     // returns the talk if found, otherwise undefined
+
   }, {
     key: 'selectTalk',
     value: function selectTalk(hash, fadeInClass) {
@@ -575,7 +546,7 @@ var AgendaView = (function () {
         this.selectedTalkCoords = tableModel.getCoords(talk.id);
 
         //$cellContent.classList.add('selected')
-        new _TalkDetailsPopup.TalkDetailsPopup({
+        this.dialog = new _TalkDialog2.default({
           talk: talk.contents,
           tagColors: this.tagColors
         }).render();
@@ -590,6 +561,7 @@ var AgendaView = (function () {
     }
 
     // calculate the TR to insert a new row after. It depends on the value of rowspan
+
   }, {
     key: 'rowForDetails',
     value: function rowForDetails($td) {
@@ -602,6 +574,7 @@ var AgendaView = (function () {
     }
 
     // add the status to the location hash
+
   }, {
     key: 'pushState',
     value: function pushState(title, hash) {
@@ -612,16 +585,15 @@ var AgendaView = (function () {
   }, {
     key: 'unselectTalk',
     value: function unselectTalk() {
+      if (this.dialog) {
+        this.dialog.hide();
+        this.dialog = undefined;
+      }
       this.selectedTalkHash = undefined;
       this.selectedTalkCoords = undefined;
       var $selected = document.querySelector('.ka-table-td.selected');
       $selected && $selected.classList.remove('selected');
-      var $details = document.querySelector('.ka-talk-details-window');
-      if ($details) {
-        $details.parentNode.removeChild($details);
-        this.pushState(this.models[this.selectedDayId].name, this.selectedDayId);
-      }
-      document.querySelector('.ka-overlay').classList.add('ka-hidden');
+      this.selectedDayId && this.pushState(this.models[this.selectedDayId].name, this.selectedDayId);
     }
   }, {
     key: 'scrollToTalk',
@@ -650,6 +622,13 @@ var AgendaView = (function () {
           this.selectDay(target.getAttribute('data-day-id'));
         } else if (classList.contains('ka-close') || classList.contains('ka-overlay')) {
           this.unselectTalk();
+        } else if (classList.contains('ka-table-th')) {
+          var parentClassList = target.parentElement.classList;
+          if (parentClassList.contains('ka-expanded')) {
+            parentClassList.remove('ka-expanded');
+          } else {
+            parentClassList.add('ka-expanded');
+          }
         }
       }
     }
@@ -666,56 +645,33 @@ var AgendaView = (function () {
         if (keyCode == 27) {
           this.onClose();
         }
-        /*
-        const rowDelta =
-          keyCode == 38? -1 :
-          keyCode == 40? 1 :
-          0;
-        const colDelta =
-          keyCode == 37? -1 :
-          keyCode == 39? 1 :
-          0;
-        if (rowDelta || colDelta) {
-          const fadeInClass =
-            rowDelta == -1? 'up' :
-            rowDelta == 1? 'down' :
-            colDelta == -1? 'left' :
-            colDelta == 1? 'right' :
-            '';
-          const talk = this.getSelectedTableModel().findTalk(this.selectedTalkCoords, { rowDelta, colDelta});
-          if (talk) {
-            this.selectTalk(talk.contents.hash, fadeInClass);
-            event.preventDefault();
-          }
-        }
-        */
       }
     }
   }]);
 
   return AgendaView;
-})();
+}();
 
 ;
 
 exports.AgendaView = AgendaView;
 
-},{"./AgendaDayTableModel":1,"./AgendaDayTemplate":2,"./KoliseoAPI":4,"./LikeButtonUtils":5,"./TalkDetailsPopup":6,"./util":11}],4:[function(require,module,exports){
+},{"./AgendaDayTableModel":1,"./AgendaDayTemplate":2,"./KoliseoAPI":4,"./LikeButtonUtils":5,"./TalkDialog":6,"./util":11}],4:[function(require,module,exports){
 'use strict';
 
-Object.defineProperty(exports, '__esModule', {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _hellojs = require('hellojs');
 
 var _hellojs2 = _interopRequireDefault(_hellojs);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var HOSTNAME = location.hostname == 'localhost' ? 'http://localhost:8888/' : 'https://www.koliseo.com/';
 
@@ -727,50 +683,50 @@ var defaultErrorHandler = function defaultErrorHandler(e, successCallback) {
     }
     // usually this is because of an invalid token or an expired token
     if ("access_denied" === e.error.code) {
-      _hellojs2['default'].logout();
+      _hellojs2.default.logout();
       return false;
     }
   }
   return e;
 };
 
-var KoliseoAPI = (function () {
+var KoliseoAPI = function () {
   function KoliseoAPI() {
     var _this = this;
 
     _classCallCheck(this, KoliseoAPI);
 
-    _hellojs2['default'].on('auth.login', function (auth) {
-      (0, _hellojs2['default'])(auth.network).api('me').then(function (user) {
+    _hellojs2.default.on('auth.login', function (auth) {
+      (0, _hellojs2.default)(auth.network).api('me').then(function (user) {
         _this.currentUser = user;
-        _hellojs2['default'].emit('login');
+        _hellojs2.default.emit('login');
       }, defaultErrorHandler);
     });
 
-    _hellojs2['default'].on('auth.logout', function (r) {
+    _hellojs2.default.on('auth.logout', function (r) {
       _this.currentUser = undefined;
-      _hellojs2['default'].emit('logout');
+      _hellojs2.default.emit('logout');
     });
   }
 
   _createClass(KoliseoAPI, [{
     key: 'init',
     value: function init(_ref) {
-      var _ref$baseUrl = _ref.baseUrl;
-      var baseUrl = _ref$baseUrl === undefined ? HOSTNAME : _ref$baseUrl;
-      var c4pUrl = _ref.c4pUrl;
-      var oauthClientId = _ref.oauthClientId;
+      var _ref$baseUrl = _ref.baseUrl,
+          baseUrl = _ref$baseUrl === undefined ? HOSTNAME : _ref$baseUrl,
+          c4pUrl = _ref.c4pUrl,
+          oauthClientId = _ref.oauthClientId;
 
       this.c4pUrl = c4pUrl;
       this.oauthClientId = oauthClientId;
 
       if (oauthClientId) {
-        _hellojs2['default'].init({ koliseo: oauthClientId });
+        _hellojs2.default.init({ koliseo: oauthClientId });
       } else {
         console.warn('Some features have been disabled because oauthClientId has not been declared');
       }
 
-      _hellojs2['default'].init({
+      _hellojs2.default.init({
 
         koliseo: {
 
@@ -829,17 +785,17 @@ var KoliseoAPI = (function () {
   }, {
     key: 'on',
     value: function on(eventName, callback) {
-      _hellojs2['default'].on(eventName, callback);
+      _hellojs2.default.on(eventName, callback);
     }
   }, {
     key: 'off',
     value: function off(eventName, callback) {
-      _hellojs2['default'].off(eventName, callback);
+      _hellojs2.default.off(eventName, callback);
     }
   }, {
     key: 'emit',
     value: function emit(eventName, value) {
-      _hellojs2['default'].emit(eventName, value);
+      _hellojs2.default.emit(eventName, value);
     }
   }, {
     key: 'isOAuthConfigured',
@@ -850,22 +806,22 @@ var KoliseoAPI = (function () {
     key: 'login',
     value: function login(e) {
       e && e.preventDefault();
-      _hellojs2['default'].login();
+      _hellojs2.default.login();
     }
   }, {
     key: 'logout',
     value: function logout(e) {
       e && e.preventDefault();
-      _hellojs2['default'].logout();
+      _hellojs2.default.logout();
     }
   }, {
     key: 'sendFeedback',
     value: function sendFeedback(_ref2, callback) {
-      var id = _ref2.id;
-      var rating = _ref2.rating;
-      var comment = _ref2.comment;
+      var id = _ref2.id,
+          rating = _ref2.rating,
+          comment = _ref2.comment;
 
-      _hellojs2['default'].api(this.c4pUrl + '/proposals/@{id}/feedback', 'post', { id: id, rating: rating, comment: comment }).then(callback, function (error) {
+      _hellojs2.default.api(this.c4pUrl + '/proposals/@{id}/feedback', 'post', { id: id, rating: rating, comment: comment }).then(callback, function (error) {
         defaultErrorHandler(error, callback);
       });
     }
@@ -874,33 +830,33 @@ var KoliseoAPI = (function () {
     value: function getFeedbackEntries(id, cursor, callback) {
       var _this2 = this;
 
-      var successCallback = (function (resp) {
+      var successCallback = function successCallback(resp) {
         callback(resp.data);
         if (resp.cursor) {
           _this2.getFeedbackEntries(id, resp.cursor, callback);
         }
-      }).bind(this);
-      _hellojs2['default'].api(this.c4pUrl + '/proposals/' + id + '/feedback?' + (cursor ? 'cursor=' + cursor : '')).then(successCallback, function (error) {
+      };
+      _hellojs2.default.api(this.c4pUrl + '/proposals/' + id + '/feedback?' + (cursor ? 'cursor=' + cursor : '')).then(successCallback, function (error) {
         defaultErrorHandler(error, callback);
       });
     }
   }, {
     key: 'getCurrentUserLikes',
     value: function getCurrentUserLikes() {
-      return _hellojs2['default'].api(this.c4pUrl + '/agenda/likes');
+      return _hellojs2.default.api(this.c4pUrl + '/agenda/likes');
     }
   }, {
     key: 'addLike',
     value: function addLike(talkId) {
-      return _hellojs2['default'].api(this.c4pUrl + '/agenda/likes/' + talkId, 'post').then(function () {
-        _hellojs2['default'].emit('likes.add', talkId);
+      return _hellojs2.default.api(this.c4pUrl + '/agenda/likes/' + talkId, 'post').then(function () {
+        _hellojs2.default.emit('likes.add', talkId);
       });
     }
   }, {
     key: 'removeLike',
     value: function removeLike(talkId) {
-      return _hellojs2['default'].api(this.c4pUrl + '/agenda/likes/' + talkId, 'delete').then(function () {
-        _hellojs2['default'].emit('likes.remove', talkId);
+      return _hellojs2.default.api(this.c4pUrl + '/agenda/likes/' + talkId, 'delete').then(function () {
+        _hellojs2.default.emit('likes.remove', talkId);
       });
     }
   }, {
@@ -908,26 +864,23 @@ var KoliseoAPI = (function () {
     value: function getCurrentUserFeedbackEntry(_ref3, callback) {
       var id = _ref3.id;
 
-      _hellojs2['default'].api(this.c4pUrl + '/proposals/@{id}/feedback/@{entryId}', 'get', { id: id, entryId: this.currentUser.id + '-' + id }).then(callback, function (error) {
+      _hellojs2.default.api(this.c4pUrl + '/proposals/@{id}/feedback/@{entryId}', 'get', { id: id, entryId: this.currentUser.id + '-' + id }).then(callback, function (error) {
         defaultErrorHandler(error, callback);
       });
     }
   }]);
 
   return KoliseoAPI;
-})();
+}();
 
-exports['default'] = new KoliseoAPI();
-module.exports = exports['default'];
+exports.default = new KoliseoAPI();
 
 },{"hellojs":12}],5:[function(require,module,exports){
 'use strict';
 
-Object.defineProperty(exports, '__esModule', {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 var _likesCollection = require('./likesCollection');
 
@@ -937,11 +890,10 @@ var _KoliseoAPI = require('./KoliseoAPI');
 
 var _KoliseoAPI2 = _interopRequireDefault(_KoliseoAPI);
 
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 var getConfig = function getConfig(talkId) {
-  return !_KoliseoAPI2['default'].currentUser ? {
-    state: 'hidden',
-    text: ''
-  } : _likesCollection2['default'].isSelected(talkId) ? {
+  return _likesCollection2.default.isSelected(talkId) ? {
     state: 'selected',
     text: "I am planning to attend this talk"
   } : {
@@ -951,37 +903,37 @@ var getConfig = function getConfig(talkId) {
 };
 
 var LikeButtonUtils = {
-
   renderButton: function renderButton(talkId) {
     var config = getConfig(talkId);
-    return '\n      <span class="ka-like-container">\n        <a class="ka-like icon-heart"\n            title="' + config.text + '"\n            data-talk="' + talkId + '"\n            data-state="' + config.state + '">\n        </a>\n      </span>\n    ';
+    return !_KoliseoAPI2.default.isOAuthConfigured() ? '' : '\n      <span class="ka-like-container">\n        <a class="ka-like icon-heart"\n            title="' + config.text + '"\n            data-talk="' + talkId + '"\n            data-state="' + config.state + '">\n        </a>\n      </span>\n    ';
   },
-
   onClickListener: function onClickListener(e) {
     e.preventDefault();
     var target = e.target;
     // assert it is a like button
     if (target.classList.contains('ka-like')) {
-      var talk = +target.dataset.talk;
-      if (!_likesCollection2['default'].isSelected(talk)) {
-        _KoliseoAPI2['default'].addLike(talk);
+      if (_KoliseoAPI2.default.currentUser) {
+        var talk = +target.dataset.talk;
+        if (!_likesCollection2.default.isSelected(talk)) {
+          _KoliseoAPI2.default.addLike(talk);
+        } else {
+          _KoliseoAPI2.default.removeLike(talk);
+        }
       } else {
-        _KoliseoAPI2['default'].removeLike(talk);
+        _KoliseoAPI2.default.login();
       }
     }
   },
-
   update: function update(item) {
     var talk = +item.dataset.talk;
     var config = getConfig(talk);
     item.dataset.state = config.state;
     item.title = config.text;
   },
-
   addUpdateListener: function addUpdateListener(element) {
     var _this = this;
 
-    _likesCollection2['default'].onUpdate(function (talk) {
+    _likesCollection2.default.onUpdate(function (talk) {
       var selector = !talk ? '.ka-like' : '.ka-like[data-talk="' + talk + '"]';
       var items = element.querySelectorAll(selector);
       if (items.forEach) {
@@ -991,65 +943,68 @@ var LikeButtonUtils = {
       }
     });
   }
-
 };
 
-exports['default'] = LikeButtonUtils;
-module.exports = exports['default'];
+exports.default = LikeButtonUtils;
 
 },{"./KoliseoAPI":4,"./likesCollection":8}],6:[function(require,module,exports){
 'use strict';
 
-Object.defineProperty(exports, '__esModule', {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _stringutils = require('./stringutils');
 
 var _util = require('./util');
 
-var _feedback = require('./feedback');
+var _TalkFeedback = require('./TalkFeedback');
+
+var _TalkFeedback2 = _interopRequireDefault(_TalkFeedback);
 
 var _LikeButtonUtils = require('./LikeButtonUtils');
 
 var _LikeButtonUtils2 = _interopRequireDefault(_LikeButtonUtils);
 
-var TalkDetailsPopup = (function () {
-  function TalkDetailsPopup(_ref) {
-    var talk = _ref.talk;
-    var tagColors = _ref.tagColors;
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-    _classCallCheck(this, TalkDetailsPopup);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var TalkDialog = function () {
+  function TalkDialog(_ref) {
+    var talk = _ref.talk,
+        tagColors = _ref.tagColors;
+
+    _classCallCheck(this, TalkDialog);
 
     this.talk = talk;
     this.tagColors = tagColors;
-    this.feedback = new _feedback.TalkFeedback(talk);
+    this.feedback = new _TalkFeedback2.default(talk);
   }
 
-  _createClass(TalkDetailsPopup, [{
+  _createClass(TalkDialog, [{
     key: 'render',
     value: function render() {
 
       var talk = this.talk;
       var links = [];
-      links.push(_LikeButtonUtils2['default'].renderButton(talk.id));
+      links.push(_LikeButtonUtils2.default.renderButton(talk.id));
       talk.slidesUrl && links.push('<a href="' + talk.slidesUrl + '" target="_blank" class="icon-slideshare" title="Slides"><span class="sr-only">Slides in new window of "' + talk.title + '"</span></a>');
       talk.videoUrl && links.push('<a href="' + talk.videoUrl + '" target="_blank" class="icon-youtube-play" title="Video"><span class="sr-only">Video in new window of "' + talk.title + '"</span></a>');
       var linkContainer = !links.length ? '' : '<div class="ka-links ka-right">\n      ' + links.join('') + '\n    </div>';
-      var html = '\n      <div class="ka-talk-details-window">\n        <a class="ka-close" title="close"></a>\n        <div class="ka-talk-details-viewport">\n          <div class="ka-talk-details-inner">\n            <div class="ka-talk-details-contents">\n              <h2 class="ka-talk-details-title">' + linkContainer + ' ' + talk.title + ' ' + this.feedback.renderFeedback() + '</h2>\n              <div class="ka-talk-details-description">' + (0, _stringutils.formatMarkdown)(talk.description) + '</div>\n              ' + this.renderTags(talk.tags) + '\n              <div class="ka-feedback-entries"></div>\n            </div>\n            <ul class="ka-avatars">\n              ' + talk.authors.map(this.renderAuthor).join('') + '\n            </ul>\n          </div>\n        </div>\n      </div>\n    ';
+      var html = '\n    <div class="ka-overlay ka-hidden">\n      <div class="ka-dialog">\n        <a class="ka-close" title="close"></a>\n        <div class="ka-dialog-contents">\n          <h2 class="ka-dialog-title">' + linkContainer + ' ' + talk.title + ' ' + this.feedback.renderFeedback() + '</h2>\n          <div class="ka-dialog-description">' + (0, _stringutils.formatMarkdown)(talk.description) + '</div>\n          ' + this.renderTags(talk.tags) + '\n        </div>\n        <ul class="ka-avatars">\n          ' + talk.authors.map(this.renderAuthor).join('') + '\n        </ul>\n        <div class="ka-feedback-entries"></div>\n      </div>\n    </div>\n    ';
       document.body.insertAdjacentHTML('beforeend', html);
-      document.querySelector('.ka-overlay').classList.remove('ka-hidden');
       this.feedback.renderFeedbackEntries(document.querySelector('.ka-feedback-entries'));
 
-      var detailsContent = document.querySelector('.ka-talk-details-contents');
-      _LikeButtonUtils2['default'].addUpdateListener(detailsContent);
-      detailsContent.querySelector('.ka-like').onclick = _LikeButtonUtils2['default'].onClickListener;
+      var detailsContent = document.querySelector('.ka-dialog-contents');
+      _LikeButtonUtils2.default.addUpdateListener(detailsContent);
+      detailsContent.querySelector('.ka-like').onclick = _LikeButtonUtils2.default.onClickListener;
+
+      this.$overlay = document.querySelector('.ka-overlay');
+      this.show();
+      return this;
     }
   }, {
     key: 'renderTags',
@@ -1069,38 +1024,47 @@ var TalkDetailsPopup = (function () {
   }, {
     key: 'renderAuthor',
     value: function renderAuthor(_ref2) {
-      var id = _ref2.id;
-      var uuid = _ref2.uuid;
-      var name = _ref2.name;
-      var avatar = _ref2.avatar;
-      var description = _ref2.description;
-      var twitterAccount = _ref2.twitterAccount;
+      var id = _ref2.id,
+          uuid = _ref2.uuid,
+          name = _ref2.name,
+          avatar = _ref2.avatar,
+          description = _ref2.description,
+          twitterAccount = _ref2.twitterAccount;
 
       avatar = avatar.indexOf('//') == 0 ? 'https:' + avatar : avatar;
       var $name = '<a href="https://www.koliseo.com/' + uuid + '" class="ka-author-name">' + name + '</a>';
       return '\n      <li class="ka-avatar-li ka-avatar-and-text">\n        <span class="ka-avatar-container">\n          <span style="display:table-row">\n            <a href="https://www.koliseo.com/' + uuid + '" class="ka-avatar-img"><img src="' + avatar + '" class="ka-avatar-img"></a>\n            ' + (!twitterAccount ? $name : '\n              <span class="ka-author-name-container">\n                ' + $name + '\n                <a href="https://twitter.com/' + twitterAccount + '" class="ka-author-twitter" target="_blank">@' + twitterAccount + '</a>\n              </span>') + '\n          </span>\n        </span>\n        <div class="ka-author-data">\n          <div class="ka-author-description">' + (0, _stringutils.formatMarkdown)(description) + '</div>\n        </div>\n      </li>\n    ';
     }
+  }, {
+    key: 'show',
+    value: function show() {
+      // delay the show so that the transition can kick in
+      (0, _util.transitionFrom)(this.$overlay, 'ka-hidden');
+    }
+  }, {
+    key: 'hide',
+    value: function hide() {
+      var $overlay = this.$overlay;
+      (0, _util.transitionTo)($overlay, 'ka-hidden').then(function () {
+        return $overlay.parentNode.removeChild($overlay);
+      });
+    }
   }]);
 
-  return TalkDetailsPopup;
-})();
+  return TalkDialog;
+}();
 
+exports.default = TalkDialog;
 ;
 
-exports.TalkDetailsPopup = TalkDetailsPopup;
-
-},{"./LikeButtonUtils":5,"./feedback":7,"./stringutils":10,"./util":11}],7:[function(require,module,exports){
+},{"./LikeButtonUtils":5,"./TalkFeedback":7,"./stringutils":10,"./util":11}],7:[function(require,module,exports){
 'use strict';
 
-Object.defineProperty(exports, '__esModule', {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _util = require('./util');
 
@@ -1109,6 +1073,10 @@ var _util2 = _interopRequireDefault(_util);
 var _KoliseoAPI = require('./KoliseoAPI');
 
 var _KoliseoAPI2 = _interopRequireDefault(_KoliseoAPI);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var MIN_STARS_WIHOUT_COMMENT = 3;
 
@@ -1127,12 +1095,12 @@ var canSendFeedback = function canSendFeedback(rating, comment) {
 };
 
 var getUserFeedbackTemplate = function getUserFeedbackTemplate(_ref, isEditing) {
-  var _ref$rating = _ref.rating;
-  var rating = _ref$rating === undefined ? 0 : _ref$rating;
-  var _ref$comment = _ref.comment;
-  var comment = _ref$comment === undefined ? '' : _ref$comment;
-  var lastModified = _ref.lastModified;
-  var user = _ref.user;
+  var _ref$rating = _ref.rating,
+      rating = _ref$rating === undefined ? 0 : _ref$rating,
+      _ref$comment = _ref.comment,
+      comment = _ref$comment === undefined ? '' : _ref$comment,
+      lastModified = _ref.lastModified,
+      user = _ref.user;
 
   var width = rating * 100 / 5;
   // comment is required with 2 stars or less
@@ -1146,20 +1114,20 @@ var getUserFeedbackTemplate = function getUserFeedbackTemplate(_ref, isEditing) 
 };
 
 var showMessage = function showMessage(_ref2) {
-  var element = _ref2.element;
-  var message = _ref2.message;
-  var level = _ref2.level;
-  var _ref2$hide = _ref2.hide;
-  var hide = _ref2$hide === undefined ? true : _ref2$hide;
+  var element = _ref2.element,
+      message = _ref2.message,
+      level = _ref2.level,
+      _ref2$hide = _ref2.hide,
+      hide = _ref2$hide === undefined ? true : _ref2$hide;
 
   element.innerHTML = '<span class="ka-message ' + level + '">' + message + '</span>';
-  _util2['default'].transitionFrom(element, 'ka-hide');
+  _util2.default.transitionFrom(element, 'ka-hide');
   hide && setTimeout(function () {
-    _util2['default'].transitionTo(element, 'ka-hide');
+    _util2.default.transitionTo(element, 'ka-hide');
   }, 3000);
 };
 
-var TalkFeedback = (function () {
+var TalkFeedback = function () {
   function TalkFeedback(talk) {
     _classCallCheck(this, TalkFeedback);
 
@@ -1182,142 +1150,135 @@ var TalkFeedback = (function () {
     value: function renderFeedbackEntries(element) {
       var _this = this;
 
-      var renderFeedbackEntries = (function (element) {
+      var renderFeedbackEntries = function renderFeedbackEntries(element) {
         element.innerHTML = '';
         element.insertAdjacentHTML('beforeend', '<ul class="ka-entries"></ul>');
         var $feedbackEntries = element.querySelector('.ka-entries');
         if (_this.isFeedbackEnabled()) {
-          if (_KoliseoAPI2['default'].currentUser) {
-            (function () {
-              var render = function render(entry) {
-                entry.user = entry.user || _KoliseoAPI2['default'].currentUser;
-                entry.rating = entry.rating || 0;
-                var html = getUserFeedbackTemplate(entry, true);
-                var $li = undefined;
-                if ($feedbackEntries.children.length) {
-                  $li = $feedbackEntries.querySelector('.ka-avatar-li.ka-editing');
-                  $li && $feedbackEntries.removeChild($li);
-                }
-                $feedbackEntries.insertAdjacentHTML('afterbegin', html);
-                var $comment = $feedbackEntries.querySelector('.ka-comment');
-                var $sendButton = $feedbackEntries.querySelector('.ka-button');
-                var $messages = $feedbackEntries.querySelector('.ka-messages');
-                var showCommentMessage = function showCommentMessage(_ref3) {
-                  var _ref3$comment = _ref3.comment;
-                  var comment = _ref3$comment === undefined ? '' : _ref3$comment;
-                  var rating = _ref3.rating;
+          if (_KoliseoAPI2.default.currentUser) {
+            var render = function render(entry) {
+              entry.user = entry.user || _KoliseoAPI2.default.currentUser;
+              entry.rating = entry.rating || 0;
+              var html = getUserFeedbackTemplate(entry, true);
+              var $li = undefined;
+              if ($feedbackEntries.children.length) {
+                $li = $feedbackEntries.querySelector('.ka-avatar-li.ka-editing');
+                $li && $feedbackEntries.removeChild($li);
+              }
+              $feedbackEntries.insertAdjacentHTML('afterbegin', html);
+              var $comment = $feedbackEntries.querySelector('.ka-comment');
+              var $sendButton = $feedbackEntries.querySelector('.ka-button');
+              var $messages = $feedbackEntries.querySelector('.ka-messages');
+              var showCommentMessage = function showCommentMessage(_ref3) {
+                var _ref3$comment = _ref3.comment,
+                    comment = _ref3$comment === undefined ? '' : _ref3$comment,
+                    rating = _ref3.rating;
 
-                  $messages.innerHTML && ($messages.innerHTML = '');
-                  if (!comment.trim() && rating > 0 && rating < 5) {
-                    if (rating >= MIN_STARS_WIHOUT_COMMENT) {
-                      showMessage({
-                        message: 'The author would appreciate your comment',
-                        element: $messages,
-                        level: 'warn',
-                        hide: false
-                      });
-                    } else {
-                      showMessage({
-                        message: 'Comment is required for 2 stars or less',
-                        element: $messages,
-                        level: 'alert',
-                        hide: false
-                      });
-                    }
-                  }
-                };
-                showCommentMessage(entry);
-                Array.prototype.forEach.call($feedbackEntries.querySelectorAll('.ka-star'), function (item) {
-                  item.onclick = (function (e) {
-                    var rating = e.target.dataset.rating;
-                    var comment = $comment.value;
-                    render({ rating: rating, comment: comment, user: entry.user });
-                    showCommentMessage({ rating: rating, comment: comment });
-                  }).bind(_this);
-                  item.onmouseover = function (e) {
-                    var rating = e.target.dataset.rating;
-                    $feedbackEntries.querySelector('.ka-star-bar').style.width = rating * 100 / 5 + '%';
-                  };
-                  item.onmouseleave = function (e) {
-                    $feedbackEntries.querySelector('.ka-star-bar').style.width = entry.rating * 100 / 5 + '%';
-                  };
-                });
-                $comment.onkeyup = (function (e) {
-                  if (canSendFeedback(entry.rating, $comment.value)) {
-                    $sendButton.removeAttribute('disabled');
-                  } else {
-                    $sendButton.disabled = true;
-                  }
-                  showCommentMessage({
-                    comment: $comment.value,
-                    rating: entry.rating
-                  });
-                }).bind(_this);
-                $sendButton.onclick = (function () {
-                  var comment = $comment.value;
-                  _KoliseoAPI2['default'].sendFeedback({ id: _this.talk.id, rating: entry.rating, comment: comment }, function (resp) {
+                $messages.innerHTML && ($messages.innerHTML = '');
+                if (!comment.trim() && rating > 0 && rating < 5) {
+                  if (rating >= MIN_STARS_WIHOUT_COMMENT) {
                     showMessage({
-                      message: 'Thanks for your feedback!',
-                      element: $messages
+                      message: 'The author would appreciate your comment',
+                      element: $messages,
+                      level: 'warn',
+                      hide: false
                     });
-                  });
-                }).bind(_this);
+                  } else {
+                    showMessage({
+                      message: 'Comment is required for 2 stars or less',
+                      element: $messages,
+                      level: 'alert',
+                      hide: false
+                    });
+                  }
+                }
               };
-              _KoliseoAPI2['default'].getCurrentUserFeedbackEntry(_this.talk, render);
-            })();
-          } else if (_KoliseoAPI2['default'].isOAuthConfigured()) {
+              showCommentMessage(entry);
+              Array.prototype.forEach.call($feedbackEntries.querySelectorAll('.ka-star'), function (item) {
+                item.onclick = function (e) {
+                  var rating = e.target.dataset.rating;
+                  var comment = $comment.value;
+                  render({ rating: rating, comment: comment, user: entry.user });
+                  showCommentMessage({ rating: rating, comment: comment });
+                };
+                item.onmouseover = function (e) {
+                  var rating = e.target.dataset.rating;
+                  $feedbackEntries.querySelector('.ka-star-bar').style.width = rating * 100 / 5 + '%';
+                };
+                item.onmouseleave = function (e) {
+                  $feedbackEntries.querySelector('.ka-star-bar').style.width = entry.rating * 100 / 5 + '%';
+                };
+              });
+              $comment.onkeyup = function (e) {
+                if (canSendFeedback(entry.rating, $comment.value)) {
+                  $sendButton.removeAttribute('disabled');
+                } else {
+                  $sendButton.disabled = true;
+                }
+                showCommentMessage({
+                  comment: $comment.value,
+                  rating: entry.rating
+                });
+              };
+              $sendButton.onclick = function () {
+                var comment = $comment.value;
+                _KoliseoAPI2.default.sendFeedback({ id: _this.talk.id, rating: entry.rating, comment: comment }, function (resp) {
+                  showMessage({
+                    message: 'Thanks for your feedback!',
+                    element: $messages
+                  });
+                });
+              };
+            };
+            _KoliseoAPI2.default.getCurrentUserFeedbackEntry(_this.talk, render);
+          } else if (_KoliseoAPI2.default.isOAuthConfigured()) {
             $feedbackEntries.insertAdjacentHTML('beforeend', getAnonymousUserFeedbackTemplate());
-            $feedbackEntries.querySelector('.ka-button').onclick = _KoliseoAPI2['default'].login;
+            $feedbackEntries.querySelector('.ka-button').onclick = _KoliseoAPI2.default.login;
           }
         }
 
-        _KoliseoAPI2['default'].getFeedbackEntries(_this.talk.id, undefined, function (entries) {
+        _KoliseoAPI2.default.getFeedbackEntries(_this.talk.id, undefined, function (entries) {
           entries.forEach(function (entry) {
-            if (!_KoliseoAPI2['default'].currentUser || entry.user.id !== _KoliseoAPI2['default'].currentUser.id) {
+            if (!_KoliseoAPI2.default.currentUser || entry.user.id !== _KoliseoAPI2.default.currentUser.id) {
               var html = getUserFeedbackTemplate(entry);
               html && $feedbackEntries.insertAdjacentHTML('beforeend', html);
             }
           });
         });
-      }).bind(this);
+      };
       renderFeedbackEntries(element);
-      _KoliseoAPI2['default'].on('login', (function () {
+      _KoliseoAPI2.default.on('login', function () {
         renderFeedbackEntries(element);
-      }).bind(this));
-      _KoliseoAPI2['default'].on('logout', (function () {
+      });
+      _KoliseoAPI2.default.on('logout', function () {
         renderFeedbackEntries(element);
-      }).bind(this));
+      });
     }
   }]);
 
   return TalkFeedback;
-})();
+}();
 
-exports['default'] = {
-
-  TalkFeedback: TalkFeedback
-
-};
-module.exports = exports['default'];
+exports.default = TalkFeedback;
 
 },{"./KoliseoAPI":4,"./util":11}],8:[function(require,module,exports){
 'use strict';
 
-Object.defineProperty(exports, '__esModule', {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _KoliseoAPI = require('./KoliseoAPI');
 
 var _KoliseoAPI2 = _interopRequireDefault(_KoliseoAPI);
 
-var LikesCollection = (function () {
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var LikesCollection = function () {
   function LikesCollection() {
     var _this = this;
 
@@ -1326,27 +1287,27 @@ var LikesCollection = (function () {
     // id of the talks to mark as selected
     this.likes = [];
 
-    _KoliseoAPI2['default'].on('login', function () {
-      _KoliseoAPI2['default'].getCurrentUserLikes().then(function (likes) {
+    _KoliseoAPI2.default.on('login', function () {
+      _KoliseoAPI2.default.getCurrentUserLikes().then(function (likes) {
         _this.likes = likes;
-        _KoliseoAPI2['default'].emit('likes.update');
+        _KoliseoAPI2.default.emit('likes.update');
       });
     });
-    _KoliseoAPI2['default'].on('logout', function () {
+    _KoliseoAPI2.default.on('logout', function () {
       _this.likes = [];
-      _KoliseoAPI2['default'].emit('likes.update');
+      _KoliseoAPI2.default.emit('likes.update');
     });
-    _KoliseoAPI2['default'].on('likes.add', function (talkId) {
+    _KoliseoAPI2.default.on('likes.add', function (talkId) {
       if (!_this.isSelected(talkId)) {
         _this.likes.push(talkId);
-        _KoliseoAPI2['default'].emit('likes.update', talkId);
+        _KoliseoAPI2.default.emit('likes.update', talkId);
       }
     });
-    _KoliseoAPI2['default'].on('likes.remove', function (talkId) {
+    _KoliseoAPI2.default.on('likes.remove', function (talkId) {
       var index = _this.likes.indexOf(talkId);
       if (index !== -1) {
         _this.likes.splice(index, 1);
-        _KoliseoAPI2['default'].emit('likes.update', talkId);
+        _KoliseoAPI2.default.emit('likes.update', talkId);
       }
     });
   }
@@ -1359,26 +1320,23 @@ var LikesCollection = (function () {
   }, {
     key: 'onUpdate',
     value: function onUpdate(callback) {
-      _KoliseoAPI2['default'].on('likes.update', callback);
+      _KoliseoAPI2.default.on('likes.update', callback);
     }
   }]);
 
   return LikesCollection;
-})();
+}();
 
-exports['default'] = new LikesCollection();
-module.exports = exports['default'];
+exports.default = new LikesCollection();
 
 },{"./KoliseoAPI":4}],9:[function(require,module,exports){
 'use strict';
 
-Object.defineProperty(exports, '__esModule', {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _slicedToArray = (function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i['return']) _i['return'](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError('Invalid attempt to destructure non-iterable instance'); } }; })();
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
 var _AgendaView = require('./AgendaView');
 
@@ -1390,6 +1348,8 @@ var _hellojs = require('hellojs');
 
 var _hellojs2 = _interopRequireDefault(_hellojs);
 
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 window.Koliseo = window.Koliseo || {};
 Koliseo.agenda = {};
 
@@ -1398,17 +1358,13 @@ Koliseo.agenda = {};
   Renders an agenda.
 
 */
-Koliseo.agenda.render = function (_ref) // {String} optional. The Koliseo OAuth client ID
-// {String} optional. URL to make the security requests
-{
-  var c4pUrl = _ref.c4pUrl;
-  var // {String} URL to retrieve the C4P
-  agendaUrl = _ref.agendaUrl;
-  var // {String} URL to retrieve the list of talks
-  element = _ref.element;
-  var // {String} The element to use to render the agenda
-  oauthClientId = _ref.oauthClientId;
-  var baseUrl = _ref.baseUrl;
+Koliseo.agenda.render = function (_ref) {
+  var c4pUrl = _ref.c4pUrl,
+      agendaUrl = _ref.agendaUrl,
+      element = _ref.element,
+      oauthClientId = _ref.oauthClientId,
+      baseUrl = _ref.baseUrl;
+
 
   // todo: add error handling
   // todo: add proper argument assertions
@@ -1422,22 +1378,20 @@ Koliseo.agenda.render = function (_ref) // {String} optional. The Koliseo OAuth 
     }
   };
 
-  _KoliseoAPI2['default'].init({ c4pUrl: c4pUrl, baseUrl: baseUrl, oauthClientId: oauthClientId });
+  _KoliseoAPI2.default.init({ c4pUrl: c4pUrl, baseUrl: baseUrl, oauthClientId: oauthClientId });
 
   agendaUrl = agendaUrl || c4pUrl + '/agenda';
 
   Promise.all([fetch(c4pUrl, fetchOptions), fetch(agendaUrl, fetchOptions)]).then(function (_ref2) {
-    var _ref22 = _slicedToArray(_ref2, 2);
-
-    var c4pResponse = _ref22[0];
-    var agendaResponse = _ref22[1];
+    var _ref3 = _slicedToArray(_ref2, 2),
+        c4pResponse = _ref3[0],
+        agendaResponse = _ref3[1];
 
     return Promise.all([c4pResponse.json(), agendaResponse.json()]);
-  }).then(function (_ref3) {
-    var _ref32 = _slicedToArray(_ref3, 2);
-
-    var c4p = _ref32[0];
-    var agenda = _ref32[1];
+  }).then(function (_ref4) {
+    var _ref5 = _slicedToArray(_ref4, 2),
+        c4p = _ref5[0],
+        agenda = _ref5[1];
 
     Koliseo.agenda.model = agenda;
     new _AgendaView.AgendaView({
@@ -1445,38 +1399,42 @@ Koliseo.agenda.render = function (_ref) // {String} optional. The Koliseo OAuth 
       agenda: agenda,
       element: element
     }).render();
-  })['catch'](function (e) {
+  }).catch(function (e) {
     console.log(e);
   });
 };
-exports['default'] = Koliseo.agenda;
-module.exports = exports['default'];
+exports.default = Koliseo.agenda;
 
 },{"./AgendaView":3,"./KoliseoAPI":4,"hellojs":12}],10:[function(require,module,exports){
 'use strict';
 
-Object.defineProperty(exports, '__esModule', {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+exports.formatMarkdown = undefined;
 
 var _marked = require('marked');
 
 var _marked2 = _interopRequireDefault(_marked);
 
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 var formatMarkdown = function formatMarkdown(s) {
-  return (0, _marked2['default'])(s || '');
+  return (0, _marked2.default)(s || '');
 };
 
 exports.formatMarkdown = formatMarkdown;
 
-},{"marked":62}],11:[function(require,module,exports){
+},{"marked":13}],11:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.strToEl = strToEl;
+exports.escapeHtml = escapeHtml;
+exports.escapeHtmlTag = escapeHtmlTag;
+exports.closest = closest;
 var entityMap = {
   "&": "&amp;",
   "<": "&lt;",
@@ -1487,13 +1445,12 @@ var entityMap = {
 };
 
 function transitionClassFunc() {
-  var _ref = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
-
-  var _ref$removeClass = _ref.removeClass;
-  var removeClass = _ref$removeClass === undefined ? false : _ref$removeClass;
+  var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+      _ref$removeClass = _ref.removeClass,
+      removeClass = _ref$removeClass === undefined ? false : _ref$removeClass;
 
   return function (el) {
-    var className = arguments.length <= 1 || arguments[1] === undefined ? 'active' : arguments[1];
+    var className = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'active';
 
     if (removeClass) {
       if (!el.classList.contains(className)) return Promise.resolve();
@@ -1518,68 +1475,57 @@ function transitionClassFunc() {
   };
 };
 
-exports["default"] = {
+var transitionTo = exports.transitionTo = transitionClassFunc();
 
-  transitionTo: transitionClassFunc(),
+var transitionFrom = exports.transitionFrom = transitionClassFunc({ removeClass: true });
 
-  transitionFrom: transitionClassFunc({ removeClass: true }),
+// transform a string into a single element
+var tmpEl = document.createElement('div');
+function strToEl(str) {
+  var r;
+  tmpEl.innerHTML = str;
+  r = tmpEl.children[0];
+  while (tmpEl.firstChild) {
+    tmpEl.removeChild(tmpEl.firstChild);
+  }
+  return r;
+};
 
-  // transform a string into a single element
-  strToEl: (function () {
-    var tmpEl = document.createElement('div');
-    return function (str) {
-      var r;
-      tmpEl.innerHTML = str;
-      r = tmpEl.children[0];
-      while (tmpEl.firstChild) {
-        tmpEl.removeChild(tmpEl.firstChild);
-      }
-      return r;
-    };
-  })(),
+function escapeHtml(string) {
+  return String(string).replace(/[&<>"'\/]/g, function (s) {
+    return entityMap[s];
+  });
+}
 
-  escapeHtml: function escapeHTML(string) {
-    return String(string).replace(/[&<>"'\/]/g, function (s) {
-      return entityMap[s];
-    });
-  },
-
-  escapeHtmlTag: function escapeHtmlTag(strings) {
-    for (var _len = arguments.length, values = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-      values[_key - 1] = arguments[_key];
-    }
-
-    values = values.map(exports.escapeHtml);
-    return strings.reduce(function (str, val, i) {
-      return str += val + (values[i] || '');
-    }, '');
-  },
-
-  closest: function closest(el, selector) {
-    if (el.closest) {
-      return el.closest(selector);
-    }
-
-    var matches = el.matches || el.msMatchesSelector || el.webkitMatchesSelector;
-
-    do {
-      if (el.nodeType != 1) continue;
-      if (matches.call(el, selector)) return el;
-    } while (el = el.parentNode);
-
-    return undefined;
-  },
-
-  debug: function debug() {
-    console.log.apply(console, arguments);
+function escapeHtmlTag(strings) {
+  for (var _len = arguments.length, values = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+    values[_key - 1] = arguments[_key];
   }
 
-};
-module.exports = exports["default"];
+  values = values.map(exports.escapeHtml);
+  return strings.reduce(function (str, val, i) {
+    return str += val + (values[i] || '');
+  }, '');
+}
+
+function closest(el, selector) {
+  if (el.closest) {
+    return el.closest(selector);
+  }
+
+  var matches = el.matches || el.msMatchesSelector || el.webkitMatchesSelector;
+
+  do {
+    if (el.nodeType != 1) continue;
+    if (matches.call(el, selector)) return el;
+  } while (el = el.parentNode);
+
+  return undefined;
+}
 
 },{}],12:[function(require,module,exports){
 (function (process){
-/*! hellojs v1.9.6 | (c) 2012-2015 Andrew Dodson | MIT https://adodson.com/hello.js/LICENSE */
+/*! hellojs v1.14.1 | (c) 2012-2017 Andrew Dodson | MIT https://adodson.com/hello.js/LICENSE */
 // ES5 Object.create
 if (!Object.create) {
 
@@ -1755,12 +1701,21 @@ hello.utils = {
 
 		// Get the arguments as an array but ommit the initial item
 		Array.prototype.slice.call(arguments, 1).forEach(function(a) {
-			if (r instanceof Object && a instanceof Object && r !== a) {
+			if (Array.isArray(r) && Array.isArray(a)) {
+				Array.prototype.push.apply(r, a);
+			}
+			else if (r && (r instanceof Object || typeof r === 'object') && a && (a instanceof Object || typeof a === 'object') && r !== a) {
 				for (var x in a) {
 					r[x] = hello.utils.extend(r[x], a[x]);
 				}
 			}
 			else {
+
+				if (Array.isArray(a)) {
+					// Clone it
+					a = a.slice(0);
+				}
+
 				r = a;
 			}
 		});
@@ -1794,6 +1749,19 @@ hello.utils.extend(hello, {
 			scrollbars: 1,
 			width: 500,
 			height: 550
+		},
+
+		// Default scope
+		// Many services require atleast a profile scope,
+		// HelloJS automatially includes the value of provider.scope_map.basic
+		// If that's not required it can be removed via hello.settings.scope.length = 0;
+		scope: ['basic'],
+
+		// Scope Maps
+		// This is the default module scope, these are the defaults which each service is mapped too.
+		// By including them here it prevents the scope from being applied accidentally
+		scope_map: {
+			basic: ''
 		},
 
 		// Default service / network
@@ -1861,14 +1829,6 @@ hello.utils.extend(hello, {
 		// Merge services if there already exists some
 		utils.extend(this.services, services);
 
-		// Format the incoming
-		for (x in this.services) {
-			if (this.services.hasOwnProperty(x)) {
-				this.services[x].scope = this.services[x].scope || {};
-			}
-		}
-
-		//
 		// Update the default settings with this one.
 		if (options) {
 			utils.extend(this.settings, options);
@@ -1980,8 +1940,6 @@ hello.utils.extend(hello, {
 			client_id: encodeURIComponent(provider.id),
 			response_type: encodeURIComponent(responseType),
 			redirect_uri: encodeURIComponent(redirectUri),
-			display: opts.display,
-			scope: 'basic',
 			state: {
 				client_id: provider.id,
 				network: p.network,
@@ -1999,18 +1957,27 @@ hello.utils.extend(hello, {
 		// Ensure this is a string - IE has a problem moving Arrays between windows
 		// Append the setup scope
 		var SCOPE_SPLIT = /[,\s]+/;
-		var scope = (opts.scope || '').toString() + ',' + p.qs.scope;
+
+		// Include default scope settings (cloned).
+		var scope = _this.settings.scope ? [_this.settings.scope.toString()] : [];
+
+		// Extend the providers scope list with the default
+		var scopeMap = utils.merge(_this.settings.scope_map, provider.scope || {});
+
+		// Add user defined scopes...
+		if (opts.scope) {
+			scope.push(opts.scope.toString());
+		}
 
 		// Append scopes from a previous session.
 		// This helps keep app credentials constant,
 		// Avoiding having to keep tabs on what scopes are authorized
 		if (session && 'scope' in session && session.scope instanceof String) {
-			scope += ',' + session.scope;
+			scope.push(session.scope);
 		}
 
-		// Convert scope to an Array
-		// - easier to manipulate
-		scope = scope.split(SCOPE_SPLIT);
+		// Join and Split again
+		scope = scope.join(',').split(SCOPE_SPLIT);
 
 		// Format remove duplicates and empty values
 		scope = utils.unique(scope).filter(filterEmpty);
@@ -2021,23 +1988,7 @@ hello.utils.extend(hello, {
 		// Map scopes to the providers naming convention
 		scope = scope.map(function(item) {
 			// Does this have a mapping?
-			if (item in provider.scope) {
-				return provider.scope[item];
-			}
-			else {
-				// Loop through all services and determine whether the scope is generic
-				for (var x in _this.services) {
-					var serviceScopes = _this.services[x].scope;
-					if (serviceScopes && item in serviceScopes) {
-						// Found an instance of this scope, so lets not assume its special
-						return '';
-					}
-				}
-
-				// This is a unique scope to this service so lets in it.
-				return item;
-			}
-
+			return (item in scopeMap) ? scopeMap[item] : item;
 		});
 
 		// Stringify and Arrayify so that double mapped scopes are given the chance to be formatted
@@ -2120,6 +2071,9 @@ hello.utils.extend(hello, {
 		else {
 			url = utils.qs(provider.oauth.auth, p.qs, encodeFunction);
 		}
+
+		// Broadcast this event as an auth:init
+		emit('auth.init', p);
 
 		// Execute
 		// Trigger how we want self displayed
@@ -2204,7 +2158,7 @@ hello.utils.extend(hello, {
 			var callback = function(opts) {
 
 				// Remove from the store
-				utils.store(p.name, '');
+				utils.store(p.name, null);
 
 				// Emit events by default
 				promise.fulfill(hello.utils.merge({network:p.name}, opts || {}));
@@ -2288,7 +2242,7 @@ hello.utils.extend(hello.utils, {
 			// Override the items in the URL which already exist
 			for (var x in params) {
 				var str = '([\\?\\&])' + x + '=[^\\&]*';
-				reg = new RegExp(str);
+				var reg = new RegExp(str);
 				if (url.match(reg)) {
 					url = url.replace(reg, '$1' + x + '=' + formatFunction(params[x]));
 					delete params[x];
@@ -2579,7 +2533,7 @@ hello.utils.extend(hello.utils, {
 		else {
 			var a = document.createElement('a');
 			a.href = path;
-			return a;
+			return a.cloneNode(false);
 		}
 	},
 
@@ -2983,102 +2937,6 @@ hello.utils.extend(hello.utils, {
 			optionsArray.push(name + (value !== null ? '=' + value : ''));
 		});
 
-		// Create a function for reopening the popup, and assigning events to the new popup object
-		// This is a fix whereby triggering the
-		var open = function(url) {
-
-			// Trigger callback
-			var popup = window.open(
-				url,
-				'_blank',
-				optionsArray.join(',')
-			);
-
-			// PhoneGap support
-			// Add an event listener to listen to the change in the popup windows URL
-			// This must appear before popup.focus();
-			try {
-				if (popup && popup.addEventListener) {
-
-					// Get the origin of the redirect URI
-
-					var a = hello.utils.url(redirectUri);
-					var redirectUriOrigin = a.origin || (a.protocol + '//' + a.hostname);
-
-					// Listen to changes in the InAppBrowser window
-
-					popup.addEventListener('loadstart', function(e) {
-
-						var url = e.url;
-
-						// Is this the path, as given by the redirectUri?
-						// Check the new URL agains the redirectUriOrigin.
-						// According to #63 a user could click 'cancel' in some dialog boxes ....
-						// The popup redirects to another page with the same origin, yet we still wish it to close.
-
-						if (url.indexOf(redirectUriOrigin) !== 0) {
-							return;
-						}
-
-						// Split appart the URL
-						var a = hello.utils.url(url);
-
-						// We dont have window operations on the popup so lets create some
-						// The location can be augmented in to a location object like so...
-
-						var _popup = {
-							location: {
-								// Change the location of the popup
-								assign: function(location) {
-
-									// Unfourtunatly an app is may not change the location of a InAppBrowser window.
-									// So to shim this, just open a new one.
-
-									popup.addEventListener('exit', function() {
-
-										// For some reason its failing to close the window if a new window opens too soon.
-
-										setTimeout(function() {
-											open(location);
-										}, 1000);
-									});
-								},
-
-								search: a.search,
-								hash: a.hash,
-								href: a.href
-							},
-							close: function() {
-								if (popup.close) {
-									popup.close();
-								}
-							}
-						};
-
-						// Then this URL contains information which HelloJS must process
-						// URL string
-						// Window - any action such as window relocation goes here
-						// Opener - the parent window which opened this, aka this script
-
-						hello.utils.responseHandler(_popup, window);
-
-						// Always close the popup regardless of whether the hello.utils.responseHandler detects a state parameter or not in the querystring.
-						// Such situations might arise such as those in #63
-
-						_popup.close();
-
-					});
-				}
-			}
-			catch (e) {}
-
-			if (popup && popup.focus) {
-				popup.focus();
-			}
-
-			return popup;
-		};
-
 		// Call the open() function with the initial path
 		//
 		// OAuth redirect, fixes URI fragments from being lost in Safari
@@ -3092,7 +2950,17 @@ hello.utils.extend(hello.utils, {
 			url = redirectUri + '#oauth_redirect=' + encodeURIComponent(encodeURIComponent(url));
 		}
 
-		return open(url);
+		var popup = window.open(
+			url,
+			'_blank',
+			optionsArray.join(',')
+		);
+
+		if (popup && popup.focus) {
+			popup.focus();
+		}
+
+		return popup;
 	},
 
 	// OAuth and API response handler
@@ -3179,7 +3047,7 @@ hello.utils.extend(hello.utils, {
 				var res = 'result' in p && p.result ? JSON.parse(p.result) : false;
 
 				// Trigger the callback on the parent
-				parent[p.callback](res);
+				callback(parent, p.callback)(res);
 				closeWindow();
 			}
 
@@ -3229,7 +3097,7 @@ hello.utils.extend(hello.utils, {
 				var str = JSON.stringify(obj);
 
 				try {
-					parent[cb](str);
+					callback(parent, cb)(str);
 				}
 				catch (e) {
 					// Error thrown whilst executing parent callback
@@ -3239,37 +3107,44 @@ hello.utils.extend(hello.utils, {
 			closeWindow();
 		}
 
+		function callback(parent, callbackID) {
+			if (callbackID.indexOf('_hellojs_') !== 0) {
+				return function() {
+					throw 'Could not execute callback ' + callbackID;
+				};
+			}
+
+			return parent[callbackID];
+		}
+
 		function closeWindow() {
 
-			// Close this current window
-			try {
-				window.close();
+			if (window.frameElement) {
+				// Inside an iframe, remove from parent
+				parent.document.body.removeChild(window.frameElement);
 			}
-			catch (e) {}
-
-			// IOS bug wont let us close a popup if still loading
-			if (window.addEventListener) {
-				window.addEventListener('load', function() {
+			else {
+				// Close this current window
+				try {
 					window.close();
-				});
+				}
+				catch (e) {}
+
+				// IOS bug wont let us close a popup if still loading
+				if (window.addEventListener) {
+					window.addEventListener('load', function() {
+						window.close();
+					});
+				}
 			}
+
 		}
 	}
 });
 
 // Events
-
 // Extend the hello object with its own event instance
 hello.utils.Event.call(hello);
-
-/////////////////////////////////////
-//
-// Save any access token that is in the current page URL
-// Handle any response solicited through iframe hash tag following an API request
-//
-/////////////////////////////////////
-
-hello.utils.responseHandler(window, window.opener || window.parent);
 
 ///////////////////////////////////
 // Monitoring session state
@@ -3871,7 +3746,7 @@ hello.utils.extend(hello.utils, {
 	// Create a clone of an object
 	clone: function(obj) {
 		// Does not clone DOM elements, nor Binary data, e.g. Blobs, Filelists
-		if (obj === null || typeof (obj) !== 'object' || obj instanceof Date || 'nodeName' in obj || this.isBinary(obj)) {
+		if (obj === null || typeof (obj) !== 'object' || obj instanceof Date || 'nodeName' in obj || this.isBinary(obj) || (typeof FormData === 'function' && obj instanceof FormData)) {
 			return obj;
 		}
 
@@ -4053,7 +3928,7 @@ hello.utils.extend(hello.utils, {
 		// This action will be ignored if we've already called the callback handler "cb" with a successful onload event
 		if (window.navigator.userAgent.toLowerCase().indexOf('opera') > -1) {
 			operaFix = _this.append('script', {
-				text: 'document.getElementById(\'' + callbackId + '\').onerror();'
+				text: 'document.getElementById(\'' + callbackID + '\').onerror();'
 			});
 			script.async = false;
 		}
@@ -4446,6 +4321,15 @@ hello.utils.extend(hello.utils, {
 
 })(hello);
 
+/////////////////////////////////////
+//
+// Save any access token that is in the current page URL
+// Handle any response solicited through iframe hash tag following an API request
+//
+/////////////////////////////////////
+
+hello.utils.responseHandler(window, window.opener || window.parent);
+
 // Script to support ChromeApps
 // This overides the hello.utils.popup method to support chrome.identity.launchWebAuthFlow
 // See https://developer.chrome.com/apps/app_identity#non
@@ -4484,7 +4368,7 @@ if (typeof chrome === 'object' && typeof chrome.identity === 'object' && chrome.
 		var _cache = {};
 		chrome.storage.local.get('hello', function(r) {
 			// Update the cache
-			_cache = r.hello;
+			_cache = r.hello || {};
 		});
 
 		hello.utils.store = function(name, value) {
@@ -4573,6 +4457,104 @@ if (typeof chrome === 'object' && typeof chrome.identity === 'object' && chrome.
 	})();
 }
 
+// Phonegap override for hello.phonegap.js
+(function() {
+
+	// Is this a phonegap implementation?
+	if (!(/^file:\/{3}[^\/]/.test(window.location.href) && window.cordova)) {
+		// Cordova is not included.
+		return;
+	}
+
+	// Augment the hidden iframe method
+	hello.utils.iframe = function(url, redirectUri) {
+		hello.utils.popup(url, redirectUri, {hidden: 'yes'});
+	};
+
+	// Augment the popup
+	var utilPopup = hello.utils.popup;
+
+	// Replace popup
+	hello.utils.popup = function(url, redirectUri, options) {
+
+		// Run the standard
+		var popup = utilPopup.call(this, url, redirectUri, options);
+
+		// Create a function for reopening the popup, and assigning events to the new popup object
+		// PhoneGap support
+		// Add an event listener to listen to the change in the popup windows URL
+		// This must appear before popup.focus();
+		try {
+			if (popup && popup.addEventListener) {
+
+				// Get the origin of the redirect URI
+
+				var a = hello.utils.url(redirectUri);
+				var redirectUriOrigin = a.origin || (a.protocol + '//' + a.hostname);
+
+				// Listen to changes in the InAppBrowser window
+
+				popup.addEventListener('loadstart', function(e) {
+
+					var url = e.url;
+
+					// Is this the path, as given by the redirectUri?
+					// Check the new URL agains the redirectUriOrigin.
+					// According to #63 a user could click 'cancel' in some dialog boxes ....
+					// The popup redirects to another page with the same origin, yet we still wish it to close.
+
+					if (url.indexOf(redirectUriOrigin) !== 0) {
+						return;
+					}
+
+					// Split appart the URL
+					var a = hello.utils.url(url);
+
+					// We dont have window operations on the popup so lets create some
+					// The location can be augmented in to a location object like so...
+
+					var _popup = {
+						location: {
+							// Change the location of the popup
+							assign: function(location) {
+
+								// Unfourtunatly an app is may not change the location of a InAppBrowser window.
+								// So to shim this, just open a new one.
+								popup.executeScript({code: 'window.location.href = "' + location + ';"'});
+							},
+
+							search: a.search,
+							hash: a.hash,
+							href: a.href
+						},
+						close: function() {
+							if (popup.close) {
+								popup.close();
+								try {
+									popup.closed = true;
+								}
+								catch (_e) {}
+							}
+						}
+					};
+
+					// Then this URL contains information which HelloJS must process
+					// URL string
+					// Window - any action such as window relocation goes here
+					// Opener - the parent window which opened this, aka this script
+
+					hello.utils.responseHandler(_popup, window);
+
+				});
+			}
+		}
+		catch (e) {}
+
+		return popup;
+	};
+
+})();
+
 (function(hello) {
 
 	// OAuth1
@@ -4602,7 +4584,6 @@ if (typeof chrome === 'object' && typeof chrome.identity === 'object' && chrome.
 			login: function(p) {
 				// OAuth2 non-standard adjustments
 				p.qs.scope = '';
-				delete p.qs.display;
 
 				// Should this be run as OAuth1?
 				// If the redirect_uri is is HTTP (non-secure) then its required to revert to the OAuth1 endpoints
@@ -4845,8 +4826,8 @@ if (typeof chrome === 'object' && typeof chrome.identity === 'object' && chrome.
 				share: 'user_posts',
 				birthday: 'user_birthday',
 				events: 'user_events',
-				photos: 'user_photos,user_videos',
-				videos: 'user_photos,user_videos',
+				photos: 'user_photos',
+				videos: 'user_videos',
 				friends: 'user_friends',
 				files: 'user_photos,user_videos',
 				publish_files: 'user_photos,user_videos,publish_actions',
@@ -4855,11 +4836,11 @@ if (typeof chrome === 'object' && typeof chrome.identity === 'object' && chrome.
 				// Deprecated in v2.0
 				// Create_event	: 'create_event',
 
-				offline_access: 'offline_access'
+				offline_access: ''
 			},
 
 			// Refresh the access_token
-			refresh: true,
+			refresh: false,
 
 			login: function(p) {
 
@@ -4869,9 +4850,8 @@ if (typeof chrome === 'object' && typeof chrome.identity === 'object' && chrome.
 					p.qs.auth_type = 'reauthenticate';
 				}
 
-				// The facebook login window is a different size.
-				p.options.popup.width = 580;
-				p.options.popup.height = 400;
+				// Set the display value
+				p.qs.display = p.options.display || 'popup';
 			},
 
 			logout: function(callback, options) {
@@ -4893,7 +4873,7 @@ if (typeof chrome === 'object' && typeof chrome.identity === 'object' && chrome.
 			},
 
 			// API Base URL
-			base: 'https://graph.facebook.com/v2.4/',
+			base: 'https://graph.facebook.com/v2.7/',
 
 			// Map GET requests
 			get: {
@@ -4997,6 +4977,13 @@ if (typeof chrome === 'object' && typeof chrome.identity === 'object' && chrome.
 
 		if (o && 'data' in o) {
 			var token = req.query.access_token;
+
+			if (!(o.data instanceof Array)) {
+				var data = o.data;
+				delete o.data;
+				o.data = [data];
+			}
+
 			o.data.forEach(function(d) {
 
 				if (d.picture) {
@@ -5380,7 +5367,6 @@ if (typeof chrome === 'object' && typeof chrome.identity === 'object' && chrome.
 			},
 
 			scope: {
-				basic: '',
 				email: 'user:email'
 			},
 
@@ -5497,6 +5483,7 @@ if (typeof chrome === 'object' && typeof chrome.identity === 'object' && chrome.
 				files: 'https://www.googleapis.com/auth/drive.readonly',
 				publish: '',
 				publish_files: 'https://www.googleapis.com/auth/drive',
+				share: '',
 				create_event: '',
 				offline_access: ''
 			},
@@ -5504,10 +5491,6 @@ if (typeof chrome === 'object' && typeof chrome.identity === 'object' && chrome.
 			scope_delim: ' ',
 
 			login: function(p) {
-				if (p.qs.display === 'none') {
-					// Google doesn't like display=none
-					p.qs.display = '';
-				}
 
 				if (p.qs.response_type === 'code') {
 
@@ -5549,6 +5532,7 @@ if (typeof chrome === 'object' && typeof chrome.identity === 'object' && chrome.
 				'me/photos': 'https://picasaweb.google.com/data/feed/api/user/default?alt=json&kind=photo&max-results=@{limit|100}&start-index=@{start|1}',
 
 				// See: https://developers.google.com/drive/v2/reference/files/list
+				'me/file': 'drive/v2/files/@{id}',
 				'me/files': 'drive/v2/files?q=%22@{parent|root}%22+in+parents+and+trashed=false&maxResults=@{limit|100}',
 
 				// See: https://developers.google.com/drive/v2/reference/files/list
@@ -5582,6 +5566,11 @@ if (typeof chrome === 'object' && typeof chrome.identity === 'object' && chrome.
 			del: {
 				'me/files': 'drive/v2/files/@{id}',
 				'me/folder': 'drive/v2/files/@{id}'
+			},
+
+			// Map PATCH requests
+			patch: {
+				'me/file': 'drive/v2/files/@{id}'
 			},
 
 			wrap: {
@@ -5625,6 +5614,10 @@ if (typeof chrome === 'object' && typeof chrome.identity === 'object' && chrome.
 
 				if (p.method === 'post' || p.method === 'put') {
 					toJSON(p);
+				}
+				else if (p.method === 'patch') {
+					hello.utils.extend(p.query, p.data);
+					p.data = null;
 				}
 
 				return true;
@@ -6061,17 +6054,18 @@ if (typeof chrome === 'object' && typeof chrome.identity === 'object' && chrome.
 
 			scope: {
 				basic: 'basic',
+				photos: '',
 				friends: 'relationships',
-				publish: 'likes comments'
+				publish: 'likes comments',
+				email: '',
+				share: '',
+				publish_files: '',
+				files: '',
+				videos: '',
+				offline_access: ''
 			},
 
 			scope_delim: ' ',
-
-			login: function(p) {
-				// Instagram throws errors like 'JavaScript API is unsupported' if the display is 'popup'.
-				// Make the display anything but 'popup'
-				p.qs.display = '';
-			},
 
 			base: 'https://api.instagram.com/v1/',
 
@@ -6252,7 +6246,16 @@ if (typeof chrome === 'object' && typeof chrome.identity === 'object' && chrome.
 				basic: 'user_info',
 				user: 'user_info',
 				scheduler: 'scheduler',
-				start: 'start_meeting'
+				start: 'start_meeting',
+				email: '',
+				friends: '',
+				share: '',
+				publish: '',
+				photos: '',
+				publish_files: '',
+				files: '',
+				videos: '',
+				offline_access: ''
 			},
 
 			scope_delim: ' ',
@@ -6408,8 +6411,14 @@ if (typeof chrome === 'object' && typeof chrome.identity === 'object' && chrome.
 			scope: {
 				basic: 'r_basicprofile',
 				email: 'r_emailaddress',
+				files: '',
 				friends: '',
-				publish: 'w_share'
+				photos: '',
+				publish: 'w_share',
+				publish_files: 'w_share',
+				share: '',
+				videos: '',
+				offline_access: ''
 			},
 			scope_delim: ' ',
 
@@ -6417,9 +6426,6 @@ if (typeof chrome === 'object' && typeof chrome.identity === 'object' && chrome.
 
 			get: {
 				me: 'people/~:(picture-url,first-name,last-name,id,formatted-name,email-address)',
-				'me/friends': 'people/~/connections?count=@{limit|500}',
-				'me/followers': 'people/~/connections?count=@{limit|500}',
-				'me/following': 'people/~/connections?count=@{limit|500}',
 
 				// See: http://developer.linkedin.com/documents/get-network-updates-and-statistics-api
 				'me/share': 'people/~/network/updates?count=@{limit|250}'
@@ -6913,9 +6919,13 @@ if (typeof chrome === 'object' && typeof chrome.identity === 'object' && chrome.
 			},
 
 			// Authorization scopes
+			// See https://vk.com/dev/permissions
 			scope: {
-				basic: '',
 				email: 'email',
+				friends: 'friends',
+				photos: 'photos',
+				videos: 'video',
+				share: 'share',
 				offline_access: 'offline'
 			},
 
@@ -7017,6 +7027,7 @@ if (typeof chrome === 'object' && typeof chrome.identity === 'object' && chrome.
 				files: 'wl.skydrive',
 				publish: 'wl.share',
 				publish_files: 'wl.skydrive_update',
+				share: 'wl.share',
 				create_event: 'wl.calendars_update,wl.events_create',
 				offline_access: 'wl.offline_access'
 			},
@@ -7287,6 +7298,13 @@ if (typeof chrome === 'object' && typeof chrome.identity === 'object' && chrome.
 
 	function formatFriend(contact) {
 		contact.id = null;
+
+		// #362: Reports of responses returning a single item, rather than an Array of items.
+		// Format the contact.fields to be an array.
+		if (contact.fields && !(contact.fields instanceof Array)) {
+			contact.fields = [contact.fields];
+		}
+
 		(contact.fields || []).forEach(function(field) {
 			if (field.type === 'email') {
 				contact.email = field.value;
@@ -7336,1691 +7354,7 @@ if (typeof module === 'object' && module.exports) {
 
 }).call(this,require('_process'))
 
-},{"_process":63}],13:[function(require,module,exports){
-/**
- * Gets the last element of `array`.
- *
- * @static
- * @memberOf _
- * @category Array
- * @param {Array} array The array to query.
- * @returns {*} Returns the last element of `array`.
- * @example
- *
- * _.last([1, 2, 3]);
- * // => 3
- */
-function last(array) {
-  var length = array ? array.length : 0;
-  return length ? array[length - 1] : undefined;
-}
-
-module.exports = last;
-
-},{}],14:[function(require,module,exports){
-var baseEach = require('../internal/baseEach'),
-    createFind = require('../internal/createFind');
-
-/**
- * Iterates over elements of `collection`, returning the first element
- * `predicate` returns truthy for. The predicate is bound to `thisArg` and
- * invoked with three arguments: (value, index|key, collection).
- *
- * If a property name is provided for `predicate` the created `_.property`
- * style callback returns the property value of the given element.
- *
- * If a value is also provided for `thisArg` the created `_.matchesProperty`
- * style callback returns `true` for elements that have a matching property
- * value, else `false`.
- *
- * If an object is provided for `predicate` the created `_.matches` style
- * callback returns `true` for elements that have the properties of the given
- * object, else `false`.
- *
- * @static
- * @memberOf _
- * @alias detect
- * @category Collection
- * @param {Array|Object|string} collection The collection to search.
- * @param {Function|Object|string} [predicate=_.identity] The function invoked
- *  per iteration.
- * @param {*} [thisArg] The `this` binding of `predicate`.
- * @returns {*} Returns the matched element, else `undefined`.
- * @example
- *
- * var users = [
- *   { 'user': 'barney',  'age': 36, 'active': true },
- *   { 'user': 'fred',    'age': 40, 'active': false },
- *   { 'user': 'pebbles', 'age': 1,  'active': true }
- * ];
- *
- * _.result(_.find(users, function(chr) {
- *   return chr.age < 40;
- * }), 'user');
- * // => 'barney'
- *
- * // using the `_.matches` callback shorthand
- * _.result(_.find(users, { 'age': 1, 'active': true }), 'user');
- * // => 'pebbles'
- *
- * // using the `_.matchesProperty` callback shorthand
- * _.result(_.find(users, 'active', false), 'user');
- * // => 'fred'
- *
- * // using the `_.property` callback shorthand
- * _.result(_.find(users, 'active'), 'user');
- * // => 'barney'
- */
-var find = createFind(baseEach);
-
-module.exports = find;
-
-},{"../internal/baseEach":17,"../internal/createFind":35}],15:[function(require,module,exports){
-/**
- * A specialized version of `_.some` for arrays without support for callback
- * shorthands and `this` binding.
- *
- * @private
- * @param {Array} array The array to iterate over.
- * @param {Function} predicate The function invoked per iteration.
- * @returns {boolean} Returns `true` if any element passes the predicate check,
- *  else `false`.
- */
-function arraySome(array, predicate) {
-  var index = -1,
-      length = array.length;
-
-  while (++index < length) {
-    if (predicate(array[index], index, array)) {
-      return true;
-    }
-  }
-  return false;
-}
-
-module.exports = arraySome;
-
-},{}],16:[function(require,module,exports){
-var baseMatches = require('./baseMatches'),
-    baseMatchesProperty = require('./baseMatchesProperty'),
-    bindCallback = require('./bindCallback'),
-    identity = require('../utility/identity'),
-    property = require('../utility/property');
-
-/**
- * The base implementation of `_.callback` which supports specifying the
- * number of arguments to provide to `func`.
- *
- * @private
- * @param {*} [func=_.identity] The value to convert to a callback.
- * @param {*} [thisArg] The `this` binding of `func`.
- * @param {number} [argCount] The number of arguments to provide to `func`.
- * @returns {Function} Returns the callback.
- */
-function baseCallback(func, thisArg, argCount) {
-  var type = typeof func;
-  if (type == 'function') {
-    return thisArg === undefined
-      ? func
-      : bindCallback(func, thisArg, argCount);
-  }
-  if (func == null) {
-    return identity;
-  }
-  if (type == 'object') {
-    return baseMatches(func);
-  }
-  return thisArg === undefined
-    ? property(func)
-    : baseMatchesProperty(func, thisArg);
-}
-
-module.exports = baseCallback;
-
-},{"../utility/identity":60,"../utility/property":61,"./baseMatches":26,"./baseMatchesProperty":27,"./bindCallback":32}],17:[function(require,module,exports){
-var baseForOwn = require('./baseForOwn'),
-    createBaseEach = require('./createBaseEach');
-
-/**
- * The base implementation of `_.forEach` without support for callback
- * shorthands and `this` binding.
- *
- * @private
- * @param {Array|Object|string} collection The collection to iterate over.
- * @param {Function} iteratee The function invoked per iteration.
- * @returns {Array|Object|string} Returns `collection`.
- */
-var baseEach = createBaseEach(baseForOwn);
-
-module.exports = baseEach;
-
-},{"./baseForOwn":21,"./createBaseEach":33}],18:[function(require,module,exports){
-/**
- * The base implementation of `_.find`, `_.findLast`, `_.findKey`, and `_.findLastKey`,
- * without support for callback shorthands and `this` binding, which iterates
- * over `collection` using the provided `eachFunc`.
- *
- * @private
- * @param {Array|Object|string} collection The collection to search.
- * @param {Function} predicate The function invoked per iteration.
- * @param {Function} eachFunc The function to iterate over `collection`.
- * @param {boolean} [retKey] Specify returning the key of the found element
- *  instead of the element itself.
- * @returns {*} Returns the found element or its key, else `undefined`.
- */
-function baseFind(collection, predicate, eachFunc, retKey) {
-  var result;
-  eachFunc(collection, function(value, key, collection) {
-    if (predicate(value, key, collection)) {
-      result = retKey ? key : value;
-      return false;
-    }
-  });
-  return result;
-}
-
-module.exports = baseFind;
-
-},{}],19:[function(require,module,exports){
-/**
- * The base implementation of `_.findIndex` and `_.findLastIndex` without
- * support for callback shorthands and `this` binding.
- *
- * @private
- * @param {Array} array The array to search.
- * @param {Function} predicate The function invoked per iteration.
- * @param {boolean} [fromRight] Specify iterating from right to left.
- * @returns {number} Returns the index of the matched value, else `-1`.
- */
-function baseFindIndex(array, predicate, fromRight) {
-  var length = array.length,
-      index = fromRight ? length : -1;
-
-  while ((fromRight ? index-- : ++index < length)) {
-    if (predicate(array[index], index, array)) {
-      return index;
-    }
-  }
-  return -1;
-}
-
-module.exports = baseFindIndex;
-
-},{}],20:[function(require,module,exports){
-var createBaseFor = require('./createBaseFor');
-
-/**
- * The base implementation of `baseForIn` and `baseForOwn` which iterates
- * over `object` properties returned by `keysFunc` invoking `iteratee` for
- * each property. Iteratee functions may exit iteration early by explicitly
- * returning `false`.
- *
- * @private
- * @param {Object} object The object to iterate over.
- * @param {Function} iteratee The function invoked per iteration.
- * @param {Function} keysFunc The function to get the keys of `object`.
- * @returns {Object} Returns `object`.
- */
-var baseFor = createBaseFor();
-
-module.exports = baseFor;
-
-},{"./createBaseFor":34}],21:[function(require,module,exports){
-var baseFor = require('./baseFor'),
-    keys = require('../object/keys');
-
-/**
- * The base implementation of `_.forOwn` without support for callback
- * shorthands and `this` binding.
- *
- * @private
- * @param {Object} object The object to iterate over.
- * @param {Function} iteratee The function invoked per iteration.
- * @returns {Object} Returns `object`.
- */
-function baseForOwn(object, iteratee) {
-  return baseFor(object, iteratee, keys);
-}
-
-module.exports = baseForOwn;
-
-},{"../object/keys":57,"./baseFor":20}],22:[function(require,module,exports){
-var toObject = require('./toObject');
-
-/**
- * The base implementation of `get` without support for string paths
- * and default values.
- *
- * @private
- * @param {Object} object The object to query.
- * @param {Array} path The path of the property to get.
- * @param {string} [pathKey] The key representation of path.
- * @returns {*} Returns the resolved value.
- */
-function baseGet(object, path, pathKey) {
-  if (object == null) {
-    return;
-  }
-  if (pathKey !== undefined && pathKey in toObject(object)) {
-    path = [pathKey];
-  }
-  var index = 0,
-      length = path.length;
-
-  while (object != null && index < length) {
-    object = object[path[index++]];
-  }
-  return (index && index == length) ? object : undefined;
-}
-
-module.exports = baseGet;
-
-},{"./toObject":49}],23:[function(require,module,exports){
-var baseIsEqualDeep = require('./baseIsEqualDeep'),
-    isObject = require('../lang/isObject'),
-    isObjectLike = require('./isObjectLike');
-
-/**
- * The base implementation of `_.isEqual` without support for `this` binding
- * `customizer` functions.
- *
- * @private
- * @param {*} value The value to compare.
- * @param {*} other The other value to compare.
- * @param {Function} [customizer] The function to customize comparing values.
- * @param {boolean} [isLoose] Specify performing partial comparisons.
- * @param {Array} [stackA] Tracks traversed `value` objects.
- * @param {Array} [stackB] Tracks traversed `other` objects.
- * @returns {boolean} Returns `true` if the values are equivalent, else `false`.
- */
-function baseIsEqual(value, other, customizer, isLoose, stackA, stackB) {
-  if (value === other) {
-    return true;
-  }
-  if (value == null || other == null || (!isObject(value) && !isObjectLike(other))) {
-    return value !== value && other !== other;
-  }
-  return baseIsEqualDeep(value, other, baseIsEqual, customizer, isLoose, stackA, stackB);
-}
-
-module.exports = baseIsEqual;
-
-},{"../lang/isObject":55,"./baseIsEqualDeep":24,"./isObjectLike":46}],24:[function(require,module,exports){
-var equalArrays = require('./equalArrays'),
-    equalByTag = require('./equalByTag'),
-    equalObjects = require('./equalObjects'),
-    isArray = require('../lang/isArray'),
-    isTypedArray = require('../lang/isTypedArray');
-
-/** `Object#toString` result references. */
-var argsTag = '[object Arguments]',
-    arrayTag = '[object Array]',
-    objectTag = '[object Object]';
-
-/** Used for native method references. */
-var objectProto = Object.prototype;
-
-/** Used to check objects for own properties. */
-var hasOwnProperty = objectProto.hasOwnProperty;
-
-/**
- * Used to resolve the [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
- * of values.
- */
-var objToString = objectProto.toString;
-
-/**
- * A specialized version of `baseIsEqual` for arrays and objects which performs
- * deep comparisons and tracks traversed objects enabling objects with circular
- * references to be compared.
- *
- * @private
- * @param {Object} object The object to compare.
- * @param {Object} other The other object to compare.
- * @param {Function} equalFunc The function to determine equivalents of values.
- * @param {Function} [customizer] The function to customize comparing objects.
- * @param {boolean} [isLoose] Specify performing partial comparisons.
- * @param {Array} [stackA=[]] Tracks traversed `value` objects.
- * @param {Array} [stackB=[]] Tracks traversed `other` objects.
- * @returns {boolean} Returns `true` if the objects are equivalent, else `false`.
- */
-function baseIsEqualDeep(object, other, equalFunc, customizer, isLoose, stackA, stackB) {
-  var objIsArr = isArray(object),
-      othIsArr = isArray(other),
-      objTag = arrayTag,
-      othTag = arrayTag;
-
-  if (!objIsArr) {
-    objTag = objToString.call(object);
-    if (objTag == argsTag) {
-      objTag = objectTag;
-    } else if (objTag != objectTag) {
-      objIsArr = isTypedArray(object);
-    }
-  }
-  if (!othIsArr) {
-    othTag = objToString.call(other);
-    if (othTag == argsTag) {
-      othTag = objectTag;
-    } else if (othTag != objectTag) {
-      othIsArr = isTypedArray(other);
-    }
-  }
-  var objIsObj = objTag == objectTag,
-      othIsObj = othTag == objectTag,
-      isSameTag = objTag == othTag;
-
-  if (isSameTag && !(objIsArr || objIsObj)) {
-    return equalByTag(object, other, objTag);
-  }
-  if (!isLoose) {
-    var objIsWrapped = objIsObj && hasOwnProperty.call(object, '__wrapped__'),
-        othIsWrapped = othIsObj && hasOwnProperty.call(other, '__wrapped__');
-
-    if (objIsWrapped || othIsWrapped) {
-      return equalFunc(objIsWrapped ? object.value() : object, othIsWrapped ? other.value() : other, customizer, isLoose, stackA, stackB);
-    }
-  }
-  if (!isSameTag) {
-    return false;
-  }
-  // Assume cyclic values are equal.
-  // For more information on detecting circular references see https://es5.github.io/#JO.
-  stackA || (stackA = []);
-  stackB || (stackB = []);
-
-  var length = stackA.length;
-  while (length--) {
-    if (stackA[length] == object) {
-      return stackB[length] == other;
-    }
-  }
-  // Add `object` and `other` to the stack of traversed objects.
-  stackA.push(object);
-  stackB.push(other);
-
-  var result = (objIsArr ? equalArrays : equalObjects)(object, other, equalFunc, customizer, isLoose, stackA, stackB);
-
-  stackA.pop();
-  stackB.pop();
-
-  return result;
-}
-
-module.exports = baseIsEqualDeep;
-
-},{"../lang/isArray":52,"../lang/isTypedArray":56,"./equalArrays":36,"./equalByTag":37,"./equalObjects":38}],25:[function(require,module,exports){
-var baseIsEqual = require('./baseIsEqual'),
-    toObject = require('./toObject');
-
-/**
- * The base implementation of `_.isMatch` without support for callback
- * shorthands and `this` binding.
- *
- * @private
- * @param {Object} object The object to inspect.
- * @param {Array} matchData The propery names, values, and compare flags to match.
- * @param {Function} [customizer] The function to customize comparing objects.
- * @returns {boolean} Returns `true` if `object` is a match, else `false`.
- */
-function baseIsMatch(object, matchData, customizer) {
-  var index = matchData.length,
-      length = index,
-      noCustomizer = !customizer;
-
-  if (object == null) {
-    return !length;
-  }
-  object = toObject(object);
-  while (index--) {
-    var data = matchData[index];
-    if ((noCustomizer && data[2])
-          ? data[1] !== object[data[0]]
-          : !(data[0] in object)
-        ) {
-      return false;
-    }
-  }
-  while (++index < length) {
-    data = matchData[index];
-    var key = data[0],
-        objValue = object[key],
-        srcValue = data[1];
-
-    if (noCustomizer && data[2]) {
-      if (objValue === undefined && !(key in object)) {
-        return false;
-      }
-    } else {
-      var result = customizer ? customizer(objValue, srcValue, key) : undefined;
-      if (!(result === undefined ? baseIsEqual(srcValue, objValue, customizer, true) : result)) {
-        return false;
-      }
-    }
-  }
-  return true;
-}
-
-module.exports = baseIsMatch;
-
-},{"./baseIsEqual":23,"./toObject":49}],26:[function(require,module,exports){
-var baseIsMatch = require('./baseIsMatch'),
-    getMatchData = require('./getMatchData'),
-    toObject = require('./toObject');
-
-/**
- * The base implementation of `_.matches` which does not clone `source`.
- *
- * @private
- * @param {Object} source The object of property values to match.
- * @returns {Function} Returns the new function.
- */
-function baseMatches(source) {
-  var matchData = getMatchData(source);
-  if (matchData.length == 1 && matchData[0][2]) {
-    var key = matchData[0][0],
-        value = matchData[0][1];
-
-    return function(object) {
-      if (object == null) {
-        return false;
-      }
-      return object[key] === value && (value !== undefined || (key in toObject(object)));
-    };
-  }
-  return function(object) {
-    return baseIsMatch(object, matchData);
-  };
-}
-
-module.exports = baseMatches;
-
-},{"./baseIsMatch":25,"./getMatchData":40,"./toObject":49}],27:[function(require,module,exports){
-var baseGet = require('./baseGet'),
-    baseIsEqual = require('./baseIsEqual'),
-    baseSlice = require('./baseSlice'),
-    isArray = require('../lang/isArray'),
-    isKey = require('./isKey'),
-    isStrictComparable = require('./isStrictComparable'),
-    last = require('../array/last'),
-    toObject = require('./toObject'),
-    toPath = require('./toPath');
-
-/**
- * The base implementation of `_.matchesProperty` which does not clone `srcValue`.
- *
- * @private
- * @param {string} path The path of the property to get.
- * @param {*} srcValue The value to compare.
- * @returns {Function} Returns the new function.
- */
-function baseMatchesProperty(path, srcValue) {
-  var isArr = isArray(path),
-      isCommon = isKey(path) && isStrictComparable(srcValue),
-      pathKey = (path + '');
-
-  path = toPath(path);
-  return function(object) {
-    if (object == null) {
-      return false;
-    }
-    var key = pathKey;
-    object = toObject(object);
-    if ((isArr || !isCommon) && !(key in object)) {
-      object = path.length == 1 ? object : baseGet(object, baseSlice(path, 0, -1));
-      if (object == null) {
-        return false;
-      }
-      key = last(path);
-      object = toObject(object);
-    }
-    return object[key] === srcValue
-      ? (srcValue !== undefined || (key in object))
-      : baseIsEqual(srcValue, object[key], undefined, true);
-  };
-}
-
-module.exports = baseMatchesProperty;
-
-},{"../array/last":13,"../lang/isArray":52,"./baseGet":22,"./baseIsEqual":23,"./baseSlice":30,"./isKey":44,"./isStrictComparable":47,"./toObject":49,"./toPath":50}],28:[function(require,module,exports){
-/**
- * The base implementation of `_.property` without support for deep paths.
- *
- * @private
- * @param {string} key The key of the property to get.
- * @returns {Function} Returns the new function.
- */
-function baseProperty(key) {
-  return function(object) {
-    return object == null ? undefined : object[key];
-  };
-}
-
-module.exports = baseProperty;
-
-},{}],29:[function(require,module,exports){
-var baseGet = require('./baseGet'),
-    toPath = require('./toPath');
-
-/**
- * A specialized version of `baseProperty` which supports deep paths.
- *
- * @private
- * @param {Array|string} path The path of the property to get.
- * @returns {Function} Returns the new function.
- */
-function basePropertyDeep(path) {
-  var pathKey = (path + '');
-  path = toPath(path);
-  return function(object) {
-    return baseGet(object, path, pathKey);
-  };
-}
-
-module.exports = basePropertyDeep;
-
-},{"./baseGet":22,"./toPath":50}],30:[function(require,module,exports){
-/**
- * The base implementation of `_.slice` without an iteratee call guard.
- *
- * @private
- * @param {Array} array The array to slice.
- * @param {number} [start=0] The start position.
- * @param {number} [end=array.length] The end position.
- * @returns {Array} Returns the slice of `array`.
- */
-function baseSlice(array, start, end) {
-  var index = -1,
-      length = array.length;
-
-  start = start == null ? 0 : (+start || 0);
-  if (start < 0) {
-    start = -start > length ? 0 : (length + start);
-  }
-  end = (end === undefined || end > length) ? length : (+end || 0);
-  if (end < 0) {
-    end += length;
-  }
-  length = start > end ? 0 : ((end - start) >>> 0);
-  start >>>= 0;
-
-  var result = Array(length);
-  while (++index < length) {
-    result[index] = array[index + start];
-  }
-  return result;
-}
-
-module.exports = baseSlice;
-
-},{}],31:[function(require,module,exports){
-/**
- * Converts `value` to a string if it's not one. An empty string is returned
- * for `null` or `undefined` values.
- *
- * @private
- * @param {*} value The value to process.
- * @returns {string} Returns the string.
- */
-function baseToString(value) {
-  return value == null ? '' : (value + '');
-}
-
-module.exports = baseToString;
-
-},{}],32:[function(require,module,exports){
-var identity = require('../utility/identity');
-
-/**
- * A specialized version of `baseCallback` which only supports `this` binding
- * and specifying the number of arguments to provide to `func`.
- *
- * @private
- * @param {Function} func The function to bind.
- * @param {*} thisArg The `this` binding of `func`.
- * @param {number} [argCount] The number of arguments to provide to `func`.
- * @returns {Function} Returns the callback.
- */
-function bindCallback(func, thisArg, argCount) {
-  if (typeof func != 'function') {
-    return identity;
-  }
-  if (thisArg === undefined) {
-    return func;
-  }
-  switch (argCount) {
-    case 1: return function(value) {
-      return func.call(thisArg, value);
-    };
-    case 3: return function(value, index, collection) {
-      return func.call(thisArg, value, index, collection);
-    };
-    case 4: return function(accumulator, value, index, collection) {
-      return func.call(thisArg, accumulator, value, index, collection);
-    };
-    case 5: return function(value, other, key, object, source) {
-      return func.call(thisArg, value, other, key, object, source);
-    };
-  }
-  return function() {
-    return func.apply(thisArg, arguments);
-  };
-}
-
-module.exports = bindCallback;
-
-},{"../utility/identity":60}],33:[function(require,module,exports){
-var getLength = require('./getLength'),
-    isLength = require('./isLength'),
-    toObject = require('./toObject');
-
-/**
- * Creates a `baseEach` or `baseEachRight` function.
- *
- * @private
- * @param {Function} eachFunc The function to iterate over a collection.
- * @param {boolean} [fromRight] Specify iterating from right to left.
- * @returns {Function} Returns the new base function.
- */
-function createBaseEach(eachFunc, fromRight) {
-  return function(collection, iteratee) {
-    var length = collection ? getLength(collection) : 0;
-    if (!isLength(length)) {
-      return eachFunc(collection, iteratee);
-    }
-    var index = fromRight ? length : -1,
-        iterable = toObject(collection);
-
-    while ((fromRight ? index-- : ++index < length)) {
-      if (iteratee(iterable[index], index, iterable) === false) {
-        break;
-      }
-    }
-    return collection;
-  };
-}
-
-module.exports = createBaseEach;
-
-},{"./getLength":39,"./isLength":45,"./toObject":49}],34:[function(require,module,exports){
-var toObject = require('./toObject');
-
-/**
- * Creates a base function for `_.forIn` or `_.forInRight`.
- *
- * @private
- * @param {boolean} [fromRight] Specify iterating from right to left.
- * @returns {Function} Returns the new base function.
- */
-function createBaseFor(fromRight) {
-  return function(object, iteratee, keysFunc) {
-    var iterable = toObject(object),
-        props = keysFunc(object),
-        length = props.length,
-        index = fromRight ? length : -1;
-
-    while ((fromRight ? index-- : ++index < length)) {
-      var key = props[index];
-      if (iteratee(iterable[key], key, iterable) === false) {
-        break;
-      }
-    }
-    return object;
-  };
-}
-
-module.exports = createBaseFor;
-
-},{"./toObject":49}],35:[function(require,module,exports){
-var baseCallback = require('./baseCallback'),
-    baseFind = require('./baseFind'),
-    baseFindIndex = require('./baseFindIndex'),
-    isArray = require('../lang/isArray');
-
-/**
- * Creates a `_.find` or `_.findLast` function.
- *
- * @private
- * @param {Function} eachFunc The function to iterate over a collection.
- * @param {boolean} [fromRight] Specify iterating from right to left.
- * @returns {Function} Returns the new find function.
- */
-function createFind(eachFunc, fromRight) {
-  return function(collection, predicate, thisArg) {
-    predicate = baseCallback(predicate, thisArg, 3);
-    if (isArray(collection)) {
-      var index = baseFindIndex(collection, predicate, fromRight);
-      return index > -1 ? collection[index] : undefined;
-    }
-    return baseFind(collection, predicate, eachFunc);
-  };
-}
-
-module.exports = createFind;
-
-},{"../lang/isArray":52,"./baseCallback":16,"./baseFind":18,"./baseFindIndex":19}],36:[function(require,module,exports){
-var arraySome = require('./arraySome');
-
-/**
- * A specialized version of `baseIsEqualDeep` for arrays with support for
- * partial deep comparisons.
- *
- * @private
- * @param {Array} array The array to compare.
- * @param {Array} other The other array to compare.
- * @param {Function} equalFunc The function to determine equivalents of values.
- * @param {Function} [customizer] The function to customize comparing arrays.
- * @param {boolean} [isLoose] Specify performing partial comparisons.
- * @param {Array} [stackA] Tracks traversed `value` objects.
- * @param {Array} [stackB] Tracks traversed `other` objects.
- * @returns {boolean} Returns `true` if the arrays are equivalent, else `false`.
- */
-function equalArrays(array, other, equalFunc, customizer, isLoose, stackA, stackB) {
-  var index = -1,
-      arrLength = array.length,
-      othLength = other.length;
-
-  if (arrLength != othLength && !(isLoose && othLength > arrLength)) {
-    return false;
-  }
-  // Ignore non-index properties.
-  while (++index < arrLength) {
-    var arrValue = array[index],
-        othValue = other[index],
-        result = customizer ? customizer(isLoose ? othValue : arrValue, isLoose ? arrValue : othValue, index) : undefined;
-
-    if (result !== undefined) {
-      if (result) {
-        continue;
-      }
-      return false;
-    }
-    // Recursively compare arrays (susceptible to call stack limits).
-    if (isLoose) {
-      if (!arraySome(other, function(othValue) {
-            return arrValue === othValue || equalFunc(arrValue, othValue, customizer, isLoose, stackA, stackB);
-          })) {
-        return false;
-      }
-    } else if (!(arrValue === othValue || equalFunc(arrValue, othValue, customizer, isLoose, stackA, stackB))) {
-      return false;
-    }
-  }
-  return true;
-}
-
-module.exports = equalArrays;
-
-},{"./arraySome":15}],37:[function(require,module,exports){
-/** `Object#toString` result references. */
-var boolTag = '[object Boolean]',
-    dateTag = '[object Date]',
-    errorTag = '[object Error]',
-    numberTag = '[object Number]',
-    regexpTag = '[object RegExp]',
-    stringTag = '[object String]';
-
-/**
- * A specialized version of `baseIsEqualDeep` for comparing objects of
- * the same `toStringTag`.
- *
- * **Note:** This function only supports comparing values with tags of
- * `Boolean`, `Date`, `Error`, `Number`, `RegExp`, or `String`.
- *
- * @private
- * @param {Object} object The object to compare.
- * @param {Object} other The other object to compare.
- * @param {string} tag The `toStringTag` of the objects to compare.
- * @returns {boolean} Returns `true` if the objects are equivalent, else `false`.
- */
-function equalByTag(object, other, tag) {
-  switch (tag) {
-    case boolTag:
-    case dateTag:
-      // Coerce dates and booleans to numbers, dates to milliseconds and booleans
-      // to `1` or `0` treating invalid dates coerced to `NaN` as not equal.
-      return +object == +other;
-
-    case errorTag:
-      return object.name == other.name && object.message == other.message;
-
-    case numberTag:
-      // Treat `NaN` vs. `NaN` as equal.
-      return (object != +object)
-        ? other != +other
-        : object == +other;
-
-    case regexpTag:
-    case stringTag:
-      // Coerce regexes to strings and treat strings primitives and string
-      // objects as equal. See https://es5.github.io/#x15.10.6.4 for more details.
-      return object == (other + '');
-  }
-  return false;
-}
-
-module.exports = equalByTag;
-
-},{}],38:[function(require,module,exports){
-var keys = require('../object/keys');
-
-/** Used for native method references. */
-var objectProto = Object.prototype;
-
-/** Used to check objects for own properties. */
-var hasOwnProperty = objectProto.hasOwnProperty;
-
-/**
- * A specialized version of `baseIsEqualDeep` for objects with support for
- * partial deep comparisons.
- *
- * @private
- * @param {Object} object The object to compare.
- * @param {Object} other The other object to compare.
- * @param {Function} equalFunc The function to determine equivalents of values.
- * @param {Function} [customizer] The function to customize comparing values.
- * @param {boolean} [isLoose] Specify performing partial comparisons.
- * @param {Array} [stackA] Tracks traversed `value` objects.
- * @param {Array} [stackB] Tracks traversed `other` objects.
- * @returns {boolean} Returns `true` if the objects are equivalent, else `false`.
- */
-function equalObjects(object, other, equalFunc, customizer, isLoose, stackA, stackB) {
-  var objProps = keys(object),
-      objLength = objProps.length,
-      othProps = keys(other),
-      othLength = othProps.length;
-
-  if (objLength != othLength && !isLoose) {
-    return false;
-  }
-  var index = objLength;
-  while (index--) {
-    var key = objProps[index];
-    if (!(isLoose ? key in other : hasOwnProperty.call(other, key))) {
-      return false;
-    }
-  }
-  var skipCtor = isLoose;
-  while (++index < objLength) {
-    key = objProps[index];
-    var objValue = object[key],
-        othValue = other[key],
-        result = customizer ? customizer(isLoose ? othValue : objValue, isLoose? objValue : othValue, key) : undefined;
-
-    // Recursively compare objects (susceptible to call stack limits).
-    if (!(result === undefined ? equalFunc(objValue, othValue, customizer, isLoose, stackA, stackB) : result)) {
-      return false;
-    }
-    skipCtor || (skipCtor = key == 'constructor');
-  }
-  if (!skipCtor) {
-    var objCtor = object.constructor,
-        othCtor = other.constructor;
-
-    // Non `Object` object instances with different constructors are not equal.
-    if (objCtor != othCtor &&
-        ('constructor' in object && 'constructor' in other) &&
-        !(typeof objCtor == 'function' && objCtor instanceof objCtor &&
-          typeof othCtor == 'function' && othCtor instanceof othCtor)) {
-      return false;
-    }
-  }
-  return true;
-}
-
-module.exports = equalObjects;
-
-},{"../object/keys":57}],39:[function(require,module,exports){
-var baseProperty = require('./baseProperty');
-
-/**
- * Gets the "length" property value of `object`.
- *
- * **Note:** This function is used to avoid a [JIT bug](https://bugs.webkit.org/show_bug.cgi?id=142792)
- * that affects Safari on at least iOS 8.1-8.3 ARM64.
- *
- * @private
- * @param {Object} object The object to query.
- * @returns {*} Returns the "length" value.
- */
-var getLength = baseProperty('length');
-
-module.exports = getLength;
-
-},{"./baseProperty":28}],40:[function(require,module,exports){
-var isStrictComparable = require('./isStrictComparable'),
-    pairs = require('../object/pairs');
-
-/**
- * Gets the propery names, values, and compare flags of `object`.
- *
- * @private
- * @param {Object} object The object to query.
- * @returns {Array} Returns the match data of `object`.
- */
-function getMatchData(object) {
-  var result = pairs(object),
-      length = result.length;
-
-  while (length--) {
-    result[length][2] = isStrictComparable(result[length][1]);
-  }
-  return result;
-}
-
-module.exports = getMatchData;
-
-},{"../object/pairs":59,"./isStrictComparable":47}],41:[function(require,module,exports){
-var isNative = require('../lang/isNative');
-
-/**
- * Gets the native function at `key` of `object`.
- *
- * @private
- * @param {Object} object The object to query.
- * @param {string} key The key of the method to get.
- * @returns {*} Returns the function if it's native, else `undefined`.
- */
-function getNative(object, key) {
-  var value = object == null ? undefined : object[key];
-  return isNative(value) ? value : undefined;
-}
-
-module.exports = getNative;
-
-},{"../lang/isNative":54}],42:[function(require,module,exports){
-var getLength = require('./getLength'),
-    isLength = require('./isLength');
-
-/**
- * Checks if `value` is array-like.
- *
- * @private
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is array-like, else `false`.
- */
-function isArrayLike(value) {
-  return value != null && isLength(getLength(value));
-}
-
-module.exports = isArrayLike;
-
-},{"./getLength":39,"./isLength":45}],43:[function(require,module,exports){
-/** Used to detect unsigned integer values. */
-var reIsUint = /^\d+$/;
-
-/**
- * Used as the [maximum length](http://ecma-international.org/ecma-262/6.0/#sec-number.max_safe_integer)
- * of an array-like value.
- */
-var MAX_SAFE_INTEGER = 9007199254740991;
-
-/**
- * Checks if `value` is a valid array-like index.
- *
- * @private
- * @param {*} value The value to check.
- * @param {number} [length=MAX_SAFE_INTEGER] The upper bounds of a valid index.
- * @returns {boolean} Returns `true` if `value` is a valid index, else `false`.
- */
-function isIndex(value, length) {
-  value = (typeof value == 'number' || reIsUint.test(value)) ? +value : -1;
-  length = length == null ? MAX_SAFE_INTEGER : length;
-  return value > -1 && value % 1 == 0 && value < length;
-}
-
-module.exports = isIndex;
-
-},{}],44:[function(require,module,exports){
-var isArray = require('../lang/isArray'),
-    toObject = require('./toObject');
-
-/** Used to match property names within property paths. */
-var reIsDeepProp = /\.|\[(?:[^[\]]*|(["'])(?:(?!\1)[^\n\\]|\\.)*?\1)\]/,
-    reIsPlainProp = /^\w*$/;
-
-/**
- * Checks if `value` is a property name and not a property path.
- *
- * @private
- * @param {*} value The value to check.
- * @param {Object} [object] The object to query keys on.
- * @returns {boolean} Returns `true` if `value` is a property name, else `false`.
- */
-function isKey(value, object) {
-  var type = typeof value;
-  if ((type == 'string' && reIsPlainProp.test(value)) || type == 'number') {
-    return true;
-  }
-  if (isArray(value)) {
-    return false;
-  }
-  var result = !reIsDeepProp.test(value);
-  return result || (object != null && value in toObject(object));
-}
-
-module.exports = isKey;
-
-},{"../lang/isArray":52,"./toObject":49}],45:[function(require,module,exports){
-/**
- * Used as the [maximum length](http://ecma-international.org/ecma-262/6.0/#sec-number.max_safe_integer)
- * of an array-like value.
- */
-var MAX_SAFE_INTEGER = 9007199254740991;
-
-/**
- * Checks if `value` is a valid array-like length.
- *
- * **Note:** This function is based on [`ToLength`](http://ecma-international.org/ecma-262/6.0/#sec-tolength).
- *
- * @private
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is a valid length, else `false`.
- */
-function isLength(value) {
-  return typeof value == 'number' && value > -1 && value % 1 == 0 && value <= MAX_SAFE_INTEGER;
-}
-
-module.exports = isLength;
-
-},{}],46:[function(require,module,exports){
-/**
- * Checks if `value` is object-like.
- *
- * @private
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is object-like, else `false`.
- */
-function isObjectLike(value) {
-  return !!value && typeof value == 'object';
-}
-
-module.exports = isObjectLike;
-
-},{}],47:[function(require,module,exports){
-var isObject = require('../lang/isObject');
-
-/**
- * Checks if `value` is suitable for strict equality comparisons, i.e. `===`.
- *
- * @private
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` if suitable for strict
- *  equality comparisons, else `false`.
- */
-function isStrictComparable(value) {
-  return value === value && !isObject(value);
-}
-
-module.exports = isStrictComparable;
-
-},{"../lang/isObject":55}],48:[function(require,module,exports){
-var isArguments = require('../lang/isArguments'),
-    isArray = require('../lang/isArray'),
-    isIndex = require('./isIndex'),
-    isLength = require('./isLength'),
-    keysIn = require('../object/keysIn');
-
-/** Used for native method references. */
-var objectProto = Object.prototype;
-
-/** Used to check objects for own properties. */
-var hasOwnProperty = objectProto.hasOwnProperty;
-
-/**
- * A fallback implementation of `Object.keys` which creates an array of the
- * own enumerable property names of `object`.
- *
- * @private
- * @param {Object} object The object to query.
- * @returns {Array} Returns the array of property names.
- */
-function shimKeys(object) {
-  var props = keysIn(object),
-      propsLength = props.length,
-      length = propsLength && object.length;
-
-  var allowIndexes = !!length && isLength(length) &&
-    (isArray(object) || isArguments(object));
-
-  var index = -1,
-      result = [];
-
-  while (++index < propsLength) {
-    var key = props[index];
-    if ((allowIndexes && isIndex(key, length)) || hasOwnProperty.call(object, key)) {
-      result.push(key);
-    }
-  }
-  return result;
-}
-
-module.exports = shimKeys;
-
-},{"../lang/isArguments":51,"../lang/isArray":52,"../object/keysIn":58,"./isIndex":43,"./isLength":45}],49:[function(require,module,exports){
-var isObject = require('../lang/isObject');
-
-/**
- * Converts `value` to an object if it's not one.
- *
- * @private
- * @param {*} value The value to process.
- * @returns {Object} Returns the object.
- */
-function toObject(value) {
-  return isObject(value) ? value : Object(value);
-}
-
-module.exports = toObject;
-
-},{"../lang/isObject":55}],50:[function(require,module,exports){
-var baseToString = require('./baseToString'),
-    isArray = require('../lang/isArray');
-
-/** Used to match property names within property paths. */
-var rePropName = /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\n\\]|\\.)*?)\2)\]/g;
-
-/** Used to match backslashes in property paths. */
-var reEscapeChar = /\\(\\)?/g;
-
-/**
- * Converts `value` to property path array if it's not one.
- *
- * @private
- * @param {*} value The value to process.
- * @returns {Array} Returns the property path array.
- */
-function toPath(value) {
-  if (isArray(value)) {
-    return value;
-  }
-  var result = [];
-  baseToString(value).replace(rePropName, function(match, number, quote, string) {
-    result.push(quote ? string.replace(reEscapeChar, '$1') : (number || match));
-  });
-  return result;
-}
-
-module.exports = toPath;
-
-},{"../lang/isArray":52,"./baseToString":31}],51:[function(require,module,exports){
-var isArrayLike = require('../internal/isArrayLike'),
-    isObjectLike = require('../internal/isObjectLike');
-
-/** Used for native method references. */
-var objectProto = Object.prototype;
-
-/** Used to check objects for own properties. */
-var hasOwnProperty = objectProto.hasOwnProperty;
-
-/** Native method references. */
-var propertyIsEnumerable = objectProto.propertyIsEnumerable;
-
-/**
- * Checks if `value` is classified as an `arguments` object.
- *
- * @static
- * @memberOf _
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
- * @example
- *
- * _.isArguments(function() { return arguments; }());
- * // => true
- *
- * _.isArguments([1, 2, 3]);
- * // => false
- */
-function isArguments(value) {
-  return isObjectLike(value) && isArrayLike(value) &&
-    hasOwnProperty.call(value, 'callee') && !propertyIsEnumerable.call(value, 'callee');
-}
-
-module.exports = isArguments;
-
-},{"../internal/isArrayLike":42,"../internal/isObjectLike":46}],52:[function(require,module,exports){
-var getNative = require('../internal/getNative'),
-    isLength = require('../internal/isLength'),
-    isObjectLike = require('../internal/isObjectLike');
-
-/** `Object#toString` result references. */
-var arrayTag = '[object Array]';
-
-/** Used for native method references. */
-var objectProto = Object.prototype;
-
-/**
- * Used to resolve the [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
- * of values.
- */
-var objToString = objectProto.toString;
-
-/* Native method references for those with the same name as other `lodash` methods. */
-var nativeIsArray = getNative(Array, 'isArray');
-
-/**
- * Checks if `value` is classified as an `Array` object.
- *
- * @static
- * @memberOf _
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
- * @example
- *
- * _.isArray([1, 2, 3]);
- * // => true
- *
- * _.isArray(function() { return arguments; }());
- * // => false
- */
-var isArray = nativeIsArray || function(value) {
-  return isObjectLike(value) && isLength(value.length) && objToString.call(value) == arrayTag;
-};
-
-module.exports = isArray;
-
-},{"../internal/getNative":41,"../internal/isLength":45,"../internal/isObjectLike":46}],53:[function(require,module,exports){
-var isObject = require('./isObject');
-
-/** `Object#toString` result references. */
-var funcTag = '[object Function]';
-
-/** Used for native method references. */
-var objectProto = Object.prototype;
-
-/**
- * Used to resolve the [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
- * of values.
- */
-var objToString = objectProto.toString;
-
-/**
- * Checks if `value` is classified as a `Function` object.
- *
- * @static
- * @memberOf _
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
- * @example
- *
- * _.isFunction(_);
- * // => true
- *
- * _.isFunction(/abc/);
- * // => false
- */
-function isFunction(value) {
-  // The use of `Object#toString` avoids issues with the `typeof` operator
-  // in older versions of Chrome and Safari which return 'function' for regexes
-  // and Safari 8 which returns 'object' for typed array constructors.
-  return isObject(value) && objToString.call(value) == funcTag;
-}
-
-module.exports = isFunction;
-
-},{"./isObject":55}],54:[function(require,module,exports){
-var isFunction = require('./isFunction'),
-    isObjectLike = require('../internal/isObjectLike');
-
-/** Used to detect host constructors (Safari > 5). */
-var reIsHostCtor = /^\[object .+?Constructor\]$/;
-
-/** Used for native method references. */
-var objectProto = Object.prototype;
-
-/** Used to resolve the decompiled source of functions. */
-var fnToString = Function.prototype.toString;
-
-/** Used to check objects for own properties. */
-var hasOwnProperty = objectProto.hasOwnProperty;
-
-/** Used to detect if a method is native. */
-var reIsNative = RegExp('^' +
-  fnToString.call(hasOwnProperty).replace(/[\\^$.*+?()[\]{}|]/g, '\\$&')
-  .replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, '$1.*?') + '$'
-);
-
-/**
- * Checks if `value` is a native function.
- *
- * @static
- * @memberOf _
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is a native function, else `false`.
- * @example
- *
- * _.isNative(Array.prototype.push);
- * // => true
- *
- * _.isNative(_);
- * // => false
- */
-function isNative(value) {
-  if (value == null) {
-    return false;
-  }
-  if (isFunction(value)) {
-    return reIsNative.test(fnToString.call(value));
-  }
-  return isObjectLike(value) && reIsHostCtor.test(value);
-}
-
-module.exports = isNative;
-
-},{"../internal/isObjectLike":46,"./isFunction":53}],55:[function(require,module,exports){
-/**
- * Checks if `value` is the [language type](https://es5.github.io/#x8) of `Object`.
- * (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
- *
- * @static
- * @memberOf _
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is an object, else `false`.
- * @example
- *
- * _.isObject({});
- * // => true
- *
- * _.isObject([1, 2, 3]);
- * // => true
- *
- * _.isObject(1);
- * // => false
- */
-function isObject(value) {
-  // Avoid a V8 JIT bug in Chrome 19-20.
-  // See https://code.google.com/p/v8/issues/detail?id=2291 for more details.
-  var type = typeof value;
-  return !!value && (type == 'object' || type == 'function');
-}
-
-module.exports = isObject;
-
-},{}],56:[function(require,module,exports){
-var isLength = require('../internal/isLength'),
-    isObjectLike = require('../internal/isObjectLike');
-
-/** `Object#toString` result references. */
-var argsTag = '[object Arguments]',
-    arrayTag = '[object Array]',
-    boolTag = '[object Boolean]',
-    dateTag = '[object Date]',
-    errorTag = '[object Error]',
-    funcTag = '[object Function]',
-    mapTag = '[object Map]',
-    numberTag = '[object Number]',
-    objectTag = '[object Object]',
-    regexpTag = '[object RegExp]',
-    setTag = '[object Set]',
-    stringTag = '[object String]',
-    weakMapTag = '[object WeakMap]';
-
-var arrayBufferTag = '[object ArrayBuffer]',
-    float32Tag = '[object Float32Array]',
-    float64Tag = '[object Float64Array]',
-    int8Tag = '[object Int8Array]',
-    int16Tag = '[object Int16Array]',
-    int32Tag = '[object Int32Array]',
-    uint8Tag = '[object Uint8Array]',
-    uint8ClampedTag = '[object Uint8ClampedArray]',
-    uint16Tag = '[object Uint16Array]',
-    uint32Tag = '[object Uint32Array]';
-
-/** Used to identify `toStringTag` values of typed arrays. */
-var typedArrayTags = {};
-typedArrayTags[float32Tag] = typedArrayTags[float64Tag] =
-typedArrayTags[int8Tag] = typedArrayTags[int16Tag] =
-typedArrayTags[int32Tag] = typedArrayTags[uint8Tag] =
-typedArrayTags[uint8ClampedTag] = typedArrayTags[uint16Tag] =
-typedArrayTags[uint32Tag] = true;
-typedArrayTags[argsTag] = typedArrayTags[arrayTag] =
-typedArrayTags[arrayBufferTag] = typedArrayTags[boolTag] =
-typedArrayTags[dateTag] = typedArrayTags[errorTag] =
-typedArrayTags[funcTag] = typedArrayTags[mapTag] =
-typedArrayTags[numberTag] = typedArrayTags[objectTag] =
-typedArrayTags[regexpTag] = typedArrayTags[setTag] =
-typedArrayTags[stringTag] = typedArrayTags[weakMapTag] = false;
-
-/** Used for native method references. */
-var objectProto = Object.prototype;
-
-/**
- * Used to resolve the [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
- * of values.
- */
-var objToString = objectProto.toString;
-
-/**
- * Checks if `value` is classified as a typed array.
- *
- * @static
- * @memberOf _
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
- * @example
- *
- * _.isTypedArray(new Uint8Array);
- * // => true
- *
- * _.isTypedArray([]);
- * // => false
- */
-function isTypedArray(value) {
-  return isObjectLike(value) && isLength(value.length) && !!typedArrayTags[objToString.call(value)];
-}
-
-module.exports = isTypedArray;
-
-},{"../internal/isLength":45,"../internal/isObjectLike":46}],57:[function(require,module,exports){
-var getNative = require('../internal/getNative'),
-    isArrayLike = require('../internal/isArrayLike'),
-    isObject = require('../lang/isObject'),
-    shimKeys = require('../internal/shimKeys');
-
-/* Native method references for those with the same name as other `lodash` methods. */
-var nativeKeys = getNative(Object, 'keys');
-
-/**
- * Creates an array of the own enumerable property names of `object`.
- *
- * **Note:** Non-object values are coerced to objects. See the
- * [ES spec](http://ecma-international.org/ecma-262/6.0/#sec-object.keys)
- * for more details.
- *
- * @static
- * @memberOf _
- * @category Object
- * @param {Object} object The object to query.
- * @returns {Array} Returns the array of property names.
- * @example
- *
- * function Foo() {
- *   this.a = 1;
- *   this.b = 2;
- * }
- *
- * Foo.prototype.c = 3;
- *
- * _.keys(new Foo);
- * // => ['a', 'b'] (iteration order is not guaranteed)
- *
- * _.keys('hi');
- * // => ['0', '1']
- */
-var keys = !nativeKeys ? shimKeys : function(object) {
-  var Ctor = object == null ? undefined : object.constructor;
-  if ((typeof Ctor == 'function' && Ctor.prototype === object) ||
-      (typeof object != 'function' && isArrayLike(object))) {
-    return shimKeys(object);
-  }
-  return isObject(object) ? nativeKeys(object) : [];
-};
-
-module.exports = keys;
-
-},{"../internal/getNative":41,"../internal/isArrayLike":42,"../internal/shimKeys":48,"../lang/isObject":55}],58:[function(require,module,exports){
-var isArguments = require('../lang/isArguments'),
-    isArray = require('../lang/isArray'),
-    isIndex = require('../internal/isIndex'),
-    isLength = require('../internal/isLength'),
-    isObject = require('../lang/isObject');
-
-/** Used for native method references. */
-var objectProto = Object.prototype;
-
-/** Used to check objects for own properties. */
-var hasOwnProperty = objectProto.hasOwnProperty;
-
-/**
- * Creates an array of the own and inherited enumerable property names of `object`.
- *
- * **Note:** Non-object values are coerced to objects.
- *
- * @static
- * @memberOf _
- * @category Object
- * @param {Object} object The object to query.
- * @returns {Array} Returns the array of property names.
- * @example
- *
- * function Foo() {
- *   this.a = 1;
- *   this.b = 2;
- * }
- *
- * Foo.prototype.c = 3;
- *
- * _.keysIn(new Foo);
- * // => ['a', 'b', 'c'] (iteration order is not guaranteed)
- */
-function keysIn(object) {
-  if (object == null) {
-    return [];
-  }
-  if (!isObject(object)) {
-    object = Object(object);
-  }
-  var length = object.length;
-  length = (length && isLength(length) &&
-    (isArray(object) || isArguments(object)) && length) || 0;
-
-  var Ctor = object.constructor,
-      index = -1,
-      isProto = typeof Ctor == 'function' && Ctor.prototype === object,
-      result = Array(length),
-      skipIndexes = length > 0;
-
-  while (++index < length) {
-    result[index] = (index + '');
-  }
-  for (var key in object) {
-    if (!(skipIndexes && isIndex(key, length)) &&
-        !(key == 'constructor' && (isProto || !hasOwnProperty.call(object, key)))) {
-      result.push(key);
-    }
-  }
-  return result;
-}
-
-module.exports = keysIn;
-
-},{"../internal/isIndex":43,"../internal/isLength":45,"../lang/isArguments":51,"../lang/isArray":52,"../lang/isObject":55}],59:[function(require,module,exports){
-var keys = require('./keys'),
-    toObject = require('../internal/toObject');
-
-/**
- * Creates a two dimensional array of the key-value pairs for `object`,
- * e.g. `[[key1, value1], [key2, value2]]`.
- *
- * @static
- * @memberOf _
- * @category Object
- * @param {Object} object The object to query.
- * @returns {Array} Returns the new array of key-value pairs.
- * @example
- *
- * _.pairs({ 'barney': 36, 'fred': 40 });
- * // => [['barney', 36], ['fred', 40]] (iteration order is not guaranteed)
- */
-function pairs(object) {
-  object = toObject(object);
-
-  var index = -1,
-      props = keys(object),
-      length = props.length,
-      result = Array(length);
-
-  while (++index < length) {
-    var key = props[index];
-    result[index] = [key, object[key]];
-  }
-  return result;
-}
-
-module.exports = pairs;
-
-},{"../internal/toObject":49,"./keys":57}],60:[function(require,module,exports){
-/**
- * This method returns the first argument provided to it.
- *
- * @static
- * @memberOf _
- * @category Utility
- * @param {*} value Any value.
- * @returns {*} Returns `value`.
- * @example
- *
- * var object = { 'user': 'fred' };
- *
- * _.identity(object) === object;
- * // => true
- */
-function identity(value) {
-  return value;
-}
-
-module.exports = identity;
-
-},{}],61:[function(require,module,exports){
-var baseProperty = require('../internal/baseProperty'),
-    basePropertyDeep = require('../internal/basePropertyDeep'),
-    isKey = require('../internal/isKey');
-
-/**
- * Creates a function that returns the property value at `path` on a
- * given object.
- *
- * @static
- * @memberOf _
- * @category Utility
- * @param {Array|string} path The path of the property to get.
- * @returns {Function} Returns the new function.
- * @example
- *
- * var objects = [
- *   { 'a': { 'b': { 'c': 2 } } },
- *   { 'a': { 'b': { 'c': 1 } } }
- * ];
- *
- * _.map(objects, _.property('a.b.c'));
- * // => [2, 1]
- *
- * _.pluck(_.sortBy(objects, _.property(['a', 'b', 'c'])), 'a.b.c');
- * // => [1, 2]
- */
-function property(path) {
-  return isKey(path) ? baseProperty(path) : basePropertyDeep(path);
-}
-
-module.exports = property;
-
-},{"../internal/baseProperty":28,"../internal/basePropertyDeep":29,"../internal/isKey":44}],62:[function(require,module,exports){
+},{"_process":14}],13:[function(require,module,exports){
 (function (global){
 /**
  * marked - a markdown parser
@@ -10118,7 +8452,8 @@ function escape(html, encode) {
 }
 
 function unescape(html) {
-  return html.replace(/&([#\w]+);/g, function(_, n) {
+	// explicitly match decimal, hex, and named HTML entities 
+  return html.replace(/&(#(?:\d+)|(?:#x[0-9A-Fa-f]+)|(?:\w+));?/g, function(_, n) {
     n = n.toLowerCase();
     if (n === 'colon') return ':';
     if (n.charAt(0) === '#') {
@@ -10310,16 +8645,105 @@ if (typeof module !== 'undefined' && typeof exports === 'object') {
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
-},{}],63:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 // shim for using process in browser
-
 var process = module.exports = {};
+
+// cached from whatever global is present so that test runners that stub it
+// don't break things.  But we need to wrap it in a try catch in case it is
+// wrapped in strict mode code which doesn't define any globals.  It's inside a
+// function because try/catches deoptimize in certain engines.
+
+var cachedSetTimeout;
+var cachedClearTimeout;
+
+function defaultSetTimout() {
+    throw new Error('setTimeout has not been defined');
+}
+function defaultClearTimeout () {
+    throw new Error('clearTimeout has not been defined');
+}
+(function () {
+    try {
+        if (typeof setTimeout === 'function') {
+            cachedSetTimeout = setTimeout;
+        } else {
+            cachedSetTimeout = defaultSetTimout;
+        }
+    } catch (e) {
+        cachedSetTimeout = defaultSetTimout;
+    }
+    try {
+        if (typeof clearTimeout === 'function') {
+            cachedClearTimeout = clearTimeout;
+        } else {
+            cachedClearTimeout = defaultClearTimeout;
+        }
+    } catch (e) {
+        cachedClearTimeout = defaultClearTimeout;
+    }
+} ())
+function runTimeout(fun) {
+    if (cachedSetTimeout === setTimeout) {
+        //normal enviroments in sane situations
+        return setTimeout(fun, 0);
+    }
+    // if setTimeout wasn't available but was latter defined
+    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
+        cachedSetTimeout = setTimeout;
+        return setTimeout(fun, 0);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedSetTimeout(fun, 0);
+    } catch(e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
+            return cachedSetTimeout.call(null, fun, 0);
+        } catch(e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
+            return cachedSetTimeout.call(this, fun, 0);
+        }
+    }
+
+
+}
+function runClearTimeout(marker) {
+    if (cachedClearTimeout === clearTimeout) {
+        //normal enviroments in sane situations
+        return clearTimeout(marker);
+    }
+    // if clearTimeout wasn't available but was latter defined
+    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
+        cachedClearTimeout = clearTimeout;
+        return clearTimeout(marker);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedClearTimeout(marker);
+    } catch (e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
+            return cachedClearTimeout.call(null, marker);
+        } catch (e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
+            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
+            return cachedClearTimeout.call(this, marker);
+        }
+    }
+
+
+
+}
 var queue = [];
 var draining = false;
 var currentQueue;
 var queueIndex = -1;
 
 function cleanUpNextTick() {
+    if (!draining || !currentQueue) {
+        return;
+    }
     draining = false;
     if (currentQueue.length) {
         queue = currentQueue.concat(queue);
@@ -10335,7 +8759,7 @@ function drainQueue() {
     if (draining) {
         return;
     }
-    var timeout = setTimeout(cleanUpNextTick);
+    var timeout = runTimeout(cleanUpNextTick);
     draining = true;
 
     var len = queue.length;
@@ -10352,7 +8776,7 @@ function drainQueue() {
     }
     currentQueue = null;
     draining = false;
-    clearTimeout(timeout);
+    runClearTimeout(timeout);
 }
 
 process.nextTick = function (fun) {
@@ -10364,7 +8788,7 @@ process.nextTick = function (fun) {
     }
     queue.push(new Item(fun, args));
     if (queue.length === 1 && !draining) {
-        setTimeout(drainQueue, 0);
+        runTimeout(drainQueue);
     }
 };
 
@@ -10404,6 +8828,5 @@ process.chdir = function (dir) {
 process.umask = function() { return 0; };
 
 },{}]},{},[9])
-
 
 //# sourceMappingURL=koliseo-agenda.js.map

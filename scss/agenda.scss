@@ -8,10 +8,17 @@
     margin-top: 0;
   }
 }
+.ka-hint {
+  display: flex;
+  align-items: center;
+  @media #{$small} {
+    flex-direction: column;
+  }
+}
 .ka-hint-p {
   line-height: 1.2;
-  margin: 0 0 4px;
   &.small {
+    margin: 8px 0 0;
     font-size: smaller;
     color: $gray;
   }

@@ -6,3 +6,5 @@ build/*.map
 node_modules
 .tmp
 .gh-pages
+coverage
+.nyc_output

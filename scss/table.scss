@@ -77,3 +77,72 @@
   margin-left: 5px;
   margin-bottom: 5px;
 }
+
+.ka-mobile-only {
+  display: none;
+}
+
+
+@media #{$small} {
+
+  .ka-mobile-only {
+    display: block;
+  }
+
+  .ka-mobile-hidden {
+    display: none;
+  }
+
+  .ka-table, .ka-table-tr, .ka-table-th, .ka-body {
+    display: block;
+  }
+
+  .ka-table-th {
+    background-color: $shaded-background;
+    padding-left: $td-padding + 1rem;
+    cursor: pointer;
+    &:after {
+      float: right;
+      border-radius: 50%;
+      width: 1rem;
+      height: 1rem;
+      border: 1px solid #ccc;
+      content: '+';
+    }
+  }
+
+  .ka-table-tr.ka-expanded {
+    & > .ka-table-td {
+      display: block;
+    }
+
+    & > .ka-table-th:after {
+      content: '-';
+    }
+  }
+
+  .ka-head, .ka-table-th:only-child,  .ka-table-td, .ka-table-td-empty {
+    display: none;
+  }
+
+  .ka-label, .ka-time {
+    font-size: 80%;
+    border-radius: 3px;
+    background-color: #807e7e;
+    padding: 5px;
+    color: #fff;
+    font-weight: bold;
+    display: inline-block;
+    margin-top: 5px;
+  }
+
+
+  $colors: $green-dark, $orange-dark, $pink-dark, $purple-dark, $yellow, $teal-dark, $red-dark, $blue-darker, $brown-dark, $gray-dark;
+
+  @for $i from 1 through length($colors) {
+    .ka-label-#{$i - 1} {
+      background-color: nth($colors, $i);
+    }
+  }
+
+}
