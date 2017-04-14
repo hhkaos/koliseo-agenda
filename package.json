@@ -6,10 +6,9 @@
   "jsnext:main": "lib/main.js",
   "dependencies": {
     "es6-promise": "^4.1.0",
-    "whatwg-fetch": "^2.0.3",
     "lodash": "^4.17.4",
     "marked": "^0.3.6",
-    "hellojs": "1.14.1"
+    "whatwg-fetch": "^2.0.3"
   },
   "repository": {
     "type": "git",
@@ -29,6 +28,7 @@
     "browser-sync": "^2.18.8",
     "browserify": "^14.3.0",
     "del": "^2.2.2",
+    "fetch-mock": "^5.8.0",
     "fs-promise": "^2.0.2",
     "gulp": "^3.9.1",
     "gulp-autoprefixer": "^3.1.1",
@@ -48,6 +48,7 @@
     "jsdom-global": "^2.1.0",
     "mocha": "^3.2.0",
     "nyc": "^10.1.2",
+    "sinon": "^1.17.7",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0"
   },

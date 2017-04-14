@@ -16,10 +16,24 @@
     color: #008CBA;
     text-decoration: none;
   }
+  label.test {
+    text-transform: uppercase;
+    font-size: 10px;
+    font-weight: bold;
+    display: block;
+  }
   </style>
 </head>
 <body>
+  <form class="oauthClientID" onsubmit="onOAuthClientChange">
+    <label class="test">Client ID</label>
+    <input type="text" id="clientId">
+    <button type="submit">Change</button>
+  </form>
+  <hr>
+
   <div class="ka"></div>
+
   <script>
 
   // This is just example code. Feel free to replace with your own way to load polyfill code.
@@ -38,14 +52,24 @@
     return script;
   }
 
+  function onOAuthClientChange(e) {
+    var clientId = document.getElementById('clientId').value;
+    localStorage.setItem('test-client-id', clientId);
+    e.preventDefault();
+    window.location.reload();
+  }
+
   function onLoad() {
+    var clientId = localStorage.getItem('test-client-id');
+    document.getElementById('clientId').value = clientId || '';
+    console.log(clientId? `Client ID ${clientId} will be used to talk to the server` : 'Client ID not configured, the widget will be read-only');
     if (typeof Koliseo !== 'undefined' && Koliseo.agenda && typeof fetch !== 'undefined') {
       Koliseo.agenda.render({
         //c4pUrl: 'https://www.koliseo.com/codemotion/codemotion-madrid/r4p/5685252034920448',
         c4pUrl: './json/c4p.json',
         agendaUrl: './json/codemotion.json', // 'talks.json',
         element: document.querySelector('.ka'),
-        oauthClientId: '<YOUR_OAUTH_CLIENT>',
+        oauthClientId: clientId
       })
     }
   }
