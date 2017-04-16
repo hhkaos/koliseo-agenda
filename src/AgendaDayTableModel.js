@@ -7,7 +7,7 @@
 // Data for a cell. Can be a talk or information about a break
 class TalkTableCell {
 
-  constructor({ id, start, end, contents }) {
+  constructor({ id, start, end, contents, currentUser, readOnly }) {
 
     // vertical and horizontal span for this cell, 1 for single row / column
     this.colSpan = this.rowSpan = 1;
@@ -30,6 +30,7 @@ class TalkTableCell {
 
     // contents of the cell (see type). May be undefined if the slot is empty.
     this.contents = contents;
+
   }
 
 }

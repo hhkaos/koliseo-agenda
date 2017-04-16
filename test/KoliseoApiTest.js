@@ -2,8 +2,9 @@ import assert from 'assert';
 import fetchMock from 'fetch-mock';
 import sinon from 'sinon';
 import jsdom from 'jsdom';
+import 'mock-local-storage';
 
-import KoliseoAPI from '../lib/KoliseoAPI';
+import KoliseoAPI from '../src/KoliseoAPI';
 
 const URL = 'https://example.com/foo'
 
@@ -26,9 +27,10 @@ describe('KoliseoAPI', () => {
     });
     global.document = doc;
     global.window = doc.defaultView;
+    global.location = window.location;
 
     return KoliseoAPI.init({
-      c4pUrl: '/foobar/',
+      c4pUrl: '/foobar',
       oauthClientId: 'MY-CLIENT-ID'
     });
   });
@@ -52,10 +54,10 @@ describe('KoliseoAPI', () => {
       return api.init();
     }).then((currentUser) => {
       assert.equal('kk', JSON.stringify(currentUser));
-      api.onLogout(onLogoutListener);
+      KoliseoAPI.onLogout(onLogoutListener);
       assert.fail();
     }).then(() => {
-      api.logout();
+      KoliseoAPI.logout();
       assert(onLogout.callendOnce());
     })
   });
@@ -65,17 +67,18 @@ describe('KoliseoAPI', () => {
   });
 
   it('logs out automatically when credentials have expired', () => {
-    fetchMock.get(/me/, {
-      status: 401,
-      headers: { 'Content-Type': 'application/json' },
-      body: '{ "error": { "message": "Credentials have expired" } }',
-      bodyUsed: true
+    fetchMock.post(/agenda\/likes/, (args, request) => {
+      assert.equal('Bearer foobar', request.headers.Authorization);
+      return {
+        // todo: use a real value
+        name: "User John Doe"
+      };
     });
     const onLogoutListener = sinon.spy();
 
+    KoliseoAPI.onLogout(onLogoutListener);
     return withFakeCredentials({ expires_in: 100 }).then(() => {
-      KoliseoAPI.onLogout(onLogoutListener);
-      return KoliseoAPI.sendFeedback({ id: 5, rating: 3, comment: 'hello' });
+      return KoliseoAPI.addLike(5);
     }).then(() => {
       assert.fail('Operation should not have succeeded')
     }).catch((e) => {
@@ -86,17 +89,17 @@ describe('KoliseoAPI', () => {
   });
 
   it('addLike', () => {
-    fetchMock.get(/addLike/, (args, request) => {
-      assert.equal('Bearer: foo', request.headers.Authorization);
+    fetchMock.post(/agenda\/likes/, (args, request) => {
+      assert.equal('Bearer foobar', request.headers.Authorization);
       return {
         // todo: use a real value
         name: "User John Doe"
       };
     });
-    withFakeCredentials().then(() => {
+    return withFakeCredentials().then(() => {
       return KoliseoAPI.addLike({ talkId: 5 })
-    }).then((like) => {
-      assert.equal('kk', JSON.stringify(like));
+    }).then((user) => {
+      assert.equal('User John Doe', user.name);
     })
   })
 

@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "Display the Koliseo Agenda for an event",
   "main": "build/koliseo-agenda.min.js",
-  "jsnext:main": "lib/main.js",
+  "jsnext:main": "src/main.js",
   "dependencies": {
     "es6-promise": "^4.1.0",
     "lodash": "^4.17.4",
@@ -47,6 +47,7 @@
     "jsdom": "^9.9.1",
     "jsdom-global": "^2.1.0",
     "mocha": "^3.2.0",
+    "mock-local-storage": "^1.0.2",
     "nyc": "^10.1.2",
     "sinon": "^1.17.7",
     "vinyl-buffer": "^1.0.0",

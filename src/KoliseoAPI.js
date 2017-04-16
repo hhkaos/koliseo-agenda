@@ -27,12 +27,11 @@ function getUrlParameter(url, name) {
 // extract the access token from the URL, validating state if necessary
 // also saves the token in localStorage
 function getTokenFromUrl() {
-  const access_token = getUrlParameter('access_token');
-  const expires_in = getUrlParameter('expires_in');
-  debugger;
+  const access_token = getUrlParameter(location.href, 'access_token');
+  const expires_in = getUrlParameter(location.href, 'expires_in');
   if (access_token && expires_in) { 
     const state = localStorage.getItem('ka-state');
-    if (state == getUrlParameter('state')) {
+    if (state == getUrlParameter(location.href, 'state')) {
       const result = { access_token, expires_in };
       localStorage.setItem('ka-token', result);
       localStorage.removeItem('ka-state');
@@ -47,9 +46,7 @@ const URL = 'https://www.koliseo.com';
 /**
  * this.c4pUrl: (required) the URL to talk to
  * this.token: (optional) the oauth token
- * this.currentUser: (optional)the currently logged in user
  * this.oauthClientId: (optional) The Koliseo clientID of this application
- * this.readOnly: true if there is no oauthClientID configured (write operations are disabled)
  * 
  * Stores in localStorage:
  * ka-state: (optional) state sent to OAuth identity provider
@@ -63,22 +60,21 @@ class KoliseoAPI {
     assert(c4pUrl, 'Missing c4pUrl');
     this.c4pUrl = c4pUrl;
     this.oauthClientId = oauthClientId;
-    this.token = getTokenFromUrl() || localStorage.getItem('ka-token');
-    this.readOnly = !oauthClientId;
+    this.token = getTokenFromUrl();
+    if (!this.token) {
+      const s = localStorage.getItem('ka-token');
+      this.token = JSON.parse(s);
+    }
     this.logoutListeners = [];
-    return this.getCurrentUser();
   }
 
   getCurrentUser() {
     return !this.token || this.token.expires_in < new Date().getTime()? Promise.resolve() : this.fetch({
-      endpoint: '/me'
-    }).then((user) => {
-      this.currentUser = user;
-      return user;
+      url: URL + '/me'
     });
   }
 
-  fetch({ endpoint, method = 'get', body }) {
+  fetch({ url, method = 'get', body }) {
     const headers = {
       'Accept': 'application/json',
       'Content-Type': 'application/json'
@@ -88,7 +84,7 @@ class KoliseoAPI {
     }
 
     body = body ? JSON.stringify(body) : undefined;
-    return fetch(URL + endpoint, {
+    return fetch(url, {
       method, headers, body, credentials: 'same-origin'
     }).then(function (response) {
       // if the response is not 2xx, throw error message 
@@ -125,7 +121,7 @@ class KoliseoAPI {
 
   // logs out. Can be triggered by any method if the credentials have expired
   logout() {
-    this.currentUser = this.token = undefined;
+    this.token = undefined;
     this.logoutListeners.each(l => l());
   }
 

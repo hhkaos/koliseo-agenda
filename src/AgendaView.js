@@ -16,6 +16,8 @@ export default class AgendaView {
   constructor({
     c4p, // JSON for the C4P
     agenda, // contents of the agenda as JSON
+    currentUser,
+    likes,
     element // DOM node to render everything into
   }) {
     // the original JSON data
@@ -75,6 +77,16 @@ export default class AgendaView {
     if (!KoliseoAPI.readOnly) {
       this.renderUserInfo();
     }
+
+    // after rendering, fill the likes info
+    if (KoliseoAPI.currentUser) {
+
+    KoliseoAPI.getCurrentUserLikes().then((likes) => {
+
+todo();
+    })
+    }
+
   }
 
   renderDayTabs() {

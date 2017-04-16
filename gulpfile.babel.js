@@ -59,8 +59,8 @@ gulp.task('styles', () => {
 
 gulp.task('polyfill', () => {
   return browserify({
-        entries: ['lib/polyfill.js'],
-        paths: [ 'lib' ],
+        entries: ['src/polyfill.js'],
+        paths: [ 'src' ],
         debug : false // !gulp.env.production
       })
       .transform([ babelify ])
@@ -73,8 +73,8 @@ gulp.task('polyfill', () => {
 
 gulp.task('scripts', () => {
   return browserify({
-        entries: ['lib/main.js'],
-        paths: [ 'lib' ],
+        entries: ['src/main.js'],
+        paths: [ 'src' ],
         debug : true // !gulp.env.production
       })
       .transform([ babelify ])
@@ -112,7 +112,7 @@ gulp.task('serve', ['styles', 'polyfill', 'scripts', 'compress'], () => {
 
   gulp.watch(['test/*.html'], [ reload ]);
   gulp.watch(['scss/**/*.scss'], [ 'styles', reload ]);
-  gulp.watch(['lib/**'], [ 'scripts', 'compress', reload ]);
+  gulp.watch(['src/**'], [ 'scripts', 'compress', reload ]);
   gulp.watch(['img/**/*'], [ 'images', reload ]);
 });
 

@@ -1,5 +1,5 @@
 import assert from "assert";
-import AgendaDayTableModel from '../lib/AgendaDayTableModel';
+import AgendaDayTableModel from '../src/AgendaDayTableModel';
 import dayJSON from './json/day-mock';
 
 describe('AgendaDayTableModel', () => {
