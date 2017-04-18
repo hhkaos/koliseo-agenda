@@ -367,7 +367,7 @@ var AgendaDayTemplate = (function () {
 
       var track = this.model.tracks[trackIndex];
       var slot = track.slots.find(function (slot) {
-        return slot.contents.id == id;
+        return slot.contents && slot.contents.id == id;
       });
       return '\n      ' + _LikeButtonUtils2['default'].renderButton(id) + '\n      <p>\n        <a href="#' + hash + '" data-id="' + id + '" data-hash="' + hash + '" class="ka-talk-title">' + title + '</a>\n      </p>\n      ' + (!videoUrl && !slidesUrl ? '' : '<p class="ka-links">\n        ' + (!slidesUrl ? '' : '<a href="' + slidesUrl + '" target="_blank" class="icon-slideshare" title="Slides"><span class="sr-only">Slides in new window of "' + title + '"</span></a>') + '\n        ' + (!videoUrl ? '' : '<a href="' + videoUrl + '" target="_blank" class="icon-youtube-play" title="Video"><span class="sr-only">Video in new window of "' + title + '"</span></a>') + '\n      </p>') + '\n      <p class="ka-mobile-only">\n        <span class="ka-label ka-label-' + trackIndex + '">' + track.name + '</span>\n        <span class="ka-time">' + slot.start + ' - ' + slot.end + '</span>\n      </p>\n      <div class="ka-feedback-footer">' + new _feedback.TalkFeedback(arguments[0]).renderFeedback() + '</div>\n      <p class="ka-author-brief">' + authors.map(function (a) {
         return _this2.renderAuthor(a);
