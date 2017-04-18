@@ -1155,15 +1155,15 @@ var getUserFeedbackTemplate = function getUserFeedbackTemplate(_ref, isEditing) 
   var rating = _ref$rating === undefined ? 0 : _ref$rating;
   var _ref$comment = _ref.comment;
   var comment = _ref$comment === undefined ? '' : _ref$comment;
-  var lastModified = _ref.lastModified;
+  var creationDate = _ref.creationDate;
   var user = _ref.user;
 
   var width = rating * 100 / 5;
   // comment is required with 2 stars or less
   var $comment = isEditing ? '\n    <p>\n      <textarea name="comment" class="ka-comment" placeholder="Share your thoughts" maxlength="255">' + comment + '</textarea>\n      <br>\n      <button class="ka-button" ' + (!canSendFeedback(rating, comment) ? 'disabled' : '') + '>Send</button>\n      <span class="ka-messages ka-hide"></span>\n    </p>\n  ' : comment ? '<p>' + comment + '</p>' : '';
   var timestamp = '';
-  if (lastModified) {
-    var date = new Date(lastModified);
+  if (creationDate) {
+    var date = new Date(creationDate);
     timestamp = '<span class="ka-feedback-time">' + date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear() + '</span>';
   }
   return '\n    <li class="ka-avatar-li ' + (isEditing ? 'ka-editing' : '') + '">\n      <div class="ka-entry-details">\n        <a href="https://www.koliseo.com/' + user.uuid + '" class="ka-avatar-container">\n          <img class="ka-avatar-img" src="' + user.avatar + '">\n        </a>\n        <div class="ka-feedback-entry">\n          <div class="ka-author-name">\n            <span class="ka-author">' + user.name + '</span>\n            ' + timestamp + '\n          </div>\n          <div class="ka-star-cell">' + getStarBarTemplate(width, isEditing) + '</div>\n          ' + $comment + '\n        </div>\n      </div>\n    </li>\n  ';
