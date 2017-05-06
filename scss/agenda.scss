@@ -75,17 +75,13 @@
 }
 
 .ka-like {
-  display: none;
+  display: inline-block;
+  color: $gray-lighter;
   &:before {
     margin-right: 0 !important;
     margin-left: 0 !important;
   }
-  &[data-state=default] {
-    display: inline-block;
-    color: $gray-lighter;
-  }
   &[data-state=selected] {
-    display: inline-block;
     color: $red-dark;
   }
 }

@@ -1,3 +1,15 @@
+
+
+// return the GET parameter from a URL 
+// http://stackoverflow.com/questions/901115/how-can-i-get-query-string-values-in-javascript
+export function getUrlParameter(url, name) {
+  name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+  var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+    results = regex.exec(url);
+  return !results ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+
+
 var entityMap = {
   "&": "&amp;",
   "<": "&lt;",
@@ -74,3 +86,6 @@ export function closest(el, selector) {
   return undefined;
 }
 
+export function formatDate(date) {
+  return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
+}

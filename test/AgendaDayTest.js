@@ -1,10 +1,10 @@
 import assert from "assert";
-import AgendaDayTableModel from '../src/AgendaDayTableModel';
+import AgendaDay from '../src/model/AgendaDay';
 import dayJSON from './json/day-mock';
 
-describe('AgendaDayTableModel', () => {
+describe('AgendaDay', () => {
 
-  const model = new AgendaDayTableModel(dayJSON);
+  const model = new AgendaDay(dayJSON);
 
   console.log(model.data.map(row => {
     return row.map((cell) => !cell? 'undefined; ' : `rows: ${cell.rowSpan}, cols: ${cell.colSpan}; `)
@@ -28,14 +28,6 @@ describe('AgendaDayTableModel', () => {
       assert.equal(1, model.data[0][0].colSpan);
       assert.equal(2, model.data[2][0].colSpan);
     });
-  });
-
-  describe('getCoords', _ => {
-    it('should return coordinates 1,0', function() {
-      const coords = model.getCoords(112);
-      assert.equal(1, coords.row);
-      assert.equal(0, coords.col);
-    })
   });
 
 });

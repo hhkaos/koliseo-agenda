@@ -1,14 +1,24 @@
-import { formatMarkdown } from './stringutils';
-import { strToEl, transitionTo, transitionFrom } from './util';
+import { strToEl, transitionTo, transitionFrom } from '../util';
 import TalkFeedback from './TalkFeedback';
-import LikeButtonUtils from './LikeButtonUtils';
+import marked from 'marked';
+
+export function formatMarkdown(s) {
+  return marked(s || '');
+}
 
 export default class TalkDialog {
 
-  constructor({ talk, tagColors }) {
+  constructor({ 
+    // talk to show
+    talk, 
+    tagColors, 
+    // the agenda element
+    element 
+  }) {
     this.talk = talk;
     this.tagColors = tagColors;
     this.feedback = new TalkFeedback(talk);
+    this.element = element;
   }
 
   render() {
@@ -37,7 +47,7 @@ export default class TalkDialog {
       </div>
     </div>
     `;
-    document.body.insertAdjacentHTML('beforeend', html);
+    this.element.insertAdjacentHTML('beforeend', html);
     this.feedback.renderFeedbackEntries(document.querySelector('.ka-feedback-entries'));
 
     let detailsContent = document.querySelector('.ka-dialog-contents');

@@ -2,16 +2,17 @@ import jsdom from 'jsdom';
 import assert from 'assert';
 import fsp from 'fs-promise';
 import path from 'path';
-import AgendaView from '../src/AgendaView';
+import AgendaController from '../src/controller/AgendaController';
 import fetchMock from 'fetch-mock';
 import 'mock-local-storage';
-import KoliseoAPI from '../src/KoliseoAPI';
+import KoliseoAPI from '../src/controller/KoliseoAPI';
 
-describe('AgendaView', () => {
+describe('AgendaController', () => {
 
+  const URL = 'https://example.com/foo';
   const doc = jsdom.jsdom('<html><body></body></html>', {
     // history in jsdoc requires a valid URL
-    url: 'https://example.com/foo'
+    url: URL
   });
   global.document = doc;
   global.window = doc.defaultView;
@@ -19,19 +20,30 @@ describe('AgendaView', () => {
 
   let element;
 
-  function mount() {
+  before(() => {
+    fetchMock.get(/me/, {
+      id: 5,
+      name: "User John Doe"
+    });
+    fetchMock.get(/likes/, [5701657165824000, 5760220017983488]);
     return Promise.all([
       fsp.readFile(path.resolve('test/json/c4p.json')),
       fsp.readFile(path.resolve('test/json/talks.json'))
     ]).then(([c4pContents, agendaContents]) => {
-      return [JSON.parse(c4pContents), JSON.parse(agendaContents)]
-    }).then(([c4p, agenda]) => {
-      return new AgendaView({
-        c4p: c4p,
-        agenda: agenda,
-        element: element
-      }).render();
-    });
+      fetchMock.get(/agenda/, JSON.parse(agendaContents.toString()));
+      fetchMock.get(/c4p/, JSON.parse(c4pContents.toString()));
+    })
+  })
+
+
+  function mount({ 
+    c4pUrl = URL + '/c4p',
+    agendaUrl = URL + '/c4p/agenda',
+    oauthClientId = 'foobar'
+  } = {}) {
+    return new AgendaController({ 
+      c4pUrl, agendaUrl, element, oauthClientId
+    }).init();
   }
 
   beforeEach(() => {
@@ -40,17 +52,10 @@ describe('AgendaView', () => {
     document.body.appendChild(element);
 
     // the user for this test
-    fetchMock.get(/me/, {
-      name: "User John Doe"
-    });
-    fetchMock.get(/likes/, [5701657165824000, 5760220017983488]);
-
     localStorage.setItem('ka-token', JSON.stringify({
       access_token: 'foobar',
       expires_in: new Date().getTime() + 1000000
     }));
-    return KoliseoAPI.init({ c4pUrl: '/foo/bar', oauthClientId: 'foobar' });
-    
   });
 
   it('renders correctly', () => {

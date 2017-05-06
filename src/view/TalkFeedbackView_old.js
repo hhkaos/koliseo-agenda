@@ -1,18 +1,5 @@
-import util from './util';
-import KoliseoAPI from './KoliseoAPI';
-
-const MIN_STARS_WIHOUT_COMMENT = 3;
-
-let getStarBarTemplate = function(width, isEditing) {
-  return `
-    <div class="ka-star-rating">
-      <span class="ka-star-bar" style="width: ${width}%"></span>
-      ${!isEditing? '' : [1,2,3,4,5].map((star) => {
-        return `<a data-rating="${star}" title="${star} ${star > 1? 'stars' : 'star' }" class="ka-star ka-star-${star}"></a>`;
-      }).join('')}
-    </div>
-  `;
-}
+import util from '../util';
+import TalkStarsView from './TalkStarsView';
 
 let getAnonymousUserFeedbackTemplate = function() {
   return `
@@ -26,51 +13,14 @@ let getAnonymousUserFeedbackTemplate = function() {
           <div class="ka-author-name">
             <span class="ka-author">You must sign in to provide feedback</span>
           </div>
-          <div class="ka-star-cell">${getStarBarTemplate(0)}</div>
+          <div class="ka-star-cell">${new TalkStarsView({ userModel: this.userModel }).render()}</div>
         </div>
       </div>
     </li>
   `;
 }
 
-let canSendFeedback = (rating, comment) => {
-  return rating >= MIN_STARS_WIHOUT_COMMENT || rating >= 1 && !!comment.trim();
-}
 
-let getUserFeedbackTemplate = function({rating = 0, comment = '', lastModified, user}, isEditing) {
-  let width = rating * 100 / 5;
-  // comment is required with 2 stars or less
-  let $comment = isEditing? `
-    <p>
-      <textarea name="comment" class="ka-comment" placeholder="Share your thoughts" maxlength="255">${comment}</textarea>
-      <br>
-      <button class="ka-button" ${!canSendFeedback(rating, comment)? 'disabled' : ''}>Send</button>
-      <span class="ka-messages ka-hide"></span>
-    </p>
-  ` : comment? `<p>${comment}</p>` : '';
-  let timestamp = '';
-  if (lastModified) {
-    let date = new Date(lastModified);
-    timestamp = `<span class="ka-feedback-time">${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}</span>`;
-  }
-  return `
-    <li class="ka-avatar-li ${isEditing? 'ka-editing': ''}">
-      <div class="ka-entry-details">
-        <a href="https://www.koliseo.com/${user.uuid}" class="ka-avatar-container">
-          <img class="ka-avatar-img" src="${user.avatar}">
-        </a>
-        <div class="ka-feedback-entry">
-          <div class="ka-author-name">
-            <span class="ka-author">${user.name}</span>
-            ${timestamp}
-          </div>
-          <div class="ka-star-cell">${getStarBarTemplate(width, isEditing)}</div>
-          ${$comment}
-        </div>
-      </div>
-    </li>
-  `;
-}
 
 let showMessage = function({element, message, level, hide = true}) {
   element.innerHTML = `<span class="ka-message ${level}">${message}</span>`;
@@ -80,20 +30,17 @@ let showMessage = function({element, message, level, hide = true}) {
   }, 3000);
 }
 
-export default class TalkFeedback {
+export default class TalkFeedbackView {
 
-  constructor(talk) {
-    this.talk = talk || {};
+  constructor({ talk, userModel }) {
+    this.talk = talk;
+    this.userModel = userModel;
   }
 
   isFeedbackEnabled() {
     return Koliseo.agenda.model.feedbackEnabled;
   }
 
-  renderFeedback() {
-    let width = (this.talk.feedback && this.talk.feedback.ratingAverage * 100 / 5) || 0;
-    return width? getStarBarTemplate(width) : '';
-  }
 
   renderFeedbackEntries(element) {
     let renderFeedbackEntries = (element) => {
@@ -101,9 +48,9 @@ export default class TalkFeedback {
       element.insertAdjacentHTML('beforeend', '<ul class="ka-entries"></ul>');
       let $feedbackEntries = element.querySelector('.ka-entries');
       if (this.isFeedbackEnabled()) {
-        if (!KoliseoAPI.readOnly) {
+        if (!this.userModel.readOnly) {
           let render = (entry) => {
-            entry.user = entry.user || KoliseoAPI.currentUser;
+            entry.user = entry.user || this.userModel;
             entry.rating = entry.rating || 0;
             let html = getUserFeedbackTemplate(entry, true);
             let $li = undefined;
@@ -151,17 +98,6 @@ export default class TalkFeedback {
                 $feedbackEntries.querySelector('.ka-star-bar').style.width = (entry.rating * 100 / 5) + '%';
               }
             })
-            $comment.onkeyup = (e) => {
-              if (canSendFeedback(entry.rating, $comment.value)) {
-                $sendButton.removeAttribute('disabled');
-              } else {
-                $sendButton.disabled = true;
-              }
-              showCommentMessage({
-                comment: $comment.value,
-                rating: entry.rating
-              })
-            };
             $sendButton.onclick = () => {
               let comment = $comment.value;
               KoliseoAPI.sendFeedback({id: this.talk.id, rating: entry.rating, comment}, (resp) => {
@@ -173,15 +109,15 @@ export default class TalkFeedback {
             }
           }
           KoliseoAPI.getCurrentUserFeedbackEntry(this.talk, render);
-        } else if (!KoliseoAPI.readOnly) {
+        } else if (!this.userModel.readOnly) {
           $feedbackEntries.insertAdjacentHTML('beforeend', getAnonymousUserFeedbackTemplate());
-          $feedbackEntries.querySelector('.ka-button').onclick = KoliseoAPI.login;
+          $feedbackEntries.querySelector('.ka-button').onclick = KoliseoAPI.login();
         }
       }
 
       KoliseoAPI.getFeedbackEntries(this.talk.id, undefined, (entries) => {
         entries.forEach((entry) => {
-          if (!KoliseoAPI.currentUser || entry.user.id !== KoliseoAPI.currentUser.id) {
+          if (this.userModel.isLoggedIn() || entry.user.id !== this.userModel.id) {
             let html = getUserFeedbackTemplate(entry);
             html && $feedbackEntries.insertAdjacentHTML('beforeend', html);
           }
@@ -189,8 +125,6 @@ export default class TalkFeedback {
       })
     };
     renderFeedbackEntries(element);
-    KoliseoAPI.on('login', () => { renderFeedbackEntries(element); });
-    KoliseoAPI.on('logout', () => { renderFeedbackEntries(element); });
   }
 }
 

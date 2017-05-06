@@ -3,8 +3,9 @@ import fetchMock from 'fetch-mock';
 import sinon from 'sinon';
 import jsdom from 'jsdom';
 import 'mock-local-storage';
+import { getUrlParameter } from '../src/util';
 
-import KoliseoAPI from '../src/KoliseoAPI';
+import KoliseoAPI from '../src/controller/KoliseoAPI';
 
 const URL = 'https://example.com/foo'
 
@@ -15,7 +16,8 @@ function withFakeCredentials({
 } = {}) {
   localStorage.setItem('ka-token', JSON.stringify({ access_token, expires_in }));
   const { c4pUrl, oauthClientId } = KoliseoAPI;
-  return KoliseoAPI.init({ c4pUrl, oauthClientId });
+  KoliseoAPI.init({ c4pUrl, oauthClientId });
+  return Promise.resolve();
 }
 
 describe('KoliseoAPI', () => {
@@ -28,6 +30,8 @@ describe('KoliseoAPI', () => {
     global.document = doc;
     global.window = doc.defaultView;
     global.location = window.location;
+
+    global.alert = sinon.spy();
 
     return KoliseoAPI.init({
       c4pUrl: '/foobar',
@@ -48,59 +52,54 @@ describe('KoliseoAPI', () => {
       };
     });
     const onLogoutListener = sinon.spy();
-    return api.login().then(() => {
-      assert.equal('kk', location.href);
+    KoliseoAPI.navigate=sinon.spy(KoliseoAPI.navigate); 
+    return withFakeCredentials().then(() => {
+      KoliseoAPI.login();
+      const redirectedUrl = KoliseoAPI.navigate.args[0][0];
+      assert(redirectedUrl.startsWith('https://www.koliseo.com/login/auth?client_id=MY-CLIENT-ID&response_type=token&redirect_uri=https%3A%2F%2Fexample.com%2Ffoo%3FoauthCallback&scope=talks.feedback&state='));
       location.href = `${URL}?state=${localStorage.getItem('ka-state')}&access_token=foo&expires_in=${new Date().getTime() + 1000000 }`;
-      return api.init();
+      const state = getUrlParameter(redirectedUrl, 'state');
+      window.history.pushState({}, "after login", URL + `?state=${state}&access_token=barbaz&expires_in=${new Date().getTime() + 1000000}`);
+      KoliseoAPI.init({
+        c4pUrl: KoliseoAPI.c4pUrl,
+        oauthClientId: KoliseoAPI.oauthClientId
+      });
+      return KoliseoAPI.getCurrentUser();
     }).then((currentUser) => {
-      assert.equal('kk', JSON.stringify(currentUser));
+      assert(localStorage.getItem('ka-token'));
+      assert(!localStorage.getItem('ka-state'));
+      assert.equal('User John Doe', currentUser.name);
       KoliseoAPI.onLogout(onLogoutListener);
-      assert.fail();
-    }).then(() => {
       KoliseoAPI.logout();
-      assert(onLogout.callendOnce());
+    }).then(() => {
+      assert(onLogoutListener.calledOnce);
+      assert(!KoliseoAPI.token);
+      assert(!localStorage.getItem('ka-token'));
+      assert(!localStorage.getItem('ka-state'));
     })
-  });
-
-  it('checks state while logging in', () => {
-    assert.fail('todo');
   });
 
   it('logs out automatically when credentials have expired', () => {
     fetchMock.post(/agenda\/likes/, (args, request) => {
       assert.equal('Bearer foobar', request.headers.Authorization);
       return {
-        // todo: use a real value
-        name: "User John Doe"
+        status: 401
       };
     });
     const onLogoutListener = sinon.spy();
 
     KoliseoAPI.onLogout(onLogoutListener);
     return withFakeCredentials({ expires_in: 100 }).then(() => {
+      KoliseoAPI.onLogout(onLogoutListener);
       return KoliseoAPI.addLike(5);
     }).then(() => {
       assert.fail('Operation should not have succeeded')
     }).catch((e) => {
-      assert.equal('kk', e.message);
+      assert(alert.calledOnce);
       assert.equal(401, e.status);
+      assert.equal('Error contacting the Koliseo server: 401', e.message);
       assert(onLogoutListener.calledOnce);
     })
   });
-
-  it('addLike', () => {
-    fetchMock.post(/agenda\/likes/, (args, request) => {
-      assert.equal('Bearer foobar', request.headers.Authorization);
-      return {
-        // todo: use a real value
-        name: "User John Doe"
-      };
-    });
-    return withFakeCredentials().then(() => {
-      return KoliseoAPI.addLike({ talkId: 5 })
-    }).then((user) => {
-      assert.equal('User John Doe', user.name);
-    })
-  })
 
 });

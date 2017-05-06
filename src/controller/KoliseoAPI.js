@@ -1,3 +1,4 @@
+import { getUrlParameter } from '../util';
 
 // generate a random identifier
 // http://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
@@ -14,15 +15,6 @@ function assert(assertion, message) {
   }
 }
 
-
-// return the GET parameter from a URL 
-// http://stackoverflow.com/questions/901115/how-can-i-get-query-string-values-in-javascript
-function getUrlParameter(url, name) {
-  name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-  var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-    results = regex.exec(url);
-  return !results ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-}
 
 // extract the access token from the URL, validating state if necessary
 // also saves the token in localStorage
@@ -56,7 +48,7 @@ class KoliseoAPI {
 
   // initializes the parameters to communicate to the server
   // returns a Promise that returns the current user
-  init({ c4pUrl, oauthClientId }) {
+  init({ c4pUrl, oauthClientId } = {}) {
     assert(c4pUrl, 'Missing c4pUrl');
     this.c4pUrl = c4pUrl;
     this.oauthClientId = oauthClientId;
@@ -65,18 +57,18 @@ class KoliseoAPI {
       const s = localStorage.getItem('ka-token');
       this.token = JSON.parse(s);
     }
-    this.logoutListeners = [];
   }
 
   getCurrentUser() {
-    return !this.token || this.token.expires_in < new Date().getTime()? Promise.resolve() : this.fetch({
+    return this.fetch({
       url: URL + '/me'
     });
   }
 
   fetch({ url, method = 'get', body }) {
     const headers = {
-      'Accept': 'application/json',
+      Accept: 'application/json',
+      Mode: 'cors',
       'Content-Type': 'application/json'
     };
     if (this.token) {
@@ -112,17 +104,27 @@ class KoliseoAPI {
     localStorage.setItem('ka-state', state);
     let redirect_uri = location.href.split('#')[0];
     redirect_uri = encodeURIComponent(redirect_uri + (redirect_uri.indexOf('?') == -1? '?' : '&') + 'oauthCallback');
-    location.href=`${URL}/login/auth?client_id=${this.oauthClientId}&response_type=token&redirect_uri=${redirect_uri}&scope=talks.feedback&state=${state}`
+    this.navigate(`${URL}/login/auth?client_id=${this.oauthClientId}&response_type=token&redirect_uri=${redirect_uri}&scope=talks.feedback&state=${state}`);
   }
 
-  onLogout(listener) {
-    this.logoutListeners.push(listener);
+  // go to the specified URL
+  navigate(url) {
+    location.href=url;
   }
 
   // logs out. Can be triggered by any method if the credentials have expired
   logout() {
     this.token = undefined;
-    this.logoutListeners.each(l => l());
+    localStorage.removeItem('ka-state');
+    localStorage.removeItem('ka-token');
+  }
+
+  getC4p() {
+    return this.fetch({ url: this.c4pUrl });
+  }
+
+  getAgenda() {
+    return this.fetch({ url: this.c4pUrl + '/agenda' });
   }
 
   sendFeedback({ id, rating, comment }) {

@@ -1,47 +1,17 @@
+import TalkTableCell from './TalkTableCell';
+
 /**
 
   Bidimensional array of talks. Represents the contents of an agenda for a day.
 
+
 */
-
-// Data for a cell. Can be a talk or information about a break
-class TalkTableCell {
-
-  constructor({ id, start, end, contents, currentUser, readOnly }) {
-
-    // vertical and horizontal span for this cell, 1 for single row / column
-    this.colSpan = this.rowSpan = 1;
-
-    // talk id
-    this.id = id;
-
-    // start time
-    this.start = start;
-
-    // end time
-    this.end = end;
-
-    // type of the cell. One of:
-    // 'TALK': see the talk data inside this.contents
-    // 'BREAK': a break. See the break title in contents.title
-    // 'EXTEND': this talk extends another track. See contents.trackId
-    // undefined if the slot is empty
-    this.type = contents && contents.type || undefined;
-
-    // contents of the cell (see type). May be undefined if the slot is empty.
-    this.contents = contents;
-
-  }
-
-}
-
-export default class AgendaDayTableModel {
+export default class AgendaDay {
 
   constructor({ id, name, tracks }) {
 
     // HACK: sort the tracks alphabetically. Once sorting is supported by Koliseo, this can be removed
     tracks.sort((t1, t2) => t1.name.localeCompare(t2.name));
-
 
     this.id = id;
     this.name = name;
@@ -125,21 +95,6 @@ export default class AgendaDayTableModel {
   // label.end
   getRowLabelIndex({ start, end }) {
     return this.rowLabels.indexOf(this.rowLabels.find(label => (!start || label.start == start) && (!end || label.end == end)));
-  }
-
-  getCoords(talkId) {
-    for (let rowIndex = 0; rowIndex < this.data.length; rowIndex++) {
-      const row = this.data[rowIndex];
-      for (let colIndex = 0; colIndex < row.length; colIndex++) {
-        if (row[colIndex] && row[colIndex].id == talkId) {
-          return {
-            row: rowIndex,
-            col: colIndex
-          }
-        }
-      }
-    }
-    return null;
   }
 
   isEmpty() {
