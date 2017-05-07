@@ -1,6 +1,5 @@
-build/*.map
+build
 *.orig
-*.sublime-workspace
 *.log
 *.map
 node_modules
