@@ -3,7 +3,12 @@
 // can be used to show the star average or to enter rating input from the user
 export default class TalkFeedbackStars {
 
-  constructor({ feedback, user }) {
+  constructor({ 
+    // {TalkFeedback} the feedback to display
+    talkFeedback, 
+    // {User} the current user
+    user 
+  }) {
     this.feedback = feedback;
     this.user = user; 
   }

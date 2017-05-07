@@ -7,7 +7,7 @@
       "request": "launch",
       "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
       "args": [ "--compilers", "js:babel-register", "--no-timeouts",
-        "test/KoliseoApiTest.js" ],
+        "test/AgendaControllerTest.js" ],
       "sourceMaps": true,
       "cwd": "${workspaceRoot}"
     }
