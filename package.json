@@ -5,9 +5,11 @@
   "main": "build/koliseo-agenda.min.js",
   "jsnext:main": "src/main.js",
   "dependencies": {
+    "alt-ng": "^0.1.0",
     "es6-promise": "^4.1.0",
     "lodash": "^4.17.4",
     "marked": "^0.3.6",
+    "preact": "^8.1.0",
     "whatwg-fetch": "^2.0.3"
   },
   "repository": {
