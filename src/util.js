@@ -9,7 +9,7 @@ export function getUrlParameter(url, name) {
   return !results ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
 
-
+/*
 var entityMap = {
   "&": "&amp;",
   "<": "&lt;",
@@ -49,17 +49,6 @@ export const transitionTo = transitionClassFunc();
 
 export const transitionFrom = transitionClassFunc({removeClass: true});
 
-// transform a string into a single element
-export function strToEl(str) {
-  var tmpEl = document.createElement('div');
-  tmpEl.innerHTML = str;
-  var r = tmpEl.children[0];
-  while (tmpEl.firstChild) {
-    tmpEl.removeChild(tmpEl.firstChild);
-  }
-  return r;
-};
-
 export function escapeHtml(string) {
   return String(string).replace(/[&<>"'\/]/g, function (s) {
     return entityMap[s];
@@ -70,21 +59,7 @@ export function escapeHtmlTag(strings, ...values) {
   values = values.map(exports.escapeHtml);
   return strings.reduce((str, val, i) => str += val + (values[i] || ''), '');
 }
-
-export function closest(el, selector) {
-  if (el.closest) {
-    return el.closest(selector);
-  }
-
-  var matches = el.matches || el.msMatchesSelector || el.webkitMatchesSelector;
-
-  do {
-    if (el.nodeType != 1) continue;
-    if (matches.call(el, selector)) return el;
-  } while (el = el.parentNode);
-
-  return undefined;
-}
+*/
 
 export function formatDate(date) {
   return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`

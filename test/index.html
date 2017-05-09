@@ -65,9 +65,9 @@
     console.log(clientId? `Client ID ${clientId} will be used to talk to the server` : 'Client ID not configured, the widget will be read-only');
     if (typeof Koliseo !== 'undefined' && Koliseo.agenda && typeof fetch !== 'undefined') {
       Koliseo.agenda.render({
-        //c4pUrl: 'https://www.koliseo.com/codemotion/codemotion-madrid/r4p/5685252034920448',
-        c4pUrl: './json/c4p.json',
-        agendaUrl: './json/codemotion.json', // 'talks.json',
+        c4pUrl: 'https://www.koliseo.com/codemotion/codemotion-madrid/r4p/5685252034920448',
+        //c4pUrl: './json/c4p.json',
+        //agendaUrl: './json/codemotion.json', // 'talks.json',
         element: document.querySelector('.ka'),
         oauthClientId: clientId
       })

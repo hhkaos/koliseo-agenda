@@ -1,22 +1,17 @@
-import jsdom from 'jsdom';
-import assert from 'assert';
+
+import assert from './assertions';
+import { mount } from 'enzyme';
 import fsp from 'fs-promise';
 import path from 'path';
-import AgendaBootstrap from '../src/controller/AgendaBootstrap';
+import renderAgenda from '../src/view/AgendaView';
+import KoliseoAPI from '../src/controller/KoliseoAPI';
 import fetchMock from 'fetch-mock';
 import 'mock-local-storage';
+import {URL, initDOM} from './jsdom-init'; 
 
 describe('AgendaBootstrap', () => {
 
-  const URL = 'https://example.com/foo';
-  const doc = jsdom.jsdom('<html><body></body></html>', {
-    // history in jsdoc requires a valid URL
-    url: URL
-  });
-  global.document = doc;
-  global.window = doc.defaultView;
-  global.location = window.location;
-
+  initDOM();
   let element;
 
   before(() => {
@@ -34,15 +29,12 @@ describe('AgendaBootstrap', () => {
     })
   })
 
-
-  function initAndRender({ 
-    c4pUrl = URL + '/c4p',
-    agendaUrl = URL + '/c4p/agenda',
-    oauthClientId = 'foobar'
-  } = {}) {
-    return new AgendaBootstrap({ 
-      c4pUrl, agendaUrl, element, oauthClientId
-    }).initAndRender();
+  function initAndRender() {
+    KoliseoAPI.init({
+      c4pUrl: URL + '/c4p',
+      oauthClientId: 'foobar'
+    });
+    return renderAgenda(element);
   }
 
   beforeEach(() => {
@@ -58,7 +50,9 @@ describe('AgendaBootstrap', () => {
   });
 
   it('renders correctly', () => {
-    return initAndRender()
+    return initAndRender().then(() => {
+      assert.react.exists(element, 'kk');
+    })
   })
 
 

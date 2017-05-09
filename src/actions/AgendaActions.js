@@ -1,4 +1,7 @@
 import alt from '../alt';
+import KoliseoAPI from '../controller/KoliseoAPI';
+import CallForPapers from '../model/CallForPapers';
+import Agenda from '../model/Agenda';
 
 /**
  * Actions about the agenda
@@ -25,7 +28,17 @@ const AgendaActions = {
     }
   },
 
-  
+  // loads the agenda and c4p
+  load() {
+    return Promise.all([
+      KoliseoAPI.getC4p(), KoliseoAPI.getAgenda()
+    ]).then(([c4pJSON, agendaJSON]) => { 
+      return { 
+        callForPapers: new CallForPapers(c4pJSON),
+        agenda: new Agenda(agendaJSON)
+      }
+    }) 
+  }
 
 }
 

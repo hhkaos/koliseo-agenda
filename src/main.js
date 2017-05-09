@@ -1,11 +1,13 @@
+import renderAgenda from './view/AgendaView';
+import KoliseoAPI from './controller/KoliseoAPI';
 
 const glob = typeof global !== 'undefined'? global : window;
 glob.Koliseo = glob.Koliseo || {};
 Koliseo.agenda = {
-  render: function(options) {
-    return new AgendaBootstrap(options).initAndRender().catch(e => {
+  render: function ({ c4pUrl, element, oauthClientId }) {
+    KoliseoAPI.init({ c4pUrl, oauthClientId });
+    renderAgenda(element).catch(e => {
       console.error(e);
     });
   }
 }
-export default Koliseo.agenda;

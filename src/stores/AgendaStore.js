@@ -1,10 +1,11 @@
 import alt from '../alt';
 import Store from 'alt-ng/Store';
-import AgendaActions from '../AgendaActions';
+import AgendaActions from '../actions/AgendaActions';
 
 class AgendaStore extends Store {
 
   constructor() {
+    super();
     this.state = {
       // the model/Agenda instance
       // agenda: undefined,
@@ -22,14 +23,12 @@ class AgendaStore extends Store {
 
   }
 
-  load(callForPapers, agenda) {
-    const tagColors = {};
-    callForPapers.tagCategories && Object.keys(callForPapers.tagCategories).forEach((tagCategoryName, index) => this.tagColors[tagCategoryName] = index);
+  load({ callForPapers, agenda }) {
     this.setState({
+      callForPapers,
       agenda,
       selectedDay: undefined,
       selectedTalk: undefined,
-      tagColors
     });
   }
 

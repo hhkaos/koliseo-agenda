@@ -9,7 +9,7 @@ import UserActions from '../actions/UserActions';
  * user: {User} the current user
  * displayLabel: {boolean} true to display the label
  */
-export default class LikeButton extends Component {
+export class LikeButton extends Component {
 
   constructor() {
     super();
@@ -28,8 +28,9 @@ export default class LikeButton extends Component {
   }
 
   render() {
-    const { user, talk, displayLabel } = this.props;
-    const liked = user.isLiked(talk.id);
+    const { currentUser } = this.context;
+    const { talk, displayLabel } = this.props;
+    const liked = currentUser.isLiked(talk.id);
     const state = liked? {
       value: 'selected',
       title: 'I am planning to attend this talk',

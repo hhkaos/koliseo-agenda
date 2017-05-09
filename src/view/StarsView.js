@@ -1,21 +1,19 @@
 import { h, render, Component } from 'preact';
+import PropTypes from 'prop-types';
 
 /**
  * Render a bar with stars
  * Can be used to show the star average or to enter rating input from the user
- * Properties:
- * feedback {Talk.feedback, required} feedback to display
- * user {User, required} current user
  */
-export default class TalkFeedbackStars extends Component {
+export default class TalkStarsView extends Component {
 
-  constructor({ feedback }) {
-    super();
+  constructor(props) {
+    super(props);
     this.onClick = this.onClick.bind(this);
     this.onMouseOver = this.onMouseOver.bind(this);
     this.onMouseLeave = this.onMouseLeave.bind(this);
     this.state = {
-      width: feedback.ratingAverage
+      width: props.feedback.rating
     }
   }
 
@@ -33,7 +31,7 @@ export default class TalkFeedbackStars extends Component {
 
   onMouseLeave() {
     setState({
-      width: this.props.feedback.ratingAverage
+      width: this.props.feedback.rating
     })
   }
 
@@ -46,22 +44,36 @@ export default class TalkFeedbackStars extends Component {
 
   onClick(e) {
     let rating = e.target.dataset.rating;
-    const feedback = new TalkFeedbackStars(this.props.feedback);
-    feedback.rating = rating;
+    const feedback = new TalkFeedbackStars(Object.assign({
+      rating
+    }, this.props.feedback));
     FeedbackActions.onChange(feedback);
   }
 
   render() {
-    const feedback = this.props.feedback;
+    const { feedback, editable } = this.props;
+    const { currentUser } = this.context;
+
     const width = (this.state.width * 100 / 5) + '%';
-    const isEditing = feedback.user.id == this.props.user.id;
     
     return (
-      <div className="ka-star-rating" onClick={isEditing? this.onClick : undefined }>
+      <div className="ka-star-rating" onClick={editable? this.onClick : undefined }>
         <span className="ka-star-bar" style={{ width }}></span>
-        { !isEditing? undefined : this.renderLinks() }
+        { !editable? undefined : this.renderLinks() }
       </div>
     )
   }
 
+}
+
+TalkStarsView.propTypes = {
+  // the feedback to display
+  feedback: PropTypes.shape({
+    user: PropTypes.object.isRequired,
+    rating: PropTypes.isRequired,
+    comment: PropTypes.string
+  }).isRequired,
+
+  // true if this component is editable
+  editable: PropTypes.bool
 }

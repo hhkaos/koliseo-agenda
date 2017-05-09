@@ -1,4 +1,5 @@
 import alt from '../alt';
+import KoliseoAPI from '../controller/KoliseoAPI';
 
 /**
  * Actions about the user feedback

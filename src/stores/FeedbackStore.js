@@ -1,5 +1,6 @@
 import alt from '../alt';
 import Store from 'alt-ng/Store';
+import FeedbackActions from '../actions/FeedbackActions';
 
 // minimum number of stars that should be assigned to send without a comment
 const MIN_STARS_WIHOUT_COMMENT = 3;
@@ -7,6 +8,7 @@ const MIN_STARS_WIHOUT_COMMENT = 3;
 class FeedbackStore extends Store {
 
   constructor() {
+    super();
     this.state = {
       // { level, message } warning message
       // message

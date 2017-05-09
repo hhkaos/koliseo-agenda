@@ -1,5 +1,6 @@
 import { h, render, Component } from 'preact';
-import LikeButton from './LikeButton';
+import { LikeButton } from './Buttons';
+import { SlidesLink, VideoLink } from './Links';
 import TalkFeedbackView from './TalkFeedbackView';
 
 export default class AgendaCellView extends Component {
@@ -18,16 +19,6 @@ export default class AgendaCellView extends Component {
 
   }
 
-  renderSlides({ title, slidesUrl }) {
-    return !slidesUrl ? undefined :
-      <a href={slidesUrl} target="_blank" className="icon-slideshare" title="Slides"><span className="sr-only">Slides of "{title}"</span></a>
-  }
-
-  renderVideo({ title, videoUrl }) {
-    return !videoUrl ? undefined :
-      <a href={videoUrl} target="_blank" className="icon-youtube-play" title="Video"><span className="sr-only">Video of "{title}"</span></a>
-  }
-
   renderTalk(talk) {
     const { id, hash, title, description, authors, tags, feedback, trackIndex, slidesUrl, videoUrl } = talk;
     const track = this.model.tracks[trackIndex];
@@ -39,8 +30,8 @@ export default class AgendaCellView extends Component {
           <a href={'#' + hash} data-id={id} className="ka-talk-title">{title}</a>
         </p>
         <p className="ka-links">
-          {this.renderSlides(talk)}
-          {this.renderVideo(talk)}
+          <SlidesLink href={slidesUrl} title={title} />
+          <VideoLink href={videoUrl} title={title} />
         </p>
         <p className="ka-mobile-only">
           <span className={`ka-label ka-label-${trackIndex}`}>{track.name}</span>

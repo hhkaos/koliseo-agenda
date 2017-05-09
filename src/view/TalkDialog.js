@@ -1,9 +1,11 @@
 import { h, render, Component } from 'preact';
 import { strToEl, transitionTo, transitionFrom } from '../util';
 import TalkStarsView from './TalkStarsView';
-import LikeButton from './LikeButton';
+import { LikeButton } from './Buttons';
+import { SlidesLink, VideoLink } from './Links';
 import marked from 'marked';
 import AvatarView from './AvatarView';
+import TalkFeedbackListView from './TalkFeedbackListView';
 
 export function formatMarkdown(s) {
   return marked(s || '');
@@ -30,13 +32,13 @@ export default class TalkDialog extends Component {
   }
 
   renderLinks() {
-    const { talk, user } = this.props; 
-    const { slidesUrl, videoUrl, title } = talk;
+    const { talk } = this.props; 
+    const { slidesUrl, videoUrl, title } = talk.contents;
     return (
       <div className="ka-links ka-right">
-        <LikeButton displayLabel={false} user={user} talk={talk}/>
-        {!slidesUrl? undefined : <a href={slidesUrl} target="_blank" className="icon-slideshare" title="Slides"><span className="sr-only">Slides of {title}</span></a>}
-        {!videoUrl ? undefined : <a href={videoUrl} target="_blank" className="icon-youtube-play" title="Video"><span className="sr-only">Video of {title}</span></a>}  
+        <LikeButton displayLabel={false} talk={talk}/>
+        <SlidesLink href={slidesUrl} title={ title } />
+        <VideoLink href={videoUrl} title={title} />
       </div>
     )
   }
@@ -58,7 +60,7 @@ export default class TalkDialog extends Component {
             {this.renderTags(talk.tags)}
           </div>
           <div className="ka-avatars">
-            {talk.authors.map(this.renderAuthor)}
+            {talk.contents.authors.map(this.renderAuthor)}
           </div>
           <TalkFeedbackListView todo={true}/>
         </div>
