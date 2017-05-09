@@ -1,26 +1,31 @@
-export default class AvatarView {
+import { h, render, Component } from 'preact';
 
-  constructor(user) {
-    this.user = user;
-  }
+/**
+ * Render the avatar
+ * Properties:
+ * user: {User} the user data to render
+ */
+export default class AvatarView extends Component {
 
-  renderAnonymous() {
-    return `
-      <span class="ka-avatar-container">
-        <img class="ka-avatar-img" src="https://www.koliseo.com/less/img/avatar.gif">
-      </span>`
+  renderAnonymous(user) {
+    return (
+      <span className="ka-avatar-container">
+        <img className="ka-avatar-img" src="https://www.koliseo.com/less/img/avatar.gif" />
+      </span>
+    )
   }
 
   renderUser(user) {
-    return `
-      <a href="https://www.koliseo.com/${user.uuid}" class="ka-avatar-container">
-        <img class="ka-avatar-img" src="${user.avatar}">
-      </a>`
+    return (
+      <a href={ 'https://www.koliseo.com/' + user.uuid } className="ka-avatar-container">
+        <img className="ka-avatar-img" src={user.avatar} />
+      </a>
+    )
   }
 
   render() {
-    const user = this.user;
-    return user.isAnonymous()? this.renderAnonymous() : this.renderUser(user);
+    const user = this.props.user;
+    return user.isAnonymous()? this.renderAnonymous(user) : this.renderUser(user);
   }
 
 }

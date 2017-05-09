@@ -1,100 +1,104 @@
+import { h, render, Component } from 'preact';
 import { strToEl, transitionTo, transitionFrom } from '../util';
-import TalkFeedback from './TalkFeedback';
+import TalkStarsView from './TalkStarsView';
+import LikeButton from './LikeButton';
 import marked from 'marked';
+import AvatarView from './AvatarView';
 
 export function formatMarkdown(s) {
   return marked(s || '');
 }
 
-export default class TalkDialog {
+/**
+ * Display a dialog with the talk contents
+ * Properties:
+ * talk: {AgendaCell} the talk contents
+ * tagColors: { Json of {tag, colorIndex} } the list of colors to be used for displaying the talk tags
+ */
+export default class TalkDialog extends Component {
 
-  constructor({ 
-    // talk to show
-    talk, 
-    tagColors, 
-    // the agenda element
-    element 
-  }) {
-    this.talk = talk;
-    this.tagColors = tagColors;
-    this.feedback = new TalkFeedback(talk);
-    this.element = element;
+  constructor() {
+    super();
+    this.onKeyPress = this.onKeyPress.bind(this);
+  }
+  
+  // escape key while viewing a talk closes the window
+  onKeyPress(event) {
+    if (!event.altKey && !event.ctrlKey && event.keyCode == 27) {
+      AgendaActions.unselectTalk();
+    }
+  }
+
+  renderLinks() {
+    const { talk, user } = this.props; 
+    const { slidesUrl, videoUrl, title } = talk;
+    return (
+      <div className="ka-links ka-right">
+        <LikeButton displayLabel={false} user={user} talk={talk}/>
+        {!slidesUrl? undefined : <a href={slidesUrl} target="_blank" className="icon-slideshare" title="Slides"><span className="sr-only">Slides of {title}</span></a>}
+        {!videoUrl ? undefined : <a href={videoUrl} target="_blank" className="icon-youtube-play" title="Video"><span className="sr-only">Video of {title}</span></a>}  
+      </div>
+    )
   }
 
   render() {
 
-    const talk = this.talk;
-    let links = [];
-    links.push(LikeButtonUtils.renderButton(talk.id));
-    talk.slidesUrl && links.push(`<a href="${talk.slidesUrl}" target="_blank" class="icon-slideshare" title="Slides"><span class="sr-only">Slides in new window of "${talk.title}"</span></a>`)
-    talk.videoUrl && links.push(`<a href="${talk.videoUrl}" target="_blank" class="icon-youtube-play" title="Video"><span class="sr-only">Video in new window of "${talk.title}"</span></a>`)
-    let linkContainer = !links.length? '' : `<div class="ka-links ka-right">
-      ${links.join('')}
-    </div>`;
-    const html = `
-    <div class="ka-overlay ka-hidden">
-      <div class="ka-dialog">
-        <a class="ka-close" title="close"></a>
-        <div class="ka-dialog-contents">
-          <h2 class="ka-dialog-title">${linkContainer} ${talk.title} ${this.feedback.renderFeedback()}</h2>
-          <div class="ka-dialog-description">${formatMarkdown(talk.description)}</div>
-          ${this.renderTags(talk.tags)}
+    const talk = this.props.talk;
+    return (
+      <div className="ka-overlay ka-hidden" onKeyPress={this.onKeyPress}>
+        <div className="ka-dialog">
+          <a className="ka-close" title="close"></a>
+          <div className="ka-dialog-contents">
+            <h2 className="ka-dialog-title">
+              { this.renderLinks() } 
+              {talk.title} 
+              <TalkStarsView feedback={talk.feedback} />
+            </h2>
+            <div className="ka-dialog-description" dangerouslySetInnerHTML={formatMarkdown(talk.description)}/>
+            {this.renderTags(talk.tags)}
+          </div>
+          <div className="ka-avatars">
+            {talk.authors.map(this.renderAuthor)}
+          </div>
+          <TalkFeedbackListView todo={true}/>
         </div>
-        <ul class="ka-avatars">
-          ${talk.authors.map(this.renderAuthor).join('')}
-        </ul>
-        <div class="ka-feedback-entries"></div>
       </div>
-    </div>
-    `;
-    this.element.insertAdjacentHTML('beforeend', html);
-    this.feedback.renderFeedbackEntries(document.querySelector('.ka-feedback-entries'));
-
-    let detailsContent = document.querySelector('.ka-dialog-contents');
-    LikeButtonUtils.addUpdateListener(detailsContent);
-    detailsContent.querySelector('.ka-like').onclick = LikeButtonUtils.onClickListener;
-
-    this.$overlay = document.querySelector('.ka-overlay');
-    this.show();
-    return this;
+    );
   }
 
   renderTags() {
-    const tags = this.talk.tags;
+    const tags = this.props.talk.tags;
     if (!tags) {
-      return '';
+      return undefined;
     }
-    return '<div class="ka-tags">' +
-      Object.keys(tags).map(category => {
-        return tags[category].map(tag => `<span class="tag tag${this.tagColors[category]}">${tag}</span>`).join(' ')
-      }).join(' ') +
-      '</div>'
+    return (
+      <div className="ka-tags">
+        {
+          Object.keys(tags).map(category => {
+            return tags[category].map(tag => <span key={category} className={ 'tag tag' + this.tagColors[category] }>{tag}</span>)
+          }) 
+        }
+      </div>
+    )
   }
 
-  renderAuthor({ id, uuid, name, avatar, description, twitterAccount }) {
-    avatar = avatar.indexOf('//') == 0? ('https:' + avatar) : avatar;
-    let $name = `<a href="https://www.koliseo.com/${uuid}" class="ka-author-name">${name}</a>`;
-    return `
-      <li class="ka-avatar-li ka-avatar-and-text">
-        <span class="ka-avatar-container">
-          <span style="display:table-row">
-            <a href="https://www.koliseo.com/${uuid}" class="ka-avatar-img"><img src="${avatar}" class="ka-avatar-img"></a>
-            ${
-              !twitterAccount? $name : `
-              <span class="ka-author-name-container">
-                ${$name}
-                <a href="https://twitter.com/${twitterAccount}" class="ka-author-twitter" target="_blank">@${twitterAccount}</a>
-              </span>`
-            }
-          </span>
+  renderAuthor(user) {
+    const { id, uuid, name, avatar, description, twitterAccount } = user;
+    return (
+      <div className="ka-avatar-li ka-avatar-and-text">
+        <AvatarView user={user}/>
+        <span className="ka-author-name-container">
+          <a href={'https://www.koliseo.com/' + uuid} className="ka-author-name">{name}</a>
+          {!twitterAccount ? undefined : <a href={'https://twitter.com/' + twitterAccount} className="ka-author-twitter" target="_blank">@{twitterAccount}</a>}
         </span>
-        <div class="ka-author-data">
-          <div class="ka-author-description">${formatMarkdown(description)}</div>
+        <div className="ka-author-data">
+          <div className="ka-author-description" dangerouslySetInnerHTML={formatMarkdown(description)}></div>
         </div>
-      </li>
-    `
+      </div>
+    )
   }
-
+/*
+todo:
   show() {
     // delay the show so that the transition can kick in
     transitionFrom(this.$overlay, 'ka-hidden');
@@ -104,6 +108,6 @@ export default class TalkDialog {
     const $overlay = this.$overlay;
     transitionTo($overlay, 'ka-hidden').then(() => $overlay.parentNode.removeChild($overlay))
   }
-
+*/
 
 };

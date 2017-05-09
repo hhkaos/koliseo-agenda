@@ -2,12 +2,11 @@ import jsdom from 'jsdom';
 import assert from 'assert';
 import fsp from 'fs-promise';
 import path from 'path';
-import AgendaController from '../src/controller/AgendaController';
+import AgendaBootstrap from '../src/controller/AgendaBootstrap';
 import fetchMock from 'fetch-mock';
 import 'mock-local-storage';
-import KoliseoAPI from '../src/controller/KoliseoAPI';
 
-describe('AgendaController', () => {
+describe('AgendaBootstrap', () => {
 
   const URL = 'https://example.com/foo';
   const doc = jsdom.jsdom('<html><body></body></html>', {
@@ -36,14 +35,14 @@ describe('AgendaController', () => {
   })
 
 
-  function mount({ 
+  function initAndRender({ 
     c4pUrl = URL + '/c4p',
     agendaUrl = URL + '/c4p/agenda',
     oauthClientId = 'foobar'
   } = {}) {
-    return new AgendaController({ 
+    return new AgendaBootstrap({ 
       c4pUrl, agendaUrl, element, oauthClientId
-    }).init();
+    }).initAndRender();
   }
 
   beforeEach(() => {
@@ -59,7 +58,7 @@ describe('AgendaController', () => {
   });
 
   it('renders correctly', () => {
-    return mount();
+    return initAndRender()
   })
 
 

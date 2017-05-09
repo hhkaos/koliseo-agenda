@@ -1,35 +1,67 @@
+import { h, render, Component } from 'preact';
 
-// render a bar with stars
-// can be used to show the star average or to enter rating input from the user
-export default class TalkFeedbackStars {
+/**
+ * Render a bar with stars
+ * Can be used to show the star average or to enter rating input from the user
+ * Properties:
+ * feedback {Talk.feedback, required} feedback to display
+ * user {User, required} current user
+ */
+export default class TalkFeedbackStars extends Component {
 
-  constructor({ 
-    // {TalkFeedback} the feedback to display
-    talkFeedback, 
-    // {User} the current user
-    user 
-  }) {
-    this.feedback = feedback;
-    this.user = user; 
+  constructor({ feedback }) {
+    super();
+    this.onClick = this.onClick.bind(this);
+    this.onMouseOver = this.onMouseOver.bind(this);
+    this.onMouseLeave = this.onMouseLeave.bind(this);
+    this.state = {
+      width: feedback.ratingAverage
+    }
   }
 
-  renderLinks() {
+  renderLinks(isEditing) {
     return [1, 2, 3, 4, 5].map((star) => {
-      return `<a data-rating="${star}" title="${star} ${star > 1 ? 'stars' : 'star'}" class="ka-star ka-star-${star}"></a>`;
-    }).join('');
+      return <a 
+        data-rating={star} 
+        key={star}
+        className={ `ka-star ka-star-${star}` } 
+        onMouseOver={this.onMouseOver}
+        onMouseLeave={this.onMouseLeave}
+      />
+    });
+  }
+
+  onMouseLeave() {
+    setState({
+      width: this.props.feedback.ratingAverage
+    })
+  }
+
+  onMouseOver(e) {
+    let width = e.target.dataset.rating;
+    setState({
+      width: rating
+    })
+  }
+
+  onClick(e) {
+    let rating = e.target.dataset.rating;
+    const feedback = new TalkFeedbackStars(this.props.feedback);
+    feedback.rating = rating;
+    FeedbackActions.onChange(feedback);
   }
 
   render() {
-    const feedback = this.feedback;
-    const width = feedback.ratingAverage * 100 / 5;
-    const isEditing = feedback.user.id == this.user.id;
+    const feedback = this.props.feedback;
+    const width = (this.state.width * 100 / 5) + '%';
+    const isEditing = feedback.user.id == this.props.user.id;
     
-    return `
-      <div class="ka-star-rating">
-        <span class="ka-star-bar" style="width: ${width}%"></span>
-        ${!isEditing ? '' : this.renderLinks()}
+    return (
+      <div className="ka-star-rating" onClick={isEditing? this.onClick : undefined }>
+        <span className="ka-star-bar" style={{ width }}></span>
+        { !isEditing? undefined : this.renderLinks() }
       </div>
-    `
+    )
   }
 
 }

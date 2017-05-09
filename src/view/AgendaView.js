@@ -1,70 +1,70 @@
+import { h, render, Component } from 'preact';
 import { AgendaDayView } from './AgendaDayView';
 import TalkDialog from './TalkDialog';
 
 /**
+ * Displays an entire agenda, including multiple days
+ * Properties: 
+ * callForPapers: {CallForPapers} The data about the call for papers ofd this agenda
+ * agenda: {Agenda} the agenda to render
+ * user: {User} the current user
+ */
+export default class AgendaView extends Component {
 
-  Displays an entire agenda, including multiple days
+  constructor(props) {
+    super(props);
+    const { callForPapers } = props;
 
-  @class
-*/
-
-export default class AgendaView {
-
-  constructor({
-    c4pModel, // JSON for the C4P
-    agendaModel, // contents of the agenda as JSON
-    user,
-    element // DOM node to render everything into
-  }) {
-    // the original JSON data
-    this.c4pModel = c4pModel;
-    this.agendaModel = agendaModel;
     this.pageTitle = document.title;
-    this.user = user;
-    this.element = element;
-
-    this.tagColors = {};
-    c4pModel.tagCategories && Object.keys(c4pModel.tagCategories).forEach((tagCategoryName, index) => this.tagColors[tagCategoryName] = index);
-
-    // the DOM element to modify
-    this.element = element;
+    this.onClick = this.onClick.bind(this);
   }
 
+  onClick(e) {
+    e.preventDefault();
+    const dayId = e.target.getAttribute('data-day-id');
+    AgendaActions.selectDay(agendaModel.daysById[dayId]);
+  }
+
+
+
   // renders the tabs and content around our table
-  renderWorkspace() {
-    const html =
-      this.renderUserInfo() +
-      this.renderDayTabs() +
-      `
-      <div class="kworkspace"></div>
-      <div class="ka-hint">
-        <a href="http://koliseo.com" target="_blank" class="ka-logo"></a>
-        <p class="ka-hint-p small">Handcrafted with ♥ in a couple of places scattered around Europe</p>
-      </div>`;
-    this.element.classList.add('ka');
-    this.element.innerHTML = html;
+  render() {
+    return (
+      <div>
+        { this.renderDayTabs() }
+        <div className="kworkspace">
+          <AgendaDayView day={this.state.selectedDay} />
+        </div>
+        <div className="ka-hint">
+          <a href="http://koliseo.com" target="_blank" className="ka-logo"></a>
+          <p className="ka-hint-p small">Handcrafted with ♥ in a couple of places scattered around Europe</p>
+        </div>
+      </div>
+    )
   }
 
   // render the tabs to move between days
   renderDayTabs() {
-    const days = this.agendaModel.getDaysArray();
-    if (days.length == 1) 
-      return `<h2 class="kday-title">${days[0].name}</h2>`;
+    const days = this.props.agenda.getDaysArray();
+    if (days.length == 1) {
+      return <h2 className="kday-title">{days[0].name}</h2>;
+    }
 
-    const tabLinks = this.agendaModel.getDaysArray().map(({ id, name }) => {
-      return `
-        <li class="ka-tab-li">
-        <a class="ka-tab-a" data-day-id="${id}" href="#${id}">${name}</a>
-        </li>
-      `
-    }).join('');
-
-    return `
-      <ul class="ka-tabs">
-        ${tabLinks}
-        <li class="ka-tab-li ka-right" id="ka-user-info"></li>
-      </ul>
-    `
+    return (
+      <nav className="ka-tabs">
+        { this.renderUserInfo() }
+        {
+          this.agenda.getDaysArray().map(({ id, name }) => {
+            const className = id == (this.state.selectedDay? 'selected ' : '' ) + 'ka-tab-a'
+            return (
+              <div className="ka-tab-li" key={id}>
+                <a className={className} data-day-id={id} href={'#' + id}>{name}</a>
+              </div>
+            )
+          })
+        }
+      </nav>
+    )
   }
 
   // render the user info and login/logout button
@@ -72,29 +72,20 @@ export default class AgendaView {
   renderUserInfo() {
     const user = this.user;
     if (user.readOnly) {
-      return '';
+      return undefined;
     }
-    const button = user.isAnonymous() ?
-      '<button class="ka-button">Sign in</button>' :
-      '<button class="ka-button ka-button-secondary">Sign out</button>';
-    return `<div class="ka-right" id="ka-user-info">${button}</div>`;
-    ;
+    return (
+      <div className="ka-right" id="ka-user-info">
+        {
+          user.isAnonymous() ?
+            <button className="ka-button">Sign in</button> :
+            <button className="ka-button ka-button-secondary">Sign out</button>
+        }
+      </div>
+    )
   }
 
-  renderDay(dayModel) {
-
-    // mark selected tab
-    Array.prototype.forEach.call(this.element.querySelectorAll('.ka-tab-a'), (a) => {
-      a.classList[a.getAttribute('data-day-id') === dayModel.id ? 'add' : 'remove']('selected')
-    })
-
-    // render table
-    this.element.querySelector('.kworkspace').innerHTML =
-      new AgendaDayView(dayModel).render();
-
-  }
-
-
+/*
   // calculate the TR to insert a new row after. It depends on the value of rowspan
   rowForDetails($td) {
     const rowSpan = parseInt($td.getAttribute('rowSpan') || '1');
@@ -104,6 +95,6 @@ export default class AgendaView {
     }
     return $tr;
   }
-
+*/
 
 };

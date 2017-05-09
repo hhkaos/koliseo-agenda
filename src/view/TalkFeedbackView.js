@@ -1,33 +1,33 @@
+import { h, render, Component } from 'preact';
 import { formatDate } from '../util';
+import AvatarView from './AvatarView';
+import TalkStarsView from './TalkStarsView';
 
 /**
  * Read-only view of talk feedback
+ * Properties:
+ * talkFeedback: {TalkFeedback} the talk feedback to display
  */
-export default class TalkFeedbackView {
-
-  constructor({ talkFeedback }) {
-    this.talkFeedback = talkFeedback;
-  }
+export default class TalkFeedbackView extends Component {
 
   render() {
-    const feedback = this.talkFeedback;
-    const { user, lastModified } = feedback;
-    const $lastModified = lastModified ? `<span class="ka-feedback-time"> ${formatDate(lastModified)}</span >` : '';
-    return `
-      <li class="ka-avatar-li">
-        <div class="ka-entry-details">
-          ${new AvatarView(user).render()}
-          <div class="ka-feedback-entry">
-            <div class="ka-author-name">
-              <span class="ka-author">${user.name}</span>
-              ${$lastModified}
+    const { talkFeedback, user } = this.options;
+    const lastModified = talkFeedback.lastModified ? <span className="ka-feedback-time">{formatDate(talkFeedback.lastModified)}</span > : undefined;
+    return (
+      <li className="ka-avatar-li">
+        <div className="ka-entry-details">
+          <AvatarView user={talkFeedback.user}/>
+          <div className="ka-feedback-entry">
+            <div className="ka-author-name">
+              <span className="ka-author">{talkFeedback.user.name}</span>
+              {lastModified}
             </div>
-            <div class="ka-star-cell">${new TalkStarsView({ feedback, user: this.user })}</div>
-            <p>${comment}</p>
+            <div className="ka-star-cell"><TalkStarsView feedback={talkFeedback} user={user}/></div>
+            <p>{talkFeedback.comment}</p>
           </div>
         </div>
       </li>
-    `
+    )
 
   }
 

@@ -1,6 +1,6 @@
 // Data for a cell. 
 // Can be a talk or information about a break
-export default class TalkTableCell {
+export default class AgendaCell {
 
   constructor({ id, start, end, contents, currentUser, readOnly }) {
 
@@ -17,9 +17,9 @@ export default class TalkTableCell {
     this.end = end;
 
     // type of the cell. One of:
-    // 'TALK': see the talk data inside this.contents
-    // 'BREAK': a break. See the break title in contents.title
-    // 'EXTEND': this talk extends another track. See contents.trackId
+    // 'TALK': the talk data is available as this.contents
+    // 'BREAK': a break. The break title is available as contents.title
+    // 'EXTEND': this talk extends another track. The extended track is at contents.trackId
     // undefined if the slot is empty
     this.type = contents && contents.type || undefined;
 

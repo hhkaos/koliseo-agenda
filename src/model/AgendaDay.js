@@ -1,4 +1,4 @@
-import TalkTableCell from './TalkTableCell';
+import AgendaCell from './AgendaCell';
 
 /**
 
@@ -49,7 +49,7 @@ export default class AgendaDay {
     // It can be removed
     this.rowLabels.pop();
 
-    // two-dimensional array of TalkTableCell
+    // two-dimensional array of AgendaCell
     this.data = rowLabels.map(_ => []);
 
     // transform data from columns into rows, including rowspans
@@ -58,7 +58,7 @@ export default class AgendaDay {
       slots.forEach((slot) => {
         const rowIndex = this.getRowLabelIndex({ start: slot.start });
         let row = this.data[rowIndex];
-        const cell = row[colIndex] = new TalkTableCell(slot);
+        const cell = row[colIndex] = new AgendaCell(slot);
         const endRowIndex = this.getRowLabelIndex({ end: slot.end });
         cell.rowSpan = (endRowIndex - rowIndex) + 1;
 
