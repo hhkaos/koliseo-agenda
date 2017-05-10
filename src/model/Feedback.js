@@ -1,3 +1,4 @@
+import User from './User';
 
 /**
  * Talk feedback
@@ -12,7 +13,7 @@ export default class Feedback {
     this.comment = comment;
 
     // {JSON Object} the user that created the feedback entry
-    this.user = user;
+    this.user = new User(user);
 
     // {Date, optional} the date of last modification 
     this.lastModified = lastModified? new Date(lastModified) : undefined;

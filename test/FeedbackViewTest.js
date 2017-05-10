@@ -6,12 +6,21 @@ import { URL, initDOM } from './mock/jsdom-init';
 import MockUserContextComponent from './mock/MockUserContextComponent';
 import Feedback from '../src/model/Feedback';
 import MockFeedback from './mock/MockFeedback';
-import StarsView from '../src/view/StarsView';
+import FeedbackView from '../src/view/FeedbackView';
 
-describe('StarsView', () => {
+describe('FeedbackView', () => {
 
   initDOM();
   let element;
+
+  before(() => {
+    /*
+    fetchMock.get(/me/, {
+      id: 5,
+      name: "User John Doe"
+    });
+    */
+  })
 
   beforeEach(() => {
     element = document.createElement('div');
@@ -22,21 +31,11 @@ describe('StarsView', () => {
     const feedback = new Feedback(MockFeedback)
     render(
       <MockUserContextComponent>
-        <StarsView feedback={feedback} />
+        <FeedbackView feedback={feedback} />
       </MockUserContextComponent>, element
     )
-    assert.react.contains(element, '<span class="ka-star-bar" style="width: 70%;">');
-    assert.react.notContains(element, '<a data-rating="4" class="ka-star ka-star-4"></a>');
-  })
-
-  it('renders correctly for read-write', () => {
-    const feedback = new Feedback(MockFeedback)
-    render(
-      <MockUserContextComponent>
-        <StarsView feedback={feedback} editable={true}/>
-      </MockUserContextComponent>, element
-    )
-    assert.react.contains(element, '<a data-rating="4" class="ka-star ka-star-4"></a>');
+    assert.react.contains(element, '<span class="ka-author">Foo User</span><span class="ka-feedback-time">1/1/1970</span></div>');
+    assert.react.contains(element, '<p>Foo bar baz</p>');
   })
 
 

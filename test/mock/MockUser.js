@@ -1,5 +1,6 @@
 export default {
   id: 1,
-    name: 'foo',
-      likes: []
+  uuid: 'foo',
+  name: 'Foo User',
+  likes: []
 }

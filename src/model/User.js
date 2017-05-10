@@ -4,17 +4,13 @@
  */
 export default class User {
 
-  // id: id of the current user. undefined if not logged in
+  // id: internal id of the current user. undefined if not logged in
+  // uuid: the public identifier of this user
   // name: name of the current user. undefined if not logged in
   // likes: array of talk IDs liked by this user. empty if not logged in.
   // readOnly: true if there is no OAuth token configured
-  // loggedIn: true if the user has logged in, false for anonymous users
-  constructor({ id, name, likes=[], readOnly }) {
-    this.id = id;
-    this.name = name;
-    this.likes = likes;
-    this.readOnly = readOnly;
-    this.loggedIn = !!id;
+  constructor(userData) {
+    Object.assign(this, userData);
   }
 
   // return true if the user has not logged in

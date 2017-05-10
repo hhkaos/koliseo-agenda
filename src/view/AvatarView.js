@@ -1,9 +1,8 @@
 import { h, render, Component } from 'preact';
+import PropTypes from 'prop-types';
 
 /**
  * Render the avatar
- * Properties:
- * user: {User} the user data to render
  */
 export default class AvatarView extends Component {
 
@@ -28,4 +27,9 @@ export default class AvatarView extends Component {
     return user.isAnonymous()? this.renderAnonymous(user) : this.renderUser(user);
   }
 
+}
+
+AvatarView.propTypes = {
+  // { User } the user data to render
+  user: PropTypes.object.isRequired
 }

@@ -1,29 +1,31 @@
 import { h, render, Component } from 'preact';
 import { formatDate } from '../util';
 import AvatarView from './AvatarView';
-import TalkStarsView from './TalkStarsView';
+import StarsView from './StarsView';
+import PropTypes from 'prop-types';
 
 /**
  * Read-only view of talk feedback
- * Properties:
- * talkFeedback: {TalkFeedback} the talk feedback to display
  */
-export default class TalkFeedbackView extends Component {
+export default class FeedbackView extends Component {
 
   render() {
-    const { talkFeedback, user } = this.options;
-    const lastModified = talkFeedback.lastModified ? <span className="ka-feedback-time">{formatDate(talkFeedback.lastModified)}</span > : undefined;
+    const { feedback } = this.props;
+    const { lastModified, user, comment } = feedback;
+    
     return (
       <li className="ka-avatar-li">
         <div className="ka-entry-details">
-          <AvatarView user={talkFeedback.user}/>
+          <AvatarView user={user}/>
           <div className="ka-feedback-entry">
             <div className="ka-author-name">
-              <span className="ka-author">{talkFeedback.user.name}</span>
-              {lastModified}
+              <span className="ka-author">{user.name}</span>
+              {lastModified && <span className="ka-feedback-time">{formatDate(lastModified)}</span>}
             </div>
-            <div className="ka-star-cell"><TalkStarsView feedback={talkFeedback} user={user}/></div>
-            <p>{talkFeedback.comment}</p>
+            <div className="ka-star-cell">
+              <StarsView feedback={feedback} />
+            </div>
+            <p>{comment}</p>
           </div>
         </div>
       </li>
@@ -31,4 +33,9 @@ export default class TalkFeedbackView extends Component {
 
   }
 
+}
+
+FeedbackView.propTypes = {
+  // {Feedback} the feedback to display
+  feedback: PropTypes.object.isRequired,
 }

@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
  * Render a bar with stars
  * Can be used to show the star average or to enter rating input from the user
  */
-export default class TalkStarsView extends Component {
+export default class StarsView extends Component {
 
   constructor(props) {
     super(props);
@@ -66,7 +66,7 @@ export default class TalkStarsView extends Component {
 
 }
 
-TalkStarsView.propTypes = {
+StarsView.propTypes = {
   // the feedback to display
   feedback: PropTypes.shape({
     user: PropTypes.object.isRequired,
