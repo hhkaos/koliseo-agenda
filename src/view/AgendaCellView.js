@@ -1,27 +1,29 @@
 import { h, render, Component } from 'preact';
 import { LikeButton } from './Buttons';
 import { SlidesLink, VideoLink } from './Links';
-import TalkFeedbackView from './TalkFeedbackView';
+import StarsView from './StarsView';
+import PropTypes from 'prop-types';
+import AgendaActions from '../actions/AgendaActions';
 
 export default class AgendaCellView extends Component {
 
   constructor() {
     super();
-    this.onClick = this.onClick.bind(e);
+    this.onClick = this.onClick.bind(this);
   }
-
 
   onClick(e) {
     debugger; // todo: review the next if
     if (e.button == 0 && !e.ctrlKey && !e.metaKey) {
+      e.preventDefault();
       const hash = e.target.getAttribute('href').substring(1);
+      AgendaActions.selectTalkByHash(hash);
     }
-
   }
 
   renderTalk(talk) {
     const { id, hash, title, description, authors, tags, feedback, trackIndex, slidesUrl, videoUrl } = talk;
-    const track = this.model.tracks[trackIndex];
+    const track = this.props.day.tracks[trackIndex];
     const slot = track.slots.find(slot => slot.contents.id == id);
     return (
       <div>
@@ -38,7 +40,7 @@ export default class AgendaCellView extends Component {
           <span className="ka-time">{slot.start} - {slot.end}</span>
         </p>
         <div className="ka-feedback-footer">
-          <TalkFeedbackView feedback={feedback} />
+          <StarsView rating={feedback.ratingAverage} />
         </div>
         <p className="ka-author-brief">{authors.map((a) => a.name).join(', ')}</p>
       </div>
@@ -47,12 +49,12 @@ export default class AgendaCellView extends Component {
   }
 
   render() {
-    const { start, end, contents, rowSpan, colSpan, trackIndex } = this.props.contents;
+    const { start, end, contents, rowSpan, colSpan, trackIndex } = this.props.cell;
     var type = contents && contents.type;
     var $contents =
-      type === 'TALK' ? this.renderTalk({ ...contents, trackIndex }) :
-        type === 'BREAK' ? contents.title :
-          type === 'EXTEND' ? <div>Extended from <b>{this.model.tracks.find(track => track.id == contents.trackId).name}</b></div> :
+      type === 'TALK'? this.renderTalk({ ...contents, trackIndex }) :
+      type === 'BREAK'? contents.title :
+      type === 'EXTEND'? <div>Extended from <b>{this.model.tracks.find(track => track.id == contents.trackId).name}</b></div> :
             'Empty slot';
 
     return (
@@ -62,4 +64,12 @@ export default class AgendaCellView extends Component {
   }
 
 
+}
+
+AgendaCellView.propTypes = {
+  // {AgendaCell} the cell to display
+  cell: PropTypes.object.isRequired,
+
+  // {AgendaDay} the day that we are reviewing
+  day: PropTypes.object.isRequired
 }

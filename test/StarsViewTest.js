@@ -22,7 +22,7 @@ describe('StarsView', () => {
     const feedback = new Feedback(MockFeedback)
     render(
       <MockUserContextComponent>
-        <StarsView feedback={feedback} />
+        <StarsView rating={feedback.rating} />
       </MockUserContextComponent>, element
     )
     assert.react.contains(element, '<span class="ka-star-bar" style="width: 70%;">');
@@ -33,7 +33,7 @@ describe('StarsView', () => {
     const feedback = new Feedback(MockFeedback)
     render(
       <MockUserContextComponent>
-        <StarsView feedback={feedback} editable={true}/>
+        <StarsView rating={feedback.rating} editable={true}/>
       </MockUserContextComponent>, element
     )
     assert.react.contains(element, '<a data-rating="4" class="ka-star ka-star-4"></a>');

@@ -136,9 +136,9 @@ class KoliseoAPI {
   }
 
   getFeedbackEntries({ id, cursor }) {
-    todo('process with cursor, also create tests')
+    // todo('process with cursor')
     return this.fetch({
-      url: `${this.c4pUrl}/proposals/${id}/feedback?${cursor ? 'cursor=' + cursor : ''}`
+      url: `${this.c4pUrl}/proposals/${id}/feedback?${cursor? 'cursor=' + cursor : ''}`
     })
   }
 

@@ -5,6 +5,7 @@ import FeedbackActions from '../actions/FeedbackActions';
 // minimum number of stars that should be assigned to send without a comment
 const MIN_STARS_WIHOUT_COMMENT = 3;
 
+// store for the feedback being edited by the current user
 class FeedbackStore extends Store {
 
   constructor() {

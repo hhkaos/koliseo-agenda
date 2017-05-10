@@ -4,11 +4,13 @@ import KoliseoAPI from '../src/controller/KoliseoAPI';
 import fetchMock from 'fetch-mock';
 import { URL, initDOM } from './mock/jsdom-init';
 import MockUserContextComponent from './mock/MockUserContextComponent';
-import Feedback from '../src/model/Feedback';
-import MockFeedback from './mock/MockFeedback';
-import FeedbackView from '../src/view/FeedbackView';
+import AgendaCell from '../src/model/AgendaCell';
+import AgendaDay from '../src/model/AgendaDay';
+import MockCell from './mock/MockCell';
+import MockDay from './mock/MockDay';
+import AgendaCellView from '../src/view/AgendaCellView';
 
-describe('FeedbackView', () => {
+describe('AgendaCellView', () => {
 
   initDOM();
   let element;
@@ -18,15 +20,15 @@ describe('FeedbackView', () => {
     document.body.appendChild(element);
   });
 
-  it('renders as read-only', () => {
-    const feedback = new Feedback(MockFeedback)
+  it('renders', () => {
+    const cell = new AgendaCell(MockCell)
+    const day = new AgendaDay(MockDay);
     render(
       <MockUserContextComponent>
-        <FeedbackView feedback={feedback} />
+        <AgendaCellView cell={cell} day={day} />
       </MockUserContextComponent>, element
     )
-    assert.react.contains(element, '<span class="ka-author">Foo User</span><span class="ka-feedback-time">1/1/1970</span></div>');
-    assert.react.contains(element, '<p>Foo bar baz</p>');
+    assert.react.contains(element, 'kk');
   })
 
 

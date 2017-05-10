@@ -1,3 +1,14 @@
+import User from './User';
+
+class CellContents {
+  constructor({ authors, ...values }) {
+    Object.assign(this, values);
+    if (authors) {
+      this.authors = authors.map(author => new User(author));
+    }
+  }
+}
+
 // Data for a cell. 
 // Can be a talk or information about a break
 export default class AgendaCell {
@@ -23,8 +34,8 @@ export default class AgendaCell {
     // undefined if the slot is empty
     this.type = contents && contents.type || undefined;
 
-    // contents of the cell (see type). May be undefined if the slot is empty.
-    this.contents = contents;
+    // contents of the cell (different according to type). May be undefined if the slot is empty.
+    this.contents = !contents? undefined : new CellContents(contents);
 
   }
 

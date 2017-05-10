@@ -1,11 +1,11 @@
 import { h, render, Component } from 'preact';
-import { strToEl, transitionTo, transitionFrom } from '../util';
-import TalkStarsView from './TalkStarsView';
+import StarsView from './StarsView';
 import { LikeButton } from './Buttons';
 import { SlidesLink, VideoLink } from './Links';
 import marked from 'marked';
 import AvatarView from './AvatarView';
-import TalkFeedbackListView from './TalkFeedbackListView';
+import FeedbackListView from './FeedbackListView';
+import PropTypes from 'prop-types';
 
 export function formatMarkdown(s) {
   return marked(s || '');
@@ -13,9 +13,6 @@ export function formatMarkdown(s) {
 
 /**
  * Display a dialog with the talk contents
- * Properties:
- * talk: {AgendaCell} the talk contents
- * tagColors: { Json of {tag, colorIndex} } the list of colors to be used for displaying the talk tags
  */
 export default class TalkDialog extends Component {
 
@@ -32,11 +29,11 @@ export default class TalkDialog extends Component {
   }
 
   renderLinks() {
-    const { talk } = this.props; 
-    const { slidesUrl, videoUrl, title } = talk.contents;
+    const { cell } = this.props; 
+    const { slidesUrl, videoUrl, title } = cell.contents;
     return (
       <div className="ka-links ka-right">
-        <LikeButton displayLabel={false} talk={talk}/>
+        <LikeButton displayLabel={false} cell={cell}/>
         <SlidesLink href={slidesUrl} title={ title } />
         <VideoLink href={videoUrl} title={title} />
       </div>
@@ -45,7 +42,9 @@ export default class TalkDialog extends Component {
 
   render() {
 
-    const talk = this.props.talk;
+    const cell = this.props.cell;
+    const { title, tags, feedback, description, authors } = cell.contents;
+
     return (
       <div className="ka-overlay ka-hidden" onKeyPress={this.onKeyPress}>
         <div className="ka-dialog">
@@ -53,23 +52,22 @@ export default class TalkDialog extends Component {
           <div className="ka-dialog-contents">
             <h2 className="ka-dialog-title">
               { this.renderLinks() } 
-              {talk.title} 
-              <TalkStarsView feedback={talk.feedback} />
+              { title } 
+              <StarsView rating={ feedback.ratingAverage } />
             </h2>
-            <div className="ka-dialog-description" dangerouslySetInnerHTML={formatMarkdown(talk.description)}/>
-            {this.renderTags(talk.tags)}
+            <div className="ka-dialog-description" dangerouslySetInnerHTML={ formatMarkdown(description)}/>
+            {this.renderTags(tags)}
           </div>
           <div className="ka-avatars">
-            {talk.contents.authors.map(this.renderAuthor)}
+            {authors.map(this.renderAuthor)}
           </div>
-          <TalkFeedbackListView todo={true}/>
+          <FeedbackListView cellId={cell.id}/>
         </div>
       </div>
     );
   }
 
-  renderTags() {
-    const tags = this.props.talk.tags;
+  renderTags(tags) {
     if (!tags) {
       return undefined;
     }
@@ -77,7 +75,7 @@ export default class TalkDialog extends Component {
       <div className="ka-tags">
         {
           Object.keys(tags).map(category => {
-            return tags[category].map(tag => <span key={category} className={ 'tag tag' + this.tagColors[category] }>{tag}</span>)
+            return tags[category].map(tag => <span key={category} className={ 'tag tag' + this.props.tagColors[category] }>{tag}</span>)
           }) 
         }
       </div>
@@ -99,17 +97,13 @@ export default class TalkDialog extends Component {
       </div>
     )
   }
-/*
-todo:
-  show() {
-    // delay the show so that the transition can kick in
-    transitionFrom(this.$overlay, 'ka-hidden');
-  }
-
-  hide() {
-    const $overlay = this.$overlay;
-    transitionTo($overlay, 'ka-hidden').then(() => $overlay.parentNode.removeChild($overlay))
-  }
-*/
 
 };
+
+TalkDialog.propTypes = {
+  // {AgendaCell} the talk contents
+  cell: PropTypes.object.isRequired,
+
+  // { Json of {tag, colorIndex } } the list of colors to be used for displaying the talk tags
+  tagColors: PropTypes.arrayOf(PropTypes.number).isRequired
+}

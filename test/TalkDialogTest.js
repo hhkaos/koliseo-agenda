@@ -1,11 +1,12 @@
 import { h, render, Component } from 'preact';
 import assert from './assertions';
 import KoliseoAPI from '../src/controller/KoliseoAPI';
-import fetchMock from 'fetch-mock';
+//import fetchMock from 'fetch-mock';
 import { URL, initDOM } from './mock/jsdom-init'; 
 import MockUserContextComponent from './mock/MockUserContextComponent';
-import AgendaCell from '../src/model/AgendaCell';
 import MockCell from './mock/MockCell';
+import AgendaCell from '../src/model/AgendaCell';
+import { registerMockFetch } from './mock/MockFeedback';
 import TalkDialog from '../src/view/TalkDialog';
 
 describe('TalkDialog', () => {
@@ -14,12 +15,7 @@ describe('TalkDialog', () => {
   let element;
 
   before(() => {
-    /*
-    fetchMock.get(/me/, {
-      id: 5,
-      name: "User John Doe"
-    });
-    */
+    registerMockFetch();
   })
 
   beforeEach(() => {
@@ -30,12 +26,21 @@ describe('TalkDialog', () => {
 
   it('renders correctly', () => {
     const cell = new AgendaCell(MockCell)
+    const tagColors = {
+      "Type of Proposal": 1,
+      "Language of the talk/workshop": 2,
+      "Technology": 3,
+      "Language ": 4,
+      "Level ": 5
+    }
+    
     render(
       <MockUserContextComponent>
-        <TalkDialog talk={cell} />
+        <TalkDialog cell={cell} tagColors={tagColors}/>
       </MockUserContextComponent>, element
     )
-    assert.react.contains(element, 'kk');
+    assert.react.contains(element, '<div class="ka-dialog"><a class="ka-close" title="close"></a><div class="ka-dialog-contents">');
+    assert.react.contains(element, 'Title for talk 1');
   })
 
 

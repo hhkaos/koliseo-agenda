@@ -1,4 +1,3 @@
-import TalkFeedbackView from './TalkFeedbackView';
 import { h, render, Component } from 'preact';
 import AgendaCellView from './AgendaCellView';
 

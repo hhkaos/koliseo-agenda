@@ -1,6 +1,5 @@
 
 import assert from './assertions';
-import { mount } from 'enzyme';
 import fsp from 'fs-promise';
 import path from 'path';
 import renderAgenda from '../src/view/AgendaView';

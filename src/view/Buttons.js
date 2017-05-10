@@ -5,8 +5,7 @@ import UserActions from '../actions/UserActions';
 /**
  * Render the like button 
  * Properties:
- * talk: {Talk}
- * user: {User} the current user
+ * cell: {AgendaCell}
  * displayLabel: {boolean} true to display the label
  */
 export class LikeButton extends Component {
@@ -19,7 +18,7 @@ export class LikeButton extends Component {
   onClick(e) {
     e.preventDefault();
     
-    if (this.props.user.isAnonymous()) {
+    if (this.context.user.isAnonymous()) {
       return UserActions.login();
     }
     const user = this.user;
@@ -29,8 +28,8 @@ export class LikeButton extends Component {
 
   render() {
     const { currentUser } = this.context;
-    const { talk, displayLabel } = this.props;
-    const liked = currentUser.isLiked(talk.id);
+    const { cell, displayLabel } = this.props;
+    const liked = currentUser.isLiked(cell.id);
     const state = liked? {
       value: 'selected',
       title: 'I am planning to attend this talk',

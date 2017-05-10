@@ -13,7 +13,7 @@ export default class StarsView extends Component {
     this.onMouseOver = this.onMouseOver.bind(this);
     this.onMouseLeave = this.onMouseLeave.bind(this);
     this.state = {
-      width: props.feedback.rating
+      width: props.rating
     }
   }
 
@@ -31,27 +31,24 @@ export default class StarsView extends Component {
 
   onMouseLeave() {
     setState({
-      width: this.props.feedback.rating
+      width: this.props.rating
     })
   }
 
   onMouseOver(e) {
     let width = e.target.dataset.rating;
-    setState({
+    this.setState({
       width: rating
     })
   }
 
   onClick(e) {
     let rating = e.target.dataset.rating;
-    const feedback = new TalkFeedbackStars(Object.assign({
-      rating
-    }, this.props.feedback));
-    FeedbackActions.onChange(feedback);
+    FeedbackActions.changeRating(rating);
   }
 
   render() {
-    const { feedback, editable } = this.props;
+    const { editable } = this.props;
     const { currentUser } = this.context;
 
     const width = (this.state.width * 100 / 5) + '%';
@@ -67,12 +64,8 @@ export default class StarsView extends Component {
 }
 
 StarsView.propTypes = {
-  // the feedback to display
-  feedback: PropTypes.shape({
-    user: PropTypes.object.isRequired,
-    rating: PropTypes.isRequired,
-    comment: PropTypes.string
-  }).isRequired,
+  // the rating to display
+  rating: PropTypes.number,
 
   // true if this component is editable
   editable: PropTypes.bool

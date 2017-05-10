@@ -10,6 +10,20 @@ const FeedbackActions = {
 
   sendFeedback(feedback) {
     return KoliseoAPI.sendFeedback(feedback);
+  },
+
+  // fetch Feedback entries for a given talk
+  fetch(cellId) {
+    this.dispatch({
+      payload: {
+        cellId, loading: true, entries: []
+      }
+    });
+    return KoliseoAPI.getFeedbackEntries({id : cellId}).then((entries) => {
+      return {
+        cellId, loading: false, entries
+      }
+    })
   }
 
 }

@@ -14,7 +14,7 @@ export default class FeedbackView extends Component {
     const { lastModified, user, comment } = feedback;
     
     return (
-      <li className="ka-avatar-li">
+      <div className="ka-avatar-li">
         <div className="ka-entry-details">
           <AvatarView user={user}/>
           <div className="ka-feedback-entry">
@@ -23,12 +23,12 @@ export default class FeedbackView extends Component {
               {lastModified && <span className="ka-feedback-time">{formatDate(lastModified)}</span>}
             </div>
             <div className="ka-star-cell">
-              <StarsView feedback={feedback} />
+              <StarsView rating={feedback.rating} />
             </div>
             <p>{comment}</p>
           </div>
         </div>
-      </li>
+      </div>
     )
 
   }
