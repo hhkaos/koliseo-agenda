@@ -8,7 +8,7 @@ import AgendaCell from './AgendaCell';
 */
 export default class AgendaDay {
 
-  constructor({ id, name, tracks }) {
+  constructor({ id, name, tracks }, cellsByHash) {
 
     // HACK: sort the tracks alphabetically. Once sorting is supported by Koliseo, this can be removed
     tracks.sort((t1, t2) => t1.name.localeCompare(t2.name));
@@ -29,7 +29,6 @@ export default class AgendaDay {
     function addRowLabel(label) {
       rowLabels.indexOf(label) > -1 || rowLabels.push(label);
     }
-
     tracks.forEach(({ slots }, index) => {
       slots.forEach(({ start, end }) => {
         addRowLabel(start);
@@ -62,29 +61,36 @@ export default class AgendaDay {
         const endRowIndex = this.getRowLabelIndex({ end: slot.end });
         cell.rowSpan = (endRowIndex - rowIndex) + 1;
 
+        if (slot.contents && slot.contents.type === 'TALK') {
+          cell.contents.hash = this.id + '/' + slot.id
+          cellsByHash[cell.hash] = cell;
+        }
+
       })
     });
 
     // calculate colSpans
     this.data.forEach((row, rowIndex) => {
-      row.filter(cell => cell).forEach((cell, colIndex) => {
+      row.forEach((cell, colIndex) => {
         const track = tracks[colIndex];
-        if (cell.type != 'EXTEND') {
-          let colSpan = 1;
-          while (colIndex + colSpan < row.length) {
-            const nextCell = row[colIndex + colSpan];
-            if (!nextCell ||
-              nextCell.type != 'EXTEND' ||
-              nextCell.contents.trackId != track.id) {
-              break;
+        if (cell) {
+          if (cell.type != 'EXTEND') {
+            let colSpan = 1;
+            while (colIndex + colSpan < row.length) {
+              const nextCell = row[colIndex + colSpan];
+              if (!nextCell ||
+                nextCell.type != 'EXTEND' ||
+                nextCell.contents.trackId != track.id) {
+                break;
+              }
+              row[colIndex + colSpan] = undefined;
+              colSpan++;
+              nextCell.contents.merged = true;
             }
-            row[colIndex + colSpan] = undefined;
-            colSpan++;
-            nextCell.contents.merged = true;
+            cell.colSpan = colSpan;
+          } else {
+            cell.contents.name = tracks.find((t) => t.id == cell.contents.trackId).name
           }
-          cell.colSpan = colSpan;
-        } else {
-          cell.contents.name = tracks.find((t) => t.id == cell.contents.trackId).name
         }
       })
     })

@@ -11,17 +11,9 @@ export default class Agenda {
     // the agenda table data, indexed by agendaDay.id
     this.daysById = {};
     agenda.days.forEach((day) => {
-      const dayModel = new AgendaDay(day);
+      const dayModel = new AgendaDay(day, this.cellsByHash);
       // this.days.push(dayModel);
       this.daysById[day.id] = dayModel;
-      day.tracks.forEach((track) => {
-        track.slots.forEach((slot) => {
-          if (slot.contents && slot.contents.type === 'TALK') {
-            const hash = slot.contents.hash = day.id + '/' + slot.id;
-            this.cellsByHash[hash] = slot;
-          }
-        })
-      })
     })
 
   }

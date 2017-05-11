@@ -1,16 +1,13 @@
-import assert from "assert";
+import assert from "./assertions";
 import AgendaDay from '../src/model/AgendaDay';
-import dayJSON from './json/day-mock';
+import MockDay from './mock/MockDay';
 
 describe('AgendaDay', () => {
 
-  const model = new AgendaDay(dayJSON);
-
-  console.log(model.data.map(row => {
-    return row.map((cell) => !cell? 'undefined; ' : `rows: ${cell.rowSpan}, cols: ${cell.colSpan}; `)
-  }).join('\n'));
+  const model = new AgendaDay(MockDay);
 
   describe('constructor', _ => {
+    console.log(assert.dayToString(model));
     it('should accumulate row and col labels from all talks', () => {
       assert.equal(
         '["09:00-10:00","10:00-11:00","11:00-11:15"]',

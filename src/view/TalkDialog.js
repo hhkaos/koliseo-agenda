@@ -29,11 +29,11 @@ export default class TalkDialog extends Component {
   }
 
   renderLinks() {
-    const { cell } = this.props; 
-    const { slidesUrl, videoUrl, title } = cell.contents;
+    const { selectedCell } = this.props; 
+    const { slidesUrl, videoUrl, title } = selectedCell.contents;
     return (
       <div className="ka-links ka-right">
-        <LikeButton displayLabel={false} cell={cell}/>
+        <LikeButton displayLabel={false} cell={selectedCell}/>
         <SlidesLink href={slidesUrl} title={ title } />
         <VideoLink href={videoUrl} title={title} />
       </div>

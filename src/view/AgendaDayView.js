@@ -32,7 +32,7 @@ export default class AgendaDayView extends Component {
 
   renderRow(row, rowIndex) {
     return row.map((cell, index) => {
-      return <AgendaCellView cell={cell} key={cell.id || (`empty-${index}`)}/>
+      return cell && <AgendaCellView cell={cell} key={cell.id || (`empty-${index}`)}/>
     }) // filter null values
   }
 

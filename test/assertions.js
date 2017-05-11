@@ -1,5 +1,13 @@
 import assert from 'assert';
 
+assert.dayToString = function(day) {
+  return day.data.map(row => {
+    return row.map((cell) => {
+      return !cell ? 'undefined' : `${cell.type} (${cell.rowSpan} rows, ${cell.colSpan} cols)`
+    }).join('; ')
+  }).join(String.fromCharCode(13))
+}
+
 assert.react = {
 
   contains(element, text) {
