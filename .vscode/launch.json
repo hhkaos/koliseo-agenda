@@ -10,7 +10,7 @@
         "--compilers", "js:babel-register", 
         "--require", ".vscode/registerBabel.js",
         "--no-timeouts",
-        "test/AgendaCellViewTest.js" ],
+        "test/AgendaViewTest.js" ],
       "sourceMaps": true,
       "cwd": "${workspaceRoot}"
     }

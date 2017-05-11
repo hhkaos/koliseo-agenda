@@ -21,23 +21,17 @@ export default class AgendaCellView extends Component {
     }
   }
 
-  renderTalk(talk) {
-    const { id, hash, title, description, authors, tags, feedback, trackIndex, slidesUrl, videoUrl } = talk;
-    const track = this.props.day.tracks[trackIndex];
-    const slot = track.slots.find(slot => slot.contents.id == id);
+  renderTalk(cell) {
+    const { hash, title, description, authors, tags, feedback, slidesUrl, videoUrl } = cell.contents;
     return (
       <div>
-        <LikeButton talkId={id} />
+        <LikeButton cell={cell} />
         <p>
-          <a href={'#' + hash} data-id={id} className="ka-talk-title">{title}</a>
+          <a href={'#' + hash} data-id={cell.id} className="ka-talk-title">{title}</a>
         </p>
         <p className="ka-links">
           <SlidesLink href={slidesUrl} title={title} />
           <VideoLink href={videoUrl} title={title} />
-        </p>
-        <p className="ka-mobile-only">
-          <span className={`ka-label ka-label-${trackIndex}`}>{track.name}</span>
-          <span className="ka-time">{slot.start} - {slot.end}</span>
         </p>
         <div className="ka-feedback-footer">
           <StarsView rating={feedback.ratingAverage} />
@@ -49,17 +43,20 @@ export default class AgendaCellView extends Component {
   }
 
   render() {
-    const { start, end, contents, rowSpan, colSpan, trackIndex } = this.props.cell;
+    const { cell } = this.props;
+    const { start, end, contents, rowSpan, colSpan } = cell;
     var type = contents && contents.type;
     var $contents =
-      type === 'TALK'? this.renderTalk({ ...contents, trackIndex }) :
+      type === 'TALK'? this.renderTalk(cell) :
       type === 'BREAK'? contents.title :
-      type === 'EXTEND'? <div>Extended from <b>{this.model.tracks.find(track => track.id == contents.trackId).name}</b></div> :
+      type === 'EXTEND'? <div>Extended from <b>{contents.name}</b></div> :
             'Empty slot';
 
     return (
-      type === 'EXTEND' && contents.merged ? undefined :
-        <td className={'ka-table-td ' + (type && type.toLowerCase() || '')} rowspan={rowSpan} colspan={colSpan}>{$contents}</td>
+      type === 'EXTEND' && contents.merged? undefined :
+        <td className={'ka-table-td ' + (type && type.toLowerCase() || '')} rowspan={rowSpan} colspan={colSpan}>
+          {$contents}
+        </td>
     )
   }
 
@@ -68,8 +65,5 @@ export default class AgendaCellView extends Component {
 
 AgendaCellView.propTypes = {
   // {AgendaCell} the cell to display
-  cell: PropTypes.object.isRequired,
-
-  // {AgendaDay} the day that we are reviewing
-  day: PropTypes.object.isRequired
+  cell: PropTypes.object.isRequired
 }

@@ -14,10 +14,7 @@ class AgendaStore extends Store {
       // selectedDay: undefined,
 
       // the currently selected talk
-      // selectedTalk: undefined,
-
-      // a list of tags and associated color
-      // tagColors: undefined
+      // selectedCell: undefined,
     }
     this.bindActions(AgendaActions);
 
@@ -28,7 +25,7 @@ class AgendaStore extends Store {
       callForPapers,
       agenda,
       selectedDay: undefined,
-      selectedTalk: undefined,
+      selectedCell: undefined,
     });
   }
 
@@ -46,23 +43,23 @@ class AgendaStore extends Store {
     const daysById = this.getAgenda().daysById;
     this.setState({
       selectedDay: daysById[dayId] || daysById[Object.keys(daysById)[0] + ''],
-      selectedTalk: undefined
+      selectedCalk: undefined
     });
   }
 
   // render a talk as modal window, by hash
   // returns the talk if found, otherwise undefined
   selectTalkByHash(hash) {
-    const talk = this.getAgenda().talksByHash[hash];
+    const cell = this.getAgenda().cellsByHash[hash];
     this.setState({
-      selectedTalk: talk
+      selectedCell: cell
     });
-    talk && this.pushState(talk.title, hash);
+    cell && this.pushState(cell.title, hash);
   }
 
   unselectTalk() {
     this.setState({
-      selectedTalk: undefined
+      selectedCell: undefined
     });
     const selectedDay = this.state.selectedDay;
     selectedDay && this.pushState(selectedDay.name, selectedDay.id);

@@ -67,15 +67,15 @@ export default class AgendaDay {
 
     // calculate colSpans
     this.data.forEach((row, rowIndex) => {
-      row.forEach((cell, colIndex) => {
-        if (cell && cell.type != 'EXTEND') {
+      row.filter(cell => cell).forEach((cell, colIndex) => {
+        const track = tracks[colIndex];
+        if (cell.type != 'EXTEND') {
           let colSpan = 1;
-          const trackId = tracks[colIndex].id;
           while (colIndex + colSpan < row.length) {
             const nextCell = row[colIndex + colSpan];
             if (!nextCell ||
               nextCell.type != 'EXTEND' ||
-              nextCell.contents.trackId != trackId) {
+              nextCell.contents.trackId != track.id) {
               break;
             }
             row[colIndex + colSpan] = undefined;
@@ -83,6 +83,8 @@ export default class AgendaDay {
             nextCell.contents.merged = true;
           }
           cell.colSpan = colSpan;
+        } else {
+          cell.contents.name = tracks[cell.contents.trackId].name
         }
       })
     })

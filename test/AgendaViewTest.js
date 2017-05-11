@@ -6,9 +6,9 @@ import renderAgenda from '../src/view/AgendaView';
 import KoliseoAPI from '../src/controller/KoliseoAPI';
 import fetchMock from 'fetch-mock';
 import 'mock-local-storage';
-import {URL, initDOM} from './jsdom-init'; 
+import {URL, initDOM} from './mock/jsdom-init'; 
 
-describe('AgendaBootstrap', () => {
+describe('AgendaView', () => {
 
   initDOM();
   let element;
@@ -50,7 +50,7 @@ describe('AgendaBootstrap', () => {
 
   it('renders correctly', () => {
     return initAndRender().then(() => {
-      assert.react.exists(element, 'kk');
+      assert.react.contains(element, '<a href="#undefined" data-id="111" class="ka-talk-title">Title for talk 1.1.1</a>');
     })
   })
 

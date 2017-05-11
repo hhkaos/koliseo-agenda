@@ -1,16 +1,12 @@
 import AgendaDay from './AgendaDay';
 
-/**
-  @property {int} this.selectedDayId the index of the selected day
-  @property {int} this.selectedTalkHash the index
- */
 export default class Agenda {
 
 
   constructor(agenda) {
 
     // all talks indexed by "dayId/talkId"
-    this.talksByHash = {};
+    this.cellsByHash = {};
 
     // the agenda table data, indexed by agendaDay.id
     this.daysById = {};
@@ -22,7 +18,7 @@ export default class Agenda {
         track.slots.forEach((slot) => {
           if (slot.contents && slot.contents.type === 'TALK') {
             const hash = slot.contents.hash = day.id + '/' + slot.id;
-            this.talksByHash[hash] = slot;
+            this.cellsByHash[hash] = slot;
           }
         })
       })

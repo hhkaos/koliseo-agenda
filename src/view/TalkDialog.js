@@ -42,9 +42,12 @@ export default class TalkDialog extends Component {
 
   render() {
 
-    const cell = this.props.cell;
-    const { title, tags, feedback, description, authors } = cell.contents;
+    const cell = this.props.selectedCell;
+    if (!cell) {
+      return undefined;
+    }
 
+    const { title, tags, feedback, description, authors } = cell.contents;
     return (
       <div className="ka-overlay ka-hidden" onKeyPress={this.onKeyPress}>
         <div className="ka-dialog">
@@ -102,7 +105,7 @@ export default class TalkDialog extends Component {
 
 TalkDialog.propTypes = {
   // {AgendaCell} the talk contents
-  cell: PropTypes.object.isRequired,
+  selectedCell: PropTypes.object.isRequired,
 
   // { Json of {tag, colorIndex } } the list of colors to be used for displaying the talk tags
   tagColors: PropTypes.arrayOf(PropTypes.number).isRequired

@@ -3,8 +3,14 @@ import User from './User';
 class CellContents {
   constructor({ authors, ...values }) {
     Object.assign(this, values);
-    if (authors) {
-      this.authors = authors.map(author => new User(author));
+    if (values.type == 'TALK') {
+      if (authors) {
+        this.authors = authors.map(author => new User(author));
+      }
+      this.feedback = this.feedback || {
+        ratingAverage: 0,
+        entriesCount: 0
+      }
     }
   }
 }
@@ -35,6 +41,9 @@ export default class AgendaCell {
     this.type = contents && contents.type || undefined;
 
     // contents of the cell (different according to type). May be undefined if the slot is empty.
+    // TALK: { hash, title, description, authors, tags, feedback, slidesUrl, videoUrl }
+    // BREAK: { title }
+    // EXTENDED: { title, merged }
     this.contents = !contents? undefined : new CellContents(contents);
 
   }

@@ -9,7 +9,7 @@ export default class MockUserContext extends Component {
 
   getChildContext() {
     return {
-      currentUser: mockUser 
+      currentUser: this.props.user || mockUser 
     }
   }
 
