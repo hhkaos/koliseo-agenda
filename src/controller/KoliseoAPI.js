@@ -68,7 +68,7 @@ class KoliseoAPI {
   fetch({ url, method = 'get', body }) {
     const headers = {
       Accept: 'application/json',
-      Mode: 'cors',
+      //Mode: 'cors', todo: Not yet supported
       'Content-Type': 'application/json'
     };
     if (this.token) {
@@ -81,7 +81,7 @@ class KoliseoAPI {
     }).then(function (response) {
       // if the response is not 2xx, throw error message 
       if (!response.ok) {
-        const error = new Error('Error contacting the Koliseo server: ' + response.status);
+        const error = new Error('Error contacting koliseo.com: ' + response.status);
         error.status = response.status;
         throw error;
       }
@@ -96,6 +96,7 @@ class KoliseoAPI {
       }
       throw error;
     });
+    
   }
 
   login() {
@@ -145,6 +146,13 @@ class KoliseoAPI {
   getCurrentUserLikes() {
     return this.fetch({ 
       url: `${this.c4pUrl}/agenda/likes`
+    }).catch((error) => {
+      // anonymous users get here
+      // todo: there is a bug on the server side that is returning 500 for anonymous users
+      if (error.status == 500) { // 401 || error.status == 403) {
+        return [];
+      }
+      throw error;
     });
   }
 

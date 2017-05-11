@@ -97,7 +97,7 @@ describe('KoliseoAPI', () => {
     }).catch((e) => {
       assert(alert.calledOnce);
       assert.equal(401, e.status);
-      assert.equal('Error contacting the Koliseo server: 401', e.message);
+      assert.equal('Error contacting koliseo.com: 401', e.message);
       assert(onLogoutListener.calledOnce);
     })
   });
