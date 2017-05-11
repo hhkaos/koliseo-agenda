@@ -76,9 +76,14 @@ npm install
 
 # run tests
 npm test
+npm run coverage
 
 # launch test page
-gulp serve
+npm run watch:js
+npm run watch:css
+
+# build
+npm run build
 
 # publish into gh-pages
 bin/publish-gh-pages

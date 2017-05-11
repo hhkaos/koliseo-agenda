@@ -1,5 +1,11 @@
 {
-  "presets": [ "es2015" ],
+  "presets": [ 
+    [ 
+      "es2015", { 
+        "modules": false
+      }
+    ]
+  ],
   "plugins": [ 
     "transform-object-rest-spread", 
     [ 
@@ -8,7 +14,7 @@
         "pragma": "h" 
       } 
     ],
-    // replace reactr as it's used by AltContainer'
+    // replace react as it's used by AltContainer
     [
       "module-resolver",
       {
