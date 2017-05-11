@@ -79,9 +79,8 @@ npm test
 npm run coverage
 npm run stats
 
-# launch test page (launch both commands at the same time)
-npm run watch:js
-npm run watch:css
+# launch test page 
+npm run watch
 
 # build a release
 npm run build
