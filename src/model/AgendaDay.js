@@ -84,7 +84,7 @@ export default class AgendaDay {
           }
           cell.colSpan = colSpan;
         } else {
-          cell.contents.name = tracks[cell.contents.trackId].name
+          cell.contents.name = tracks.find((t) => t.id == cell.contents.trackId).name
         }
       })
     })

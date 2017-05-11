@@ -13,6 +13,11 @@ describe('AgendaView', () => {
   initDOM();
   let element;
 
+  // uncomment to switch to easy mode :)
+  // const AGENDA_FILENAME = 'test/json/talks.json';
+  const AGENDA_FILENAME = 'test/json/codemotion.json'; 
+  const C4P_FILENAME = 'test/json/c4p.json';
+
   before(() => {
     fetchMock.get(/me/, {
       id: 5,
@@ -20,11 +25,11 @@ describe('AgendaView', () => {
     });
     fetchMock.get(/likes/, [5701657165824000, 5760220017983488]);
     return Promise.all([
-      fsp.readFile(path.resolve('test/json/c4p.json')),
-      fsp.readFile(path.resolve('test/json/talks.json'))
+      fsp.readFile(path.resolve(C4P_FILENAME)),
+      fsp.readFile(path.resolve(AGENDA_FILENAME))
     ]).then(([c4pContents, agendaContents]) => {
+      fetchMock.get(/c4p$/, JSON.parse(c4pContents.toString()));
       fetchMock.get(/agenda/, JSON.parse(agendaContents.toString()));
-      fetchMock.get(/c4p/, JSON.parse(c4pContents.toString()));
     })
   })
 
@@ -48,11 +53,20 @@ describe('AgendaView', () => {
     }));
   });
 
-  it('renders correctly', () => {
+  it('renders with logged user', () => {
     return initAndRender().then(() => {
       assert.react.contains(element, '<a href="#undefined" data-id="111" class="ka-talk-title">Title for talk 1.1.1</a>');
     })
   })
 
+  it('renders with anonymous user', () => {
+    fetchMock.get(/me/, {
+      name: "<anonymous>"
+    });
+    fetchMock.get(/likes/, { status: 401 });
+    return initAndRender().then(() => {
+      assert.react.contains(element, 'kk');
+    })
+  })
 
 });
