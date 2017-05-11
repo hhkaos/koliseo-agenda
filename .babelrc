@@ -1,27 +1,13 @@
+// config for our mocha tests
+// this is overriten by webpack.config.js
 {
   "presets": [ 
-    [ 
-      "es2015", { 
-        "modules": false
-      }
-    ]
+    "es2015"
   ],
   "plugins": [ 
-    "transform-object-rest-spread", 
-    [ 
-      "transform-react-jsx", 
-      { 
-        "pragma": "h" 
-      } 
-    ],
+    "transform-object-rest-spread",
+    [ "transform-react-jsx", { "pragma": "h" } ],
     // replace react as it's used by AltContainer
-    [
-      "module-resolver",
-      {
-        "alias": {
-          "react": "preact-compat"
-        }
-      }
-    ] 
+    [ "module-resolver", { "alias": { "react": "preact-compat" } } ] 
   ]
 }

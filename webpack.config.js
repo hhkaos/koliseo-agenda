@@ -20,10 +20,24 @@ module.exports = function({ stats } = {}) {
     module: {
       rules: [
         {
+          // babel
+          // overwrites .babelrc to use with the browser
           test: /\.js$/,
           exclude: /node_modules\/(?!alt-ng)/,
           use: [{
-            loader: 'babel-loader'
+            loader: 'babel-loader',
+            options: {
+              presets: [
+                // tree shaking. See http://jakewiesler.com/tree-shaking-es6-modules-in-webpack-2/
+                ['es2015', { modules: false }], 
+              ], 
+              "plugins": [
+                "transform-object-rest-spread",
+                ["transform-react-jsx", { "pragma": "h" }],
+                // replace react as it's used by AltContainer
+                ["module-resolver", { "alias": { "react": "preact-compat" } }]
+              ]
+            }
           }]
         }
       ]
@@ -32,13 +46,10 @@ module.exports = function({ stats } = {}) {
 
       // save sourcemap next to the files
       new webpack.SourceMapDevToolPlugin({
-        filename: 'build/[name].js.map',
+        filename: '[name].js.map',
         columns: false
       }),
 
-
-      // minimize JS
-      new webpack.optimize.UglifyJsPlugin()
     ]
   }
 
@@ -46,6 +57,12 @@ module.exports = function({ stats } = {}) {
   if (stats) {
     config.plugins.push(new BundleAnalyzerPlugin());
   }
+
+  // minimize JS
+  if (prod) {
+    new webpack.optimize.UglifyJsPlugin()
+  }
+
   return config;
 
 }
