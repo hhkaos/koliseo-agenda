@@ -74,15 +74,16 @@ You are welcome to hack around. To get started, run the following:
 ```
 npm install
 
-# run tests
+# run tests (choose one of these)
 npm test
 npm run coverage
+npm run stats
 
-# launch test page
+# launch test page (launch both commands at the same time)
 npm run watch:js
 npm run watch:css
 
-# build
+# build a release
 npm run build
 
 # publish into gh-pages
