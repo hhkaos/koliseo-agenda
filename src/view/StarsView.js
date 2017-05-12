@@ -4,6 +4,13 @@ import PropTypes from 'prop-types';
 /**
  * Render a bar with stars
  * Can be used to show the star average or to enter rating input from the user
+ * 
+ * {number, required} the rating to display (0-5)
+ * rating
+ * 
+ * {boolean} true if this component is editable
+ * editable
+ * 
  */
 export default class StarsView extends Component {
 
@@ -63,10 +70,3 @@ export default class StarsView extends Component {
 
 }
 
-StarsView.propTypes = {
-  // the rating to display
-  rating: PropTypes.number,
-
-  // true if this component is editable
-  editable: PropTypes.bool
-}

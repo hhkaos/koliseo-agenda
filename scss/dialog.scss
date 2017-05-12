@@ -1,3 +1,4 @@
+$transitionDuration: .5s;
 .ka-overlay {
   background: transparent;
   background: rgba(0,0,0, .2);
@@ -7,7 +8,7 @@
   right: 0;
   bottom: 0;
   opacity: 1;
-  transition: opacity .5s cubic-bezier(0.23, 1, 0.32, 1);
+  transition: opacity $transitionDuration ease-out;
   overflow-y: auto;
   overflow-x: hidden;
 }
@@ -15,7 +16,6 @@
   opacity: 0;
 }
 .ka-dialog {
-  padding: 30px 4px 4px;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -29,8 +29,7 @@
 .ka-dialog-description {
 
 }
-.ka-dialog-contents,
-.ka-avatars {
+.ka-dialog-contents {
   padding: $td-padding * 2;
   & > ul {
     padding-left: 20px;

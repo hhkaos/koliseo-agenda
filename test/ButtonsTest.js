@@ -25,7 +25,7 @@ describe('Buttons', () => {
         <LoginLogoutButton />
       </MockUserContextComponent>, element
     )
-    assert.react.contains(element, '<a class="ka-like icon-heart" title="Click to mark this talk as favorite" data-state="default"></a>');
+    assert.react.contains(element, '<a class="ka-icon ka-icon-heart" title="Click to mark this talk as favorite" data-state="default"></a>');
     assert.react.contains(element, '<button class="ka-button ka-button-secondary">Sign out</button>');
   })
 

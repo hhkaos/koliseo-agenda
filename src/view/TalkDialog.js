@@ -12,6 +12,12 @@ export function formatMarkdown(s) {
   return marked(s || '');
 }
 
+const FirstChild = (props) => {
+  return props.children[0] || null
+}
+
+const ANIMATION_TIMEOUT = 500;
+
 /**
  * Display a dialog with the talk contents
  * 
@@ -28,20 +34,38 @@ export default class TalkDialog extends Component {
 
   constructor() {
     super();
+    this.state = {
+      // used to animate the dialog opacity
+      // hidden
+    }
     this.onKeyPress = this.onKeyPress.bind(this);
     this.onClose = this.onClose.bind(this);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps !== this.props) {
+      this.setState({
+        hidden: true
+      });
+      setTimeout(() => this.setState({
+        hidden: false
+      }), ANIMATION_TIMEOUT);
+    }
   }
   
   // escape key while viewing a talk closes the window
   onKeyPress(event) {
     if (!event.altKey && !event.ctrlKey && event.keyCode == 27) {
-      AgendaActions.unselectTalk();
+      this.onClose(event);
     }
   }
 
   onClose(e) {
     e.preventDefault();
-    AgendaActions.unselectTalk();
+    this.setState({
+      hidden: true
+    });
+    setTimeout(() => AgendaActions.unselectTalk(), ANIMATION_TIMEOUT);    
   }
 
   renderLinks() {
@@ -88,33 +112,31 @@ export default class TalkDialog extends Component {
   }
 
   render() {
-
+    const { hidden } = this.state;
     const { selectedCell, feedbackEnabled } = this.props;
-    if (!selectedCell) {
-      return undefined;
-    }
-
-    const { title, tags, feedback, description, authors } = selectedCell.contents;
+    const { id, contents = {} } = selectedCell || {};
+    const { title, tags, feedback, description, authors } = contents;
     return (
-      <div className="ka-overlay" onKeyPress={this.onKeyPress}>
+      selectedCell && 
+      <div className={"ka-overlay" + (hidden? ' ka-hidden' : '')} onKeyPress={this.onKeyPress}>
         <div className="ka-dialog">
-          <a className="ka-close" title="close" onClick={this.onClose}></a>
           <div className="ka-dialog-contents">
+            <a className="ka-close" title="close" onClick={this.onClose}></a>
             <h2 className="ka-dialog-title">
               {this.renderLinks()}
               {title}
               <StarsView rating={feedback.ratingAverage} />
             </h2>
             <div className="ka-dialog-description" dangerouslySetInnerHTML={{ __html: formatMarkdown(description) }} />
+            <div className="ka-avatars">
+              {authors.map(this.renderAuthor)}
+            </div>
             {this.renderTags(tags)}
           </div>
-          <div className="ka-avatars">
-            {authors.map(this.renderAuthor)}
-          </div>
-          <FeedbackListView cellId={selectedCell.id} feedbackEnabled={feedbackEnabled} />
+          <FeedbackListView cellId={id} feedbackEnabled={feedbackEnabled} />
         </div>
       </div>
-    );
+    )
   }
 
 };

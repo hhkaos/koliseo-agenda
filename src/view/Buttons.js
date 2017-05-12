@@ -40,14 +40,12 @@ export class LikeButton extends Component {
       label: 'Like'
     };
     return (
-      <span className="ka-like-container">
-        <a className="ka-like icon-heart"
-            title={state.title}
-            data-state={state.value}
-            onClick={this.onClick}>
-            { displayLabel? label : undefined }
-        </a>
-      </span>
+      <a className="ka-icon ka-icon-heart"
+          title={state.title}
+          data-state={state.value}
+          onClick={this.onClick}>
+          { displayLabel? label : undefined }
+      </a>
     )
   }
 
