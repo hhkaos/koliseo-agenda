@@ -8,6 +8,12 @@ import FeedbackInputView from './FeedbackInputView';
 
 /**
  * Render the list of talk feedback
+ * 
+ * {Number, required} the cell id to display
+ * cellId
+ *
+ * {Array of Feedback} the list of feedback to display
+ * entries
  */
 class FeedbackListView extends Component {
 
@@ -35,10 +41,10 @@ class FeedbackListView extends Component {
   }
 
   render() {
-    const { loading, entries, currentFeedback } = this.props;
+    const { feedbackEnabled, loading, entries, currentFeedback } = this.props;
     return (
       <div className="ka-feedback-entries">
-        <FeedbackInputView feedback={currentFeedback} />
+        {feedbackEnabled && <FeedbackInputView feedback={currentFeedback} /> }
         { loading? this.renderLoading() : this.renderEntries(entries) }
       </div>
     )
@@ -54,10 +60,3 @@ export default function(props) {
   )
 }
 
-FeedbackListView.propTypes = {
-  // the cell id to display
-  cellId: PropTypes.number.isRequired,
-
-  // {Array of Feedback} the list of feedback to display
-  entries: PropTypes.object
-}

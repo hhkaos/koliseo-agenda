@@ -13,6 +13,15 @@ export function formatMarkdown(s) {
 
 /**
  * Display a dialog with the talk contents
+ * 
+ * {AgendaCell, required} the talk contents
+ * selectedCell
+ *
+ * { Json of {tag, colorIndex } } the list of colors to be used for displaying the talk tags
+ * tagColors
+ * 
+ * {boolean} true if feedback is enabled
+ * feedbackEnabled
  */
 export default class TalkDialog extends Component {
 
@@ -73,12 +82,12 @@ export default class TalkDialog extends Component {
 
   render() {
 
-    const cell = this.props.selectedCell;
-    if (!cell) {
+    const { selectedCell, feedbackEnabled } = this.props;
+    if (!selectedCell) {
       return undefined;
     }
 
-    const { title, tags, feedback, description, authors } = cell.contents;
+    const { title, tags, feedback, description, authors } = selectedCell.contents;
     return (
       <div className="ka-overlay ka-hidden" onKeyPress={this.onKeyPress}>
         <div className="ka-dialog">
@@ -95,7 +104,7 @@ export default class TalkDialog extends Component {
           <div className="ka-avatars">
             {authors.map(this.renderAuthor)}
           </div>
-          <FeedbackListView cellId={cell.id} />
+          <FeedbackListView cellId={selectedCell.id} feedbackEnabled={feedbackEnabled} />
         </div>
       </div>
     );
@@ -103,10 +112,3 @@ export default class TalkDialog extends Component {
 
 };
 
-TalkDialog.propTypes = {
-  // {AgendaCell} the talk contents
-  selectedCell: PropTypes.object.isRequired,
-
-  // { Json of {tag, colorIndex } } the list of colors to be used for displaying the talk tags
-  tagColors: PropTypes.arrayOf(PropTypes.number).isRequired
-}

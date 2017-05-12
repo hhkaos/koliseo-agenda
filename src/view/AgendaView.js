@@ -113,7 +113,7 @@ export default function renderAgenda(element) {
           <UserContextComponent>
             <AltContainer store={AgendaStore}>
               <AgendaView />
-              <TalkDialog tagColors={ callForPapers.tagColors } />
+              <TalkDialog tagColors={callForPapers.tagColors} feedbackEnabled={agenda.feedbackEnabled}/>
             </AltContainer>
           </UserContextComponent>
         </AltContainer>, 
