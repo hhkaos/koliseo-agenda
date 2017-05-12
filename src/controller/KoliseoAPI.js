@@ -1,4 +1,4 @@
-import { getUrlParameter } from '../util';
+import { getUrlParameter, assert } from '../util';
 
 // generate a random identifier
 // http://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
@@ -8,13 +8,6 @@ function uuid() {
     return v.toString(16);
   });
 }
-
-function assert(assertion, message) {
-  if (!assertion) {
-    throw new Error(message);
-  }
-}
-
 
 // extract the access token from the URL, validating state if necessary
 // also saves the token in localStorage
@@ -39,6 +32,7 @@ const URL = 'https://www.koliseo.com';
  * this.c4pUrl: (required) the URL to talk to
  * this.token: (optional) the oauth token
  * this.oauthClientId: (optional) The Koliseo clientID of this application
+ * this.agendaUrl, this,likesUrl: (optional) URLs only used while testing
  * 
  * Stores in localStorage:
  * ka-state: (optional) state sent to OAuth identity provider
@@ -48,9 +42,11 @@ class KoliseoAPI {
 
   // initializes the parameters to communicate to the server
   // returns a Promise that returns the current user
-  init({ c4pUrl, oauthClientId } = {}) {
+  init({ c4pUrl, agendaUrl = c4pUrl + '/agenda', likesUrl = c4pUrl + '/likes', oauthClientId } = {}) {
     assert(c4pUrl, 'Missing c4pUrl');
     this.c4pUrl = c4pUrl;
+    this.agendaUrl = agendaUrl;
+    this.likesUrl = likesUrl,
     this.oauthClientId = oauthClientId;
     this.token = getTokenFromUrl();
     if (!this.token) {
@@ -125,7 +121,7 @@ class KoliseoAPI {
   }
 
   getAgenda() {
-    return this.fetch({ url: this.c4pUrl + '/agenda' });
+    return this.fetch({ url: this.agendaUrl });
   }
 
   sendFeedback({ id, rating, comment }) {
@@ -145,7 +141,7 @@ class KoliseoAPI {
 
   getCurrentUserLikes() {
     return this.fetch({ 
-      url: `${this.c4pUrl}/agenda/likes`
+      url: this.likesUrl
     }).catch((error) => {
       // anonymous users get here
       // todo: there is a bug on the server side that is returning 500 for anonymous users
@@ -158,23 +154,16 @@ class KoliseoAPI {
 
   addLike({ talkId }) {
     return this.fetch({
-      url: `${this.c4pUrl}/agenda/likes/${talkId}`, 
+      url: `${this.agendaUrl}/likes/${talkId}`, 
       method: 'post'
     });
   }
 
   removeLike({ talkId }) {
     return this.fetch({
-      url: `${this.c4pUrl}/agenda/likes/${talkId}`, 
+      url: `${this.agendaUrl}/likes/${talkId}`, 
       method: 'delete'
     });
-  }
-
-  getCurrentUserFeedbackEntry({ id }) {
-    const entryId = this.currentUser.id + '-' + id;
-    return this.fetch({
-      url: this.c4pUrl + '/proposals/${id}/feedback/${entryId}'
-    })
   }
 
 }

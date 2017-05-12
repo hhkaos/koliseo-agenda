@@ -9,6 +9,12 @@ export function getUrlParameter(url, name) {
   return !results ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
 
+export function assert(assertion, message) {
+  if (!assertion) {
+    throw new Error(message);
+  }
+}
+
 /*
 var entityMap = {
   "&": "&amp;",
