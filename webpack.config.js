@@ -17,13 +17,16 @@ module.exports = function({ stats } = {}) {
       path: path.resolve('./build/'),
       filename: '[name].js',
     },
+    resolve: {
+      mainFields: ['jsnext:main', 'browser', 'main'],
+    },
     module: {
       rules: [
         {
           // babel
           // overwrites .babelrc to remove CommonJS support
           test: /\.js$/,
-          exclude: /node_modules\/(?!alt-ng)/,
+          exclude: /node_modules\/(?!alt-ng|preact)/,
           use: [{
             loader: 'babel-loader',
             options: {
@@ -33,6 +36,7 @@ module.exports = function({ stats } = {}) {
               ], 
               "plugins": [
                 "transform-object-rest-spread",
+                "transform-class-properties",
                 ["transform-react-jsx", { "pragma": "h" }],
                 ["module-resolver", { "alias": { "react": "preact-compat" } }]
               ]
@@ -47,7 +51,7 @@ module.exports = function({ stats } = {}) {
         filename: '[name].js.map',
         columns: false
       }),
-
+      new webpack.NoEmitOnErrorsPlugin()
     ]
   }
 
