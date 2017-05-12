@@ -5,8 +5,8 @@ import { h, render, Component } from 'preact';
 const glob = typeof global !== 'undefined'? global : window;
 glob.Koliseo = glob.Koliseo || {};
 Koliseo.agenda = {
-  render: function ({ c4pUrl, element, oauthClientId }) {
-    KoliseoAPI.init({ c4pUrl, oauthClientId });
+  render: function ({ element, ...options }) {
+    KoliseoAPI.init(options);
     renderAgenda(element).catch(e => {
       console.error(e, e.stack);
       render(

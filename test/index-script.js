@@ -28,8 +28,14 @@ function onLoad() {
   if (typeof Koliseo !== 'undefined' && Koliseo.agenda && typeof fetch !== 'undefined') {
     Koliseo.agenda.render({
       c4pUrl: 'https://www.koliseo.com/codemotion/codemotion-madrid/r4p/5685252034920448',
-      //c4pUrl: './json/c4p.json',
-      //agendaUrl: './json/codemotion.json', // 'talks.json',
+      /*
+      urls: {
+        c4p: './json/c4p.json',
+        agenda: './json/codemotion.json', // 'talks.json',
+        likes: './json/likes.json',
+        me: './json/me.json',
+      },
+      */
       element: document.querySelector('.ka'),
       oauthClientId: clientId
     })

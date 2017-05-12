@@ -15,8 +15,8 @@ function withFakeCredentials({
   expires_in = new Date().getTime() + 1000000
 } = {}) {
   localStorage.setItem('ka-token', JSON.stringify({ access_token, expires_in }));
-  const { c4pUrl, oauthClientId } = KoliseoAPI;
-  KoliseoAPI.init({ c4pUrl, oauthClientId });
+  const { urls, oauthClientId } = KoliseoAPI;
+  KoliseoAPI.init({ urls: urls, oauthClientId });
   return Promise.resolve();
 }
 
@@ -34,7 +34,7 @@ describe('KoliseoAPI', () => {
     global.alert = sinon.spy();
 
     return KoliseoAPI.init({
-      c4pUrl: '/foobar',
+      urls: { c4p: '/foobar' },
       oauthClientId: 'MY-CLIENT-ID'
     });
   });
@@ -51,7 +51,6 @@ describe('KoliseoAPI', () => {
         name: "User John Doe"
       };
     });
-    const onLogoutListener = sinon.spy();
     KoliseoAPI.navigate=sinon.spy(KoliseoAPI.navigate); 
     return withFakeCredentials().then(() => {
       KoliseoAPI.login();
@@ -61,7 +60,7 @@ describe('KoliseoAPI', () => {
       const state = getUrlParameter(redirectedUrl, 'state');
       window.history.pushState({}, "after login", URL + `?state=${state}&access_token=barbaz&expires_in=${new Date().getTime() + 1000000}`);
       KoliseoAPI.init({
-        c4pUrl: KoliseoAPI.c4pUrl,
+        urls: KoliseoAPI.urls,
         oauthClientId: KoliseoAPI.oauthClientId
       });
       return KoliseoAPI.getCurrentUser();
@@ -69,10 +68,7 @@ describe('KoliseoAPI', () => {
       assert(localStorage.getItem('ka-token'));
       assert(!localStorage.getItem('ka-state'));
       assert.equal('User John Doe', currentUser.name);
-      KoliseoAPI.onLogout(onLogoutListener);
       KoliseoAPI.logout();
-    }).then(() => {
-      assert(onLogoutListener.calledOnce);
       assert(!KoliseoAPI.token);
       assert(!localStorage.getItem('ka-token'));
       assert(!localStorage.getItem('ka-state'));
@@ -86,11 +82,8 @@ describe('KoliseoAPI', () => {
         status: 401
       };
     });
-    const onLogoutListener = sinon.spy();
 
-    KoliseoAPI.onLogout(onLogoutListener);
     return withFakeCredentials({ expires_in: 100 }).then(() => {
-      KoliseoAPI.onLogout(onLogoutListener);
       return KoliseoAPI.addLike(5);
     }).then(() => {
       assert.fail('Operation should not have succeeded')
@@ -98,7 +91,7 @@ describe('KoliseoAPI', () => {
       assert(alert.calledOnce);
       assert.equal(401, e.status);
       assert.equal('Error contacting koliseo.com: 401', e.message);
-      assert(onLogoutListener.calledOnce);
+      assert(!KoliseoAPI.token);
     })
   });
 

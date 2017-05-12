@@ -13,7 +13,6 @@ export default class AgendaCellView extends Component {
   }
 
   onClick(e) {
-    debugger; // todo: review the next if
     if (e.button == 0 && !e.ctrlKey && !e.metaKey) {
       e.preventDefault();
       const hash = e.target.getAttribute('href').substring(1);
@@ -27,7 +26,7 @@ export default class AgendaCellView extends Component {
       <div>
         <LikeButton cell={cell} />
         <p>
-          <a href={'#' + hash} data-id={cell.id} className="ka-talk-title">{title}</a>
+          <a href={'#' + hash} data-id={cell.id} className="ka-talk-title" onClick={this.onClick}>{title}</a>
         </p>
         <p className="ka-links">
           <SlidesLink href={slidesUrl} title={title} />

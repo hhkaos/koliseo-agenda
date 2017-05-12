@@ -6,6 +6,7 @@ import marked from 'marked';
 import AvatarView from './AvatarView';
 import FeedbackListView from './FeedbackListView';
 import PropTypes from 'prop-types';
+import AgendaActions from '../actions/AgendaActions';
 
 export function formatMarkdown(s) {
   return marked(s || '');
@@ -28,6 +29,7 @@ export default class TalkDialog extends Component {
   constructor() {
     super();
     this.onKeyPress = this.onKeyPress.bind(this);
+    this.onClose = this.onClose.bind(this);
   }
   
   // escape key while viewing a talk closes the window
@@ -35,6 +37,11 @@ export default class TalkDialog extends Component {
     if (!event.altKey && !event.ctrlKey && event.keyCode == 27) {
       AgendaActions.unselectTalk();
     }
+  }
+
+  onClose(e) {
+    e.preventDefault();
+    AgendaActions.unselectTalk();
   }
 
   renderLinks() {
@@ -74,7 +81,7 @@ export default class TalkDialog extends Component {
           {!twitterAccount ? undefined : <a href={'https://twitter.com/' + twitterAccount} className="ka-author-twitter" target="_blank">@{twitterAccount}</a>}
         </span>
         <div className="ka-author-data">
-          <div className="ka-author-description" dangerouslySetInnerHTML={formatMarkdown(description)}></div>
+          <div className="ka-author-description" dangerouslySetInnerHTML={{ __html: formatMarkdown(description)}}></div>
         </div>
       </div>
     )
@@ -89,16 +96,16 @@ export default class TalkDialog extends Component {
 
     const { title, tags, feedback, description, authors } = selectedCell.contents;
     return (
-      <div className="ka-overlay ka-hidden" onKeyPress={this.onKeyPress}>
+      <div className="ka-overlay" onKeyPress={this.onKeyPress}>
         <div className="ka-dialog">
-          <a className="ka-close" title="close"></a>
+          <a className="ka-close" title="close" onClick={this.onClose}></a>
           <div className="ka-dialog-contents">
             <h2 className="ka-dialog-title">
               {this.renderLinks()}
               {title}
               <StarsView rating={feedback.ratingAverage} />
             </h2>
-            <div className="ka-dialog-description" dangerouslySetInnerHTML={formatMarkdown(description)} />
+            <div className="ka-dialog-description" dangerouslySetInnerHTML={{ __html: formatMarkdown(description) }} />
             {this.renderTags(tags)}
           </div>
           <div className="ka-avatars">

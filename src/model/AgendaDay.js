@@ -55,15 +55,17 @@ export default class AgendaDay {
     tracks.forEach(({ id, name, slots }, colIndex) => {
       colLabels.push(name);
       slots.forEach((slot) => {
-        const rowIndex = this.getRowLabelIndex({ start: slot.start });
+        const { start, end, contents } = slot;
+        const rowIndex = this.getRowLabelIndex({ start });
         let row = this.data[rowIndex];
         const cell = row[colIndex] = new AgendaCell(slot);
-        const endRowIndex = this.getRowLabelIndex({ end: slot.end });
+        const endRowIndex = this.getRowLabelIndex({ end });
         cell.rowSpan = (endRowIndex - rowIndex) + 1;
 
-        if (slot.contents && slot.contents.type === 'TALK') {
-          cell.contents.hash = this.id + '/' + slot.id
-          cellsByHash[cell.hash] = cell;
+        if (contents && contents.type === 'TALK') {
+          const hash = this.id + '/' + contents.id;
+          cell.contents.hash = hash;
+          cellsByHash[hash] = cell;
         }
 
       })

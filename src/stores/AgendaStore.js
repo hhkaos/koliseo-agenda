@@ -43,7 +43,7 @@ class AgendaStore extends Store {
     const daysById = this.getAgenda().daysById;
     this.setState({
       selectedDay: daysById[dayId] || daysById[Object.keys(daysById)[0] + ''],
-      selectedCalk: undefined
+      selectedCell: undefined
     });
   }
 

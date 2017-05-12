@@ -20,7 +20,7 @@ describe('Agenda', () => {
 
   describe('constructor', _ => {
     it('should parse agenda', () => {
-      agenda.getDaysArray().map((day) => {
+      agenda.getDaysArray().forEach((day) => {
         console.log(day.name);
         console.log('===');
         console.log(assert.dayToString(day))
@@ -32,9 +32,10 @@ describe('Agenda', () => {
       assert.equal('{"start":"09:00","end":"09:15"}', JSON.stringify(day0.rowLabels[1]));
       assert.equal('27 noviembre', day0.name);
       assert.equal('{"rowSpan":1,"colSpan":12,"id":47474001,"start":"08:00","end":"09:00","type":"BREAK","contents":{"type":"BREAK","title":"Registro"}}', JSON.stringify(day0.data[0][0]));
-      assert.equal('kk', JSON.stringify(day0.data[0][1]));
-      assert.equal('kk', agenda.cellsByHash);
-    })
+      assert(agenda.cellsByHash["5699289732874240/5733608132182016"], "Could not find indexed talk");
+      assert(agenda.cellsByHash["5699289732874240/5629608451899392"], "Could not find indexed talk");
+      assert.equal('undefined', typeof day0.data[0][1]);
+    });
   });
 
 });

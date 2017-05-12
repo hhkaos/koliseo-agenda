@@ -13,9 +13,7 @@ export default class Agenda {
     // the agenda table data, indexed by agendaDay.id
     this.daysById = {};
     agenda.days.forEach((day) => {
-      const dayModel = new AgendaDay(day, this.cellsByHash);
-      // this.days.push(dayModel);
-      this.daysById[day.id] = dayModel;
+      this.daysById[day.id] = new AgendaDay(day, this.cellsByHash);
     })
 
   }

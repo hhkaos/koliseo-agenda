@@ -13,6 +13,15 @@ import UserContextComponent from './UserContextComponent';
 
 /**
  * Displays an entire agenda, including multiple days
+ * 
+ * { CallForPapers, required } The data about the call for papers ofd this agenda
+ * callForPapers
+ * 
+ * {Agenda, required } the agenda to render
+ * agenda
+ * 
+ * {AgendaDay}  the currently selected day
+ * selectedDay
  */
 class AgendaView extends Component {
 
@@ -26,27 +35,24 @@ class AgendaView extends Component {
 
   onClick(e) {
     e.preventDefault();
-    const dayId = e.target.getAttribute('data-day-id');
-    AgendaActions.selectDay(agendaModel.daysById[dayId]);
+    const dayId = e.target.dataset.dayId;
+    AgendaActions.selectDayById(dayId);
   }
 
   // render the tabs to move between days
-  renderDayTabs() {
-    const { agenda, selectedDay } = this.props;
+  renderDayTabs(agenda, selectedDay) {
     const days = agenda.getDaysArray();
-    if (days.length == 1) {
-      return <h2 className="kday-title">{days[0].name}</h2>;
-    }
 
     return (
       <nav className="ka-tabs">
         { this.renderUserInfo() }
         {
+          days.length == 1? <h2 className="kday-title">{days[0].name}</h2>:
           agenda.getDaysArray().map(({ id, name }) => {
-            const className = (id == selectedDay? 'selected ' : '' ) + 'ka-tab-a'
+            const className = (id == selectedDay.id? 'selected ' : '' ) + 'ka-tab-a'
             return (
               <div className="ka-tab-li" key={id}>
-                <a className={className} data-day-id={id} href={'#' + id}>{name}</a>
+                <a className={className} data-day-id={id} href={'#' + id} onClick={this.onClick}>{name}</a>
               </div>
             )
           })
@@ -67,10 +73,10 @@ class AgendaView extends Component {
 
   // renders the tabs and content around our table
   render() {
-    const { selectedDay } = this.props;
+    const { agenda, selectedDay } = this.props;
     return (
       <div>
-        {this.renderDayTabs()}
+        {this.renderDayTabs(agenda, selectedDay)}
         <div className="kworkspace">
           <AgendaDayView day={selectedDay} />
         </div>
@@ -81,19 +87,6 @@ class AgendaView extends Component {
       </div>
     )
   }
-
-}
-
-AgendaView.propTypes = {
-  
-  // { CallForPapers } The data about the call for papers ofd this agenda
-  callForPapers: PropTypes.object.isRequired,
-
-  // {Agenda } the agenda to render
-  agenda: PropTypes.object.isRequired,
-
-  // {AgendaDay}  the currently selected day
-  selectedDay: PropTypes.object
 
 }
 
