@@ -10,6 +10,7 @@ import { LoginLogoutButton } from './Buttons';
 import AgendaDayView from './AgendaDayView';
 import PropTypes from 'prop-types';
 import UserContextComponent from './UserContextComponent';
+import LoadingView from './LoadingView';
 
 /**
  * Displays an entire agenda, including multiple days
@@ -92,6 +93,10 @@ class AgendaView extends Component {
 
 // retrieve the agenda and data for this user, then render
 export default function renderAgenda(element) {
+  render(
+    <LoadingView />,
+    element
+  );
   return Promise.all([AgendaActions.load(), UserActions.load()])
     .then(([ { callForPapers, agenda }, currentUser ]) => {
 
@@ -110,7 +115,7 @@ export default function renderAgenda(element) {
             </AltContainer>
           </UserContextComponent>
         </AltContainer>, 
-        element
+        element, element.lastChild
       );
 
     })
