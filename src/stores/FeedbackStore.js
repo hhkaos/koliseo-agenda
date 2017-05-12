@@ -1,48 +1,58 @@
 import alt from '../alt';
 import Store from 'alt-ng/Store';
 import FeedbackActions from '../actions/FeedbackActions';
+import Feedback from '../model/Feedback';
 
-// minimum number of stars that should be assigned to send without a comment
-const MIN_STARS_WIHOUT_COMMENT = 3;
-
-// store for the feedback being edited by the current user
 class FeedbackStore extends Store {
 
   constructor() {
     super();
     this.state = {
-      // { level, message } warning message
-      // message
+      // {int, required} id of the current talk being displayed
+      // cellId
 
-      // { Feedback } the feedback provided by this user to this talk
-      //feedback
+      // {boolean} loading state
+      // loading
+
+      // {Array of Feedback, empty if loading or none} list of feedback for the current talk being displayed
+      // entries
+
+      // {Feedback, undefined if none} feedback by the current user, 
+      // currentFeedback
     }
     this.bindActions(FeedbackActions);
   }
 
-  load(feedback) {
-    this.onChange(feedback);
+  // add the page of feedback to the list
+  // currently we are not paging these but a cursor could be added easily
+  fetch({ cellId, loading, entries, currentUser }) {
+
+    // either fetch just started (we are in a loading state)
+    // or we just received results, in which case accept if they are only for our latest request
+    if (loading || cellId == this.state.cellId) {
+      let currentFeedback;
+      const processedEntries = entries.map((entry) => {
+        if (entry.user.id == currentUser.id) {
+          currentFeedback = new Feedback(entry);
+        }
+        return new Feedback(entry);
+      })
+      this.setState({
+        cellId, 
+        loading, 
+        entries: processedEntries,
+        currentFeedback
+      })
+    }
   }
 
-  onChange(feedback) {
-    const { comment, rating } = feedback;
-    let message = undefined;
-    if (!comment.trim()) {
-      if (rating >= MIN_STARS_WIHOUT_COMMENT) {
-        message = {
-          message: 'The author would appreciate your comment',
-          level: 'warn'
-        }
-      } else {
-        message = {
-          message: 'Comment is required for 2 stars or less',
-          level: 'alert'
-        }
-      }
-    }
+  // change the rating or the comment of the feedback of this user
+  onChange({ attribute, value }) {
+    const currentFeedback = this.state.currentFeedback;
+    currentFeedback[attribute] = value;
     this.setState({
-      feedback,
-      message
+      currentFeedback,
+      message: currentFeedback.getMessage()
     })
   }
 
@@ -52,12 +62,9 @@ class FeedbackStore extends Store {
       message: {
         level: 'info',
         message: 'Thanks for your feedback!'
-      },
-      feedback
+      }
     })
   }
 
-
-};
-
+}
 export default alt.createStore('FeedbackStore', new FeedbackStore());

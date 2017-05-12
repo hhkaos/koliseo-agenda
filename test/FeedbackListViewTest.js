@@ -2,6 +2,7 @@ import { h, render, Component } from 'preact';
 import assert from './assertions';
 import fetchMock from 'fetch-mock';
 import { URL, initDOM } from './mock/jsdom-init';
+import { AUTHENTICATED, ANONYMOUS } from './mock/MockUser';
 import MockUserContextComponent from './mock/MockUserContextComponent';
 import { registerMockFetch } from './mock/MockFeedback';
 import FeedbackListView from '../src/view/FeedbackListView';
@@ -13,7 +14,7 @@ describe('FeedbackListView', () => {
   let element;
 
   before(() => {
-    registerMokcFetch();
+    registerMockFetch();
   })
 
   beforeEach(() => {
@@ -21,15 +22,27 @@ describe('FeedbackListView', () => {
     document.body.appendChild(element);
   });
 
-  it('renders', () => {
+  it('renders with authenticated user', () => {
     render(
-      <MockUserContextComponent>
+      <MockUserContextComponent currentUser={AUTHENTICATED}>
         <FeedbackListView cellId={5} />
       </MockUserContextComponent>, element
     )
     assert.react.contains(element, '<div class="ka-feedback-entries"></div>');
     return FeedbackActions.fetch({ cellId: 5 }).then(() => {
-      assert.react.contains(element, 'kk');      
+      assert.react.contains(element, 'kk');
+    })
+  })
+
+  it('renders with anonymous user', () => {
+    render(
+      <MockUserContextComponent currentUser={ANONYMOUS}>
+        <FeedbackListView cellId={5} />
+      </MockUserContextComponent>, element
+    )
+    assert.react.contains(element, '<div class="ka-feedback-entries"></div>');
+    return FeedbackActions.fetch({ cellId: 5 }).then(() => {
+      assert.react.contains(element, 'kk');
     })
   })
 

@@ -40,36 +40,6 @@ export default class TalkDialog extends Component {
     )
   }
 
-  render() {
-
-    const cell = this.props.selectedCell;
-    if (!cell) {
-      return undefined;
-    }
-
-    const { title, tags, feedback, description, authors } = cell.contents;
-    return (
-      <div className="ka-overlay ka-hidden" onKeyPress={this.onKeyPress}>
-        <div className="ka-dialog">
-          <a className="ka-close" title="close"></a>
-          <div className="ka-dialog-contents">
-            <h2 className="ka-dialog-title">
-              { this.renderLinks() } 
-              { title } 
-              <StarsView rating={ feedback.ratingAverage } />
-            </h2>
-            <div className="ka-dialog-description" dangerouslySetInnerHTML={ formatMarkdown(description)}/>
-            {this.renderTags(tags)}
-          </div>
-          <div className="ka-avatars">
-            {authors.map(this.renderAuthor)}
-          </div>
-          <FeedbackListView cellId={cell.id}/>
-        </div>
-      </div>
-    );
-  }
-
   renderTags(tags) {
     if (!tags) {
       return undefined;
@@ -99,6 +69,36 @@ export default class TalkDialog extends Component {
         </div>
       </div>
     )
+  }
+
+  render() {
+
+    const cell = this.props.selectedCell;
+    if (!cell) {
+      return undefined;
+    }
+
+    const { title, tags, feedback, description, authors } = cell.contents;
+    return (
+      <div className="ka-overlay ka-hidden" onKeyPress={this.onKeyPress}>
+        <div className="ka-dialog">
+          <a className="ka-close" title="close"></a>
+          <div className="ka-dialog-contents">
+            <h2 className="ka-dialog-title">
+              {this.renderLinks()}
+              {title}
+              <StarsView rating={feedback.ratingAverage} />
+            </h2>
+            <div className="ka-dialog-description" dangerouslySetInnerHTML={formatMarkdown(description)} />
+            {this.renderTags(tags)}
+          </div>
+          <div className="ka-avatars">
+            {authors.map(this.renderAuthor)}
+          </div>
+          <FeedbackListView cellId={cell.id} />
+        </div>
+      </div>
+    );
   }
 
 };

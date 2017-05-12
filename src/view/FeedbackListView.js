@@ -3,7 +3,8 @@ import FeedbackActions from '../actions/FeedbackActions';
 import PropTypes from 'prop-types';
 import AltContainer from 'alt-ng/AltContainer';
 import FeedbackView from './FeedbackView';
-import FeedbackListStore from '../stores/FeedbackListStore';
+import FeedbackStore from '../stores/FeedbackStore';
+import FeedbackInputView from './FeedbackInputView';
 
 /**
  * Render the list of talk feedback
@@ -11,7 +12,7 @@ import FeedbackListStore from '../stores/FeedbackListStore';
 class FeedbackListView extends Component {
 
   componentDidMount() {
-    FeedbackActions.fetch({ cellId: this.props.cellId })
+    FeedbackActions.fetch(this.props.cellId, this.context.currentUser)
   }
 
   renderLoading() {
@@ -34,9 +35,10 @@ class FeedbackListView extends Component {
   }
 
   render() {
-    const { loading, entries } = this.props;
+    const { loading, entries, currentFeedback } = this.props;
     return (
       <div className="ka-feedback-entries">
+        <FeedbackInputView feedback={currentFeedback} />
         { loading? this.renderLoading() : this.renderEntries(entries) }
       </div>
     )
@@ -46,7 +48,7 @@ class FeedbackListView extends Component {
 
 export default function(props) {
   return (
-    <AltContainer store={FeedbackListStore}>
+    <AltContainer store={FeedbackStore}>
       <FeedbackListView {...props} />
     </AltContainer>
   )

@@ -8,6 +8,8 @@ import MockCell from './mock/MockCell';
 import AgendaCell from '../src/model/AgendaCell';
 import { registerMockFetch } from './mock/MockFeedback';
 import TalkDialog from '../src/view/TalkDialog';
+import FeedbackActions from '../src/actions/FeedbackActions';
+import { AUTHENTICATED } from './mock/MockUser';
 
 describe('TalkDialog', () => {
 
@@ -35,12 +37,13 @@ describe('TalkDialog', () => {
     }
     
     render(
-      <MockUserContextComponent>
-        <TalkDialog cell={cell} tagColors={tagColors}/>
+      <MockUserContextComponent user={AUTHENTICATED}>
+        <TalkDialog selectedCell={cell} tagColors={tagColors}/>
       </MockUserContextComponent>, element
     )
     assert.react.contains(element, '<div class="ka-dialog"><a class="ka-close" title="close"></a><div class="ka-dialog-contents">');
     assert.react.contains(element, 'Title for talk 1');
+    return FeedbackActions.fetch(cell.id, AUTHENTICATED)
   })
 
 

@@ -9,6 +9,7 @@ import KoliseoAPI from '../controller/KoliseoAPI';
 import { LoginLogoutButton } from './Buttons';
 import AgendaDayView from './AgendaDayView';
 import PropTypes from 'prop-types';
+import UserContextComponent from './UserContextComponent';
 
 /**
  * Displays an entire agenda, including multiple days
@@ -27,12 +28,6 @@ class AgendaView extends Component {
     e.preventDefault();
     const dayId = e.target.getAttribute('data-day-id');
     AgendaActions.selectDay(agendaModel.daysById[dayId]);
-  }
-
-  getChildContext() {
-    return { 
-      currentUser: this.props.currentUser 
-    }
   }
 
   // render the tabs to move between days
@@ -97,9 +92,6 @@ AgendaView.propTypes = {
   // {Agenda } the agenda to render
   agenda: PropTypes.object.isRequired,
 
-  // {User} the current user. Will be propagated to children components through context
-  user: PropTypes.object.isRequired,
-
   // {AgendaDay}  the currently selected day
   selectedDay: PropTypes.object
 
@@ -116,11 +108,14 @@ export default function renderAgenda(element) {
       const agendaDay = agenda.daysById[dayId] || agenda.getDaysArray()[0]
       AgendaActions.selectDayById(agendaDay);
       AgendaActions.selectTalkByHash(talkHash);
-
       render(
-        <AltContainer stores={[AgendaStore, UserStore]}>
-          <AgendaView />
-          <TalkDialog tagColors={ callForPapers.tagColors } />
+        <AltContainer store={UserStore}>
+          <UserContextComponent>
+            <AltContainer store={AgendaStore}>
+              <AgendaView />
+              <TalkDialog tagColors={ callForPapers.tagColors } />
+            </AltContainer>
+          </UserContextComponent>
         </AltContainer>, 
         element
       );

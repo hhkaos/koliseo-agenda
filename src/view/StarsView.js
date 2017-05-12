@@ -44,7 +44,7 @@ export default class StarsView extends Component {
 
   onClick(e) {
     let rating = e.target.dataset.rating;
-    FeedbackActions.changeRating(rating);
+    FeedbackActions.onChange({attribute: 'rating', value: rating });
   }
 
   render() {
