@@ -41,10 +41,12 @@ class AgendaStore extends Store {
   // dayId the identifier of this day
   selectDayById(dayId) {
     const daysById = this.getAgenda().daysById;
+    const selectedDay = daysById[dayId] || daysById[Object.keys(daysById)[0] + ''];
     this.setState({
-      selectedDay: daysById[dayId] || daysById[Object.keys(daysById)[0] + ''],
+      selectedDay: selectedDay,
       selectedCell: undefined
     });
+    this.pushState(selectedDay.name, selectedDay.id);
   }
 
   // render a talk as modal window, by hash

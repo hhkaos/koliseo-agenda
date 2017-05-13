@@ -1,41 +1,51 @@
-.ka-avatar-container {
-  display: block;
-  margin-bottom: 10px;
-}
-.ka-avatar-a {
-  display: block;
-  line-height: 1.5;
-}
+$avatarWidth: 5rem;
+$avatarMargin: 1rem;
 
 .ka-avatar-a {
-  display: table;
-  width: 100%
-}
-.ka-avatar-img, .ka-author-name {
-  display: table-cell;
-  vertical-align: middle;
-  text-align: left;
-}
-.ka-author-name-container {
-  display: table-cell;
-  vertical-align: middle;
+  display: inline-block;
+  margin-bottom: $avatarMargin;
+
+  &:not(:first-child) {
+    margin-left: .3rem;
+  }
 }
 .ka-avatar-img {
   border-radius: 50%;
-  width: 50px;
-  height: 50px;
-  margin-right: $td-padding;
-  vertical-align: middle;
+  width: $avatarWidth;
+  height: $avatarWidth;
+  border: 1px solid rgba(0,0,0,.2);
 }
 .ka-avatars {
-  padding: $td-padding 0;
-  margin: 0;
-  border-top: 1px solid $gray-lighter;
-}
-.ka-avatar-li {
-  display: inline-block;
-  position: relative;
-  margin: 0;
-  padding: 12px;
-}
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+  display: inline-flex;
 
+  // stack all avatars one over another
+  &.stacked {
+
+    display: flex;
+    justify-content: space-between;
+    padding-right: $avatarWidth / 2;
+
+    & > .ka-avatar-a {
+      // allow avatars to overlap when stacked
+      min-width: 0;
+    }
+    & > .ka-avatar-a:nth-child(1) {
+      z-index: 10;
+    }
+    & > .ka-avatar-a:nth-child(2) {
+      z-index: 9;
+    }
+    & > .ka-avatar-a:nth-child(3) {
+      z-index: 8;
+    }
+    & > .ka-avatar-a:nth-child(4) {
+      z-index: 7;
+    }
+    & > .ka-avatar-a:nth-child(5) {
+      z-index: 6;
+    }
+  }
+}

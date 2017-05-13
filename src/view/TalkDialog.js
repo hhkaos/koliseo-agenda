@@ -49,7 +49,7 @@ export default class TalkDialog extends Component {
       });
       setTimeout(() => this.setState({
         hidden: false
-      }), ANIMATION_TIMEOUT);
+      }), 0);
     }
   }
   

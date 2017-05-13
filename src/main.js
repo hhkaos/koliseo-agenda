@@ -5,9 +5,13 @@ import { h, render, Component } from 'preact';
 const glob = typeof global !== 'undefined'? global : window;
 glob.Koliseo = glob.Koliseo || {};
 Koliseo.agenda = {
-  render: function ({ element, ...options }) {
+  render: function ({ 
+    // element where we will render the agenda
+    element, 
+    ...options 
+  }) {
     KoliseoAPI.init(options);
-    renderAgenda(element).catch(e => {
+    renderAgenda({ element, ...options }).catch(e => {
       console.error(e, e.stack);
       render(
         <div className="ka-messages">

@@ -1,151 +1,81 @@
+$tdGradientColor1: #00a1ff;
+$tdGradientColor2: #0982ca;
+$border-color: #9cb9c9;
+
 .ka-table {
   background: $table-background;
   margin-top: 1.5rem;
   margin-bottom: 1.5rem;
-  border: solid 1px $border-color;
-  border-collapse: collapse;
-  border-spacing: 0;
-  font-size: inherit;
+  border-spacing: 5px;
+  table-layout: fixed;
+
+  // you may want to change this value for really big tables
+  width: 100%;
 }
 .ka-head {
   background-color: $shaded-background;
 
 }
-.ka-table-td, .ka-table-th {
+.ka-td, .ka-th {
   border: 1px solid $border-color;
   padding: $td-padding;
-  box-sizing: border-box;
   vertical-align: top;
-  position: relative;
-  min-width: 100px;
-
+  min-width: 15rem;
 }
-.ka-table-th {
+.ka-th {
   white-space: nowrap;
   font-weight: bold;
+  color: white;
+  background-color: $tdGradientColor1;
 }
-.ka-feedback-footer {
-  position: absolute;
-  bottom: 1.3rem;
+
+.ka-td.talk {
+  background-image: linear-gradient(175.5deg, $tdGradientColor1 70px, transparent 71px, transparent), linear-gradient(177deg, $tdGradientColor2 70px, white 71px, white);
+  padding-bottom: 0;
+
+  // this value is ignored, but makes children use 100% of the space
+  height: 10rem;
+
+  & > .ka-td-contents {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+  }
 }
-.ka-author-brief {
+
+
+// name of the user in the table
+.ka-username {
   text-transform: uppercase;
   line-height: 1;
-  font-size: 10px;
+  //font-size: 10px;
   color: $gray;
-  position: absolute;
-  bottom: 3px;
-  height: $td-padding;
-  overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  width: 100%;
-  margin-left: -$td-padding;
-  padding-left: $td-padding;
-  padding-right: $td-padding;
-  margin-bottom: 0;
+  text-align: center;
+  overflow: hidden;
 }
-.ka-table-td.talk {
-  padding-bottom: 50px;
+
+// title of the talk
+.ka-talk-title {
+  text-align: center;
+  flex-grow: 1;
+  overflow: hidden;
 }
-.ka-table-td.break {
+
+.ka-td.break {
   background-color: $shaded-background;
   text-transform: uppercase;
   color: $gray;
   text-align: center;
 }
-.ka-table-td.hidden {
+
+.ka-td.hidden {
   visibility: hidden;
 }
 
-.ka-table-td.selected {
-  background: $selected-border-color;
-  border-color: $selected-border-color;
-  color: $selected-color;
-
-  & .ka-talk-title {
-    color: #fff !important;
-    color: rgba(255, 255, 255, .8) !important;
-    font-weight: bold;
-  }
-  & .ka-author-brief {
-    color: $selected-color;
-  }
-}
-/*
-.ka-table-td .ka-like-container {
-  float: right;
-  margin-left: 5px;
-  margin-bottom: 5px;
-}
-*/
-
-.ka-mobile-only {
-  display: none;
-}
-
-
-@media #{$small} {
-
-  .ka-mobile-only {
-    display: block;
-  }
-
-  .ka-mobile-hidden {
-    display: none;
-  }
-
-  .ka-table, .ka-table-tr, .ka-table-th, .ka-body {
-    display: block;
-  }
-
-  .ka-table-th {
-    background-color: $shaded-background;
-    padding-left: $td-padding + 1rem;
-    cursor: pointer;
-    &:after {
-      float: right;
-      border-radius: 50%;
-      width: 1rem;
-      height: 1rem;
-      border: 1px solid #ccc;
-      content: '+';
-    }
-  }
-
-/*
-  .ka-table-tr.ka-expanded {
-    & > .ka-table-td {
-      display: block;
-    }
-
-    & > .ka-table-th:after {
-      content: '-';
-    }
-  }
-*/
-  .ka-head, .ka-table-th:only-child,  .ka-table-td, .ka-table-td-empty {
-    display: none;
-  }
-
-  .ka-label, .ka-time {
-    font-size: 80%;
-    border-radius: 3px;
-    background-color: #807e7e;
-    padding: 5px;
-    color: #fff;
-    font-weight: bold;
-    display: inline-block;
-    margin-top: 5px;
-  }
-
-
-  $colors: $green-dark, $orange-dark, $pink-dark, $purple-dark, $yellow, $teal-dark, $red-dark, $blue-darker, $brown-dark, $gray-dark;
-
-  @for $i from 1 through length($colors) {
-    .ka-label-#{$i - 1} {
-      background-color: nth($colors, $i);
-    }
-  }
-
+.ka-td-footer {
+  color: #aaa;
+  font-size: .9rem;
 }

@@ -23,6 +23,7 @@ import LoadingView from './LoadingView';
  * 
  * {AgendaDay}  the currently selected day
  * selectedDay
+ * 
  */
 class AgendaView extends Component {
 
@@ -92,7 +93,9 @@ class AgendaView extends Component {
 }
 
 // retrieve the agenda and data for this user, then render
-export default function renderAgenda(element) {
+export default function renderAgenda({ 
+  element
+}) {
   render(
     <LoadingView />,
     element

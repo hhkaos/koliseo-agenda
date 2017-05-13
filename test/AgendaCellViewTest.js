@@ -44,7 +44,7 @@ describe('AgendaCellView', () => {
         <AgendaCellView cell={cell} />
       </MockUserContextComponent>, element
     )
-    assert.react.contains(element, '<td class="ka-table-td extend" rowspan="1" colspan="1"><div>Extended from <b>Foobar</b></div></td>');
+    assert.react.contains(element, '<td class="ka-td extend" rowspan="1" colspan="1"><div>Extended from <b>Foobar</b></div></td>');
     
   })
 

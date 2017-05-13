@@ -10,7 +10,7 @@ export default class AgendaDayView extends Component {
   renderColLabels() {
     const labels = [''].concat(this.props.day.colLabels);
     return labels.map((label, index) => {
-      return <th className="ka-table-th" key={index}>{label}</th>
+      return <th className="ka-th" key={index}>{label}</th>
     })
   }
 
@@ -21,8 +21,8 @@ export default class AgendaDayView extends Component {
       rowLabels.map(({start, end}, rowIndex) => {
         const row = day.data[rowIndex];
         return (
-          <tr className="ka-table-tr" key={rowIndex}>
-            <th className="ka-table-th">{start}<span className="ka-mobile-hidden">-{end}</span></th>
+          <tr className="ka-tr" key={rowIndex}>
+            <th className="ka-th">{start}<span className="ka-mobile-hidden">-{end}</span></th>
             {this.renderRow(row, rowIndex)}
           </tr>
         )

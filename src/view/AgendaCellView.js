@@ -1,9 +1,10 @@
 import { h, render, Component } from 'preact';
 import { LikeButton } from './Buttons';
 import { SlidesLink, VideoLink } from './Links';
-import StarsView from './StarsView';
+import { SmallView } from './StarsView';
 import PropTypes from 'prop-types';
 import AgendaActions from '../actions/AgendaActions';
+import AvatarView from './AvatarView';
 
 export default class AgendaCellView extends Component {
 
@@ -23,19 +24,22 @@ export default class AgendaCellView extends Component {
   renderTalk(cell) {
     const { hash, title, description, authors, tags, feedback, slidesUrl, videoUrl } = cell.contents;
     return (
-      <div>
-        <LikeButton cell={cell} />
-        <p>
-          <a href={'#' + hash} data-id={cell.id} className="ka-talk-title" onClick={this.onClick}>{title}</a>
+      <div class="ka-td-contents">
+        <AvatarView users={authors} onClick={this.onClick} href={'#' + hash} />
+        <div className="ka-username">
+          {authors.map((a) => a.name).join(', ')}
+        </div>
+        <p className="ka-talk-title">
+          <a href={'#' + hash} data-id={cell.id} onClick={this.onClick}>{title}</a>
         </p>
-        <p className="ka-links">
+        <div className="ka-td-footer">
           <SlidesLink href={slidesUrl} title={title} />
           <VideoLink href={videoUrl} title={title} />
-        </p>
-        <div className="ka-feedback-footer">
-          <StarsView rating={feedback.ratingAverage} />
         </div>
-        <p className="ka-author-brief">{authors.map((a) => a.name).join(', ')}</p>
+        <div className="ka-td-footer">
+          <LikeButton cell={cell} />
+          <SmallView rating={feedback.ratingAverage} entriesCount={feedback.entriesCount} />
+        </div>
       </div>
     )
 
@@ -53,7 +57,7 @@ export default class AgendaCellView extends Component {
 
     return (
       type === 'EXTEND' && contents.merged? undefined :
-        <td className={'ka-table-td ' + (type && type.toLowerCase() || '')} rowspan={rowSpan} colspan={colSpan}>
+        <td className={'ka-td ' + (type && type.toLowerCase() || '')} rowspan={rowSpan} colspan={colSpan}>
           {$contents}
         </td>
     )

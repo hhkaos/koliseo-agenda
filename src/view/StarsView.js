@@ -70,3 +70,12 @@ export default class StarsView extends Component {
 
 }
 
+// render a small view with the stars
+export function SmallView({ rating, entriesCount }) {
+  return (
+    <div className="ka-social-link" title={`${rating} out of ${entriesCount} votes`}>
+      <span className="ka-icon ka-icon-star"/>
+      { rating }
+    </div>
+  )
+}

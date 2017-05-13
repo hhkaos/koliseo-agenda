@@ -29,22 +29,25 @@ export class LikeButton extends Component {
   render() {
     const { currentUser } = this.context;
     const { cell, displayLabel } = this.props;
+    const { totalLikes } = cell.contents;
     const liked = currentUser.isLiked(cell.id);
     const state = liked? {
       value: 'selected',
       title: 'I am planning to attend this talk',
-      label: 'Liked'
+      label: `Liked (${totalLikes})`
     } : {
       value: 'default',
-      title: 'Click to mark this talk as favorite',
-      label: 'Like'
+      title: `Click to mark this talk as favorite (currently ${totalLikes})`,
+      label: `Like (${totalLikes})`
     };
     return (
-      <a className="ka-icon ka-icon-heart"
-          title={state.title}
-          data-state={state.value}
-          onClick={this.onClick}>
-          { displayLabel? label : undefined }
+      <a 
+        title={state.title}
+        data-state={state.value}
+        onClick={this.onClick}
+        className="ka-social-link">
+        <span className={"ka-icon ka-icon-heart " + state.value}/>
+          {displayLabel ? label : totalLikes }
       </a>
     )
   }
