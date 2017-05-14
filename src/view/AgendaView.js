@@ -83,8 +83,10 @@ class AgendaView extends Component {
           <AgendaDayView day={selectedDay} />
         </div>
         <div className="ka-hint">
-          <a href="http://koliseo.com" target="_blank" className="ka-logo"></a>
-          <p className="ka-hint-p small">Handcrafted with ♥ in a couple of places scattered around Europe</p>
+          <a href="http://koliseo.com" target="_blank" rel="noopener" className="ka-logo"></a>
+          <p className="ka-hint-p small">
+            This agenda is a free automated service from <a href="http://koliseo.com" target="_blank" rel="noopener">koliseo.com</a>. Drop us a line if you need something like this for your own events.
+          </p>
         </div>
       </div>
     )

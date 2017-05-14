@@ -39,7 +39,15 @@ export default class TalkDialog extends Component {
       // hidden
     }
     this.onKeyPress = this.onKeyPress.bind(this);
-    this.onClose = this.onClose.bind(this);
+    this.onClickClose = this.onClickClose.bind(this);
+  }
+
+  componentDidMount() {
+    window.addEventListener('keyup', this.onKeyPress);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('keyup', this.onKeyPress);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -56,16 +64,25 @@ export default class TalkDialog extends Component {
   // escape key while viewing a talk closes the window
   onKeyPress(event) {
     if (!event.altKey && !event.ctrlKey && event.keyCode == 27) {
-      this.onClose(event);
+      this.close();
     }
   }
 
-  onClose(e) {
-    e.preventDefault();
-    this.setState({
-      hidden: true
-    });
-    setTimeout(() => AgendaActions.unselectTalk(), ANIMATION_TIMEOUT);    
+  onClickClose(e) {
+    const classList = e.target.classList;
+    if (classList.contains('ka-close') || classList.contains('ka-overlay')) {
+      e.preventDefault();
+      this.close();
+    }
+  }
+
+  close() {
+    if (this.props.selectedCell) {
+      this.setState({
+        hidden: true
+      });
+      setTimeout(() => AgendaActions.unselectTalk(), ANIMATION_TIMEOUT);    
+    }
   }
 
   renderLinks() {
@@ -102,7 +119,7 @@ export default class TalkDialog extends Component {
         <AvatarView user={user}/>
         <span className="ka-author-name-container">
           <a href={'https://www.koliseo.com/' + uuid} className="ka-author-name">{name}</a>
-          {!twitterAccount ? undefined : <a href={'https://twitter.com/' + twitterAccount} className="ka-author-twitter" target="_blank">@{twitterAccount}</a>}
+          {!twitterAccount ? undefined : <a href={'https://twitter.com/' + twitterAccount} className="ka-author-twitter" target="_blank" rel="noopener">@{twitterAccount}</a>}
         </span>
         <div className="ka-author-data">
           <div className="ka-author-description" dangerouslySetInnerHTML={{ __html: formatMarkdown(description)}}></div>
@@ -118,10 +135,12 @@ export default class TalkDialog extends Component {
     const { title, tags, feedback, description, authors } = contents;
     return (
       selectedCell && 
-      <div className={"ka-overlay" + (hidden? ' ka-hidden' : '')} onKeyPress={this.onKeyPress}>
+      <div className={"ka-overlay" + (hidden? ' ka-hidden' : '')} 
+        onClick={this.onClickClose}
+        >
         <div className="ka-dialog">
           <div className="ka-dialog-contents">
-            <a className="ka-close" title="close" onClick={this.onClose}></a>
+            <a className="ka-close" title="close" onClick={this.onClickClose}></a>
             <h2 className="ka-dialog-title">
               {this.renderLinks()}
               {title}

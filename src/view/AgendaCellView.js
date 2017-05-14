@@ -16,7 +16,7 @@ export default class AgendaCellView extends Component {
   onClick(e) {
     if (e.button == 0 && !e.ctrlKey && !e.metaKey) {
       e.preventDefault();
-      const hash = e.target.getAttribute('href').substring(1);
+      const hash = this.props.cell.contents.hash;
       AgendaActions.selectTalkByHash(hash);
     }
   }
@@ -35,10 +35,8 @@ export default class AgendaCellView extends Component {
         <div className="ka-td-footer">
           <SlidesLink href={slidesUrl} title={title} />
           <VideoLink href={videoUrl} title={title} />
-        </div>
-        <div className="ka-td-footer">
           <LikeButton cell={cell} />
-          <SmallView rating={feedback.ratingAverage} entriesCount={feedback.entriesCount} />
+          <SmallView rating={feedback.ratingAverage} entriesCount={feedback.entriesCount} onClick={this.onClick}/>
         </div>
       </div>
     )

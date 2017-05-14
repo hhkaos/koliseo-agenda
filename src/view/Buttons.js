@@ -45,9 +45,14 @@ export class LikeButton extends Component {
         title={state.title}
         data-state={state.value}
         onClick={this.onClick}
-        className="ka-social-link">
-        <span className={"ka-icon ka-icon-heart " + state.value}/>
-          {displayLabel ? label : totalLikes }
+        className="ka-social-link ka-like-link">
+        <svg 
+          xmlns="http://www.w3.org/2000/svg" 
+          className={"ka-icon with-label " + state.value} 
+          viewBox="0 -10 110.669 106.234">
+          <path className="ka-icon-heart" d="M110.67 30c0-16.57-13.38-30-29.887-30-10.778 0-20.19 5.746-25.45 14.333C50.078 5.746 40.66 0 29.884 0 13.376 0 0 13.43 0 30c0 9.02 3.982 17.09 10.258 22.587L52.608 95.1c.722.726 1.703 1.134 2.726 1.134s2.004-.408 2.728-1.134l42.348-42.513C106.687 47.09 110.67 39.02 110.67 30z" />
+        </svg>
+        {displayLabel ? label : totalLikes }
       </a>
     )
   }

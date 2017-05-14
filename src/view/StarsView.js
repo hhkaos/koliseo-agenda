@@ -71,11 +71,17 @@ export default class StarsView extends Component {
 }
 
 // render a small view with the stars
-export function SmallView({ rating, entriesCount }) {
+export function SmallView({ rating, entriesCount, onClick }) {
   return (
-    <div className="ka-social-link" title={`${rating} out of ${entriesCount} votes`}>
-      <span className="ka-icon ka-icon-star"/>
+    <a className="ka-social-link" title={`${rating} out of ${entriesCount} votes`} onClick={onClick}>
+      <svg 
+        xmlns="http://www.w3.org/2000/svg" 
+        viewBox="0 0 104.853 100" 
+        className="ka-icon with-label"
+        >
+        <path className="ka-icon-star" d="M104.853 38.713c0 .903-.564 1.92-1.693 3.048L80.248 63.996l5.418 31.49c.113.34.113.79.113 1.355 0 1.693-.904 3.047-2.484 3.047-.79.113-1.693-.113-2.596-.677L52.37 84.312 24.153 99.21c-1.015.564-1.805.79-2.595.79-1.58 0-2.596-1.693-2.596-3.16 0-.34 0-.79.112-1.355l5.418-31.49L1.58 41.76C.564 40.633 0 39.617 0 38.714c0-1.58 1.13-2.596 3.5-2.934L35.1 31.263l14.22-28.668C50.113.903 51.13 0 52.37 0c1.242 0 2.258.903 3.16 2.596l14.11 28.668 31.602 4.515c2.37.337 3.61 1.353 3.61 2.933z" />
+      </svg>
       { rating }
-    </div>
+    </a>
   )
 }
