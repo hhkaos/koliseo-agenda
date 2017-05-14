@@ -92,6 +92,10 @@ $transitionDuration: .5s;
   color: #444;
 }
 
+.ka-author-twitter {
+  display: block;
+}
+
 @media #{$medium-up} {
   .ka-dialog {
     max-width: 980px;
