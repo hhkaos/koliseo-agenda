@@ -49,3 +49,10 @@ $avatarMargin: 1rem;
     }
   }
 }
+.ka-avatar-and-text {
+  display: flex;
+}
+.ka-avatar-text {
+  flex-grow: 1;
+  margin-left: 1rem;
+}

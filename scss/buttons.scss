@@ -1,14 +1,17 @@
 .ka-talk-buttons {
 
+  margin-top: 1rem;
+
   > .ka-social-link {
     padding: .8rem 1rem;
-    display: inline-block;
     color: #444;
     background: #eee;
-    margin: 0 0.8rem 1rem 0;
+    margin-right: 0.8rem;
     border: 1px solid #ccc;
     border-radius: 3px;
     transition: background-color 300ms ease-out;
+    display: inline-flex;
+    align-items: center;
 
     &:hover, &:focus {
       background: #dcdcdc;

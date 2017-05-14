@@ -36,7 +36,7 @@ export function SlidesLink({ href, children }) {
  */
 export function VideoLink({ href, title, children }) {
   return href && (
-    <a href={href} target="_blank" rel="noopener" className="ka-social-link external" title="Click here to go to the slides">
+    <a href={href} target="_blank" rel="noopener" className="ka-social-link external" title="Click here to go to the video">
       <svg 
         xmlns="http://www.w3.org/2000/svg" 
         className="ka-icon" 

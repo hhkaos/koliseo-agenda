@@ -119,17 +119,40 @@ export default class TalkDialog extends Component {
   renderAuthor(user) {
     const { id, uuid, name, avatar, description, twitterAccount } = user;
     return (
-      <div className="ka-avatar-li ka-avatar-and-text">
+      <div className="ka-dialog-section ka-avatar-and-text" key={user.id}>
         <AvatarView user={user}/>
-        <span className="ka-author-name-container">
-          <a href={'https://www.koliseo.com/' + uuid} className="ka-author-name">{name}</a>
-          {!twitterAccount ? undefined : <a href={'https://twitter.com/' + twitterAccount} className="ka-author-twitter" target="_blank" rel="noopener">@{twitterAccount}</a>}
-        </span>
-        <div className="ka-author-data">
-          <div className="ka-author-description" dangerouslySetInnerHTML={{ __html: formatMarkdown(description)}}></div>
+        <div className="ka-avatar-text">
+          <h3 className="ka-author-header">
+            {name}
+            {
+              twitterAccount && 
+              <a href={'https://twitter.com/' + twitterAccount}              className="ka-author-twitter" target="_blank" rel="noopener">
+                @{twitterAccount}
+              </a>
+            }
+          </h3>
+          <div 
+            className="ka-author-description" 
+            dangerouslySetInnerHTML={{ __html: formatMarkdown(description)}} 
+          />
         </div>
       </div>
     )
+  }
+
+  renderHeader(title, feedback) {
+    return (
+      <div className="ka-dialog-header">
+        <a className="ka-close" title="close" onClick={this.onClickClose}></a>
+        <h2 className="ka-dialog-title">
+          {title}
+        </h2>
+        <div className="ka-stats">
+          <StarsView rating={feedback.ratingAverage} />
+          {`${feedback.ratingAverage} out of ${feedback.entriesCount} votes`}
+        </div>
+      </div>
+    );
   }
 
   render() {
@@ -143,27 +166,18 @@ export default class TalkDialog extends Component {
         onClick={this.onClickClose}
         >
         <div className="ka-dialog">
-          <div className="ka-dialog-header">
-            <a className="ka-close" title="close" onClick={this.onClickClose}></a>
-            <h2 className="ka-dialog-title">
-              {title}
-            </h2>
-            <div className="ka-stats">
-              <StarsView rating={feedback.ratingAverage} />
-              {`${feedback.ratingAverage} out of ${feedback.entriesCount} votes`}
-            </div>
-          </div>
+          { this.renderHeader(title, feedback) }
           <div className="ka-dialog-contents">
-            <div 
-              className="ka-dialog-description" 
-              dangerouslySetInnerHTML={{ __html: formatMarkdown(description) }} 
-            />
-            {this.renderLinks()}
-            <div className="ka-avatars">
-              {authors.map(this.renderAuthor)}
+            <div className="ka-dialog-section">
+              <div 
+                className="ka-dialog-description" 
+                dangerouslySetInnerHTML={{ __html: formatMarkdown(description) }} 
+              />
+              {this.renderTags(tags)}
+              {this.renderLinks()}
             </div>
+            {authors.map(this.renderAuthor)}
           </div>
-          {this.renderTags(tags)}
           <div className="ka-dialog-contents">
             <FeedbackListView cellId={id} feedbackEnabled={feedbackEnabled} />
           </div>

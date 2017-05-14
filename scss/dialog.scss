@@ -46,12 +46,17 @@ $transitionDuration: .5s;
 }
 
 .ka-dialog-contents {
-  padding: $td-padding * 2;
   margin: $td-padding * 2;
   background: #fff;
   border: 1px solid #ddd;
 }
 
+.ka-dialog-section {
+  padding: $td-padding * 2;
+  &:not(:first-child) {
+    border-top: 1px solid #ddd;
+  }
+}
 
 .ka-author-description > ul {
   padding-left: 20px;
@@ -82,9 +87,13 @@ $transitionDuration: .5s;
 
 }
 
+.ka-author-header {
+  margin: 0 0 1rem;
+  color: #444;
+}
+
 @media #{$medium-up} {
   .ka-dialog {
     max-width: 980px;
-    max-height: 700px;
   }
 }
