@@ -1,7 +1,7 @@
 import { h, render, Component } from 'preact';
 import StarsView from './StarsView';
 import { LikeButton } from './Buttons';
-import { SlidesLink, VideoLink } from './Links';
+import { SlidesLink, VideoLink, ExternalFlag } from './Links';
 import marked from 'marked';
 import AvatarView from './AvatarView';
 import FeedbackListView from './FeedbackListView';
@@ -89,10 +89,14 @@ export default class TalkDialog extends Component {
     const { selectedCell } = this.props; 
     const { slidesUrl, videoUrl, title } = selectedCell.contents;
     return (
-      <div className="ka-links ka-right">
-        <LikeButton displayLabel={false} cell={selectedCell}/>
-        <SlidesLink href={slidesUrl} title={ title } />
-        <VideoLink href={videoUrl} title={title} />
+      <div className="ka-talk-buttons">
+        <LikeButton displayLabel={true} cell={selectedCell}/>
+        <SlidesLink href={slidesUrl} title={title}>
+          Slides <ExternalFlag/>
+        </SlidesLink>
+        <VideoLink href={videoUrl} title={title}>
+          Video <ExternalFlag />
+        </VideoLink>
       </div>
     )
   }
@@ -139,20 +143,30 @@ export default class TalkDialog extends Component {
         onClick={this.onClickClose}
         >
         <div className="ka-dialog">
-          <div className="ka-dialog-contents">
+          <div className="ka-dialog-header">
             <a className="ka-close" title="close" onClick={this.onClickClose}></a>
             <h2 className="ka-dialog-title">
-              {this.renderLinks()}
               {title}
-              <StarsView rating={feedback.ratingAverage} />
             </h2>
-            <div className="ka-dialog-description" dangerouslySetInnerHTML={{ __html: formatMarkdown(description) }} />
+            <div className="ka-stats">
+              <StarsView rating={feedback.ratingAverage} />
+              {`${feedback.ratingAverage} out of ${feedback.entriesCount} votes`}
+            </div>
+          </div>
+          <div className="ka-dialog-contents">
+            <div 
+              className="ka-dialog-description" 
+              dangerouslySetInnerHTML={{ __html: formatMarkdown(description) }} 
+            />
+            {this.renderLinks()}
             <div className="ka-avatars">
               {authors.map(this.renderAuthor)}
             </div>
-            {this.renderTags(tags)}
           </div>
-          <FeedbackListView cellId={id} feedbackEnabled={feedbackEnabled} />
+          {this.renderTags(tags)}
+          <div className="ka-dialog-contents">
+            <FeedbackListView cellId={id} feedbackEnabled={feedbackEnabled} />
+          </div>
         </div>
       </div>
     )

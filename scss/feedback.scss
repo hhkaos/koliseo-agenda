@@ -7,6 +7,7 @@ $starSize: $ratingSize / 5;
   position: relative;
   width: $ratingSize;
   vertical-align: middle;
+  margin-right: .5rem;
   &:before {
     background-repeat: repeat-x;
     background-size: $starSize;
@@ -113,26 +114,23 @@ $starSize: $ratingSize / 5;
     }
 }
 
-ul.ka-entries {
-    padding-left: 0;
-    li {
-        width: 100%;
-    }
-    .ka-avatar-container {
-        margin: 0;
-    }
-    .ka-entry-details {
-        display: table-row;
-    }
-    .ka-feedback-entry {
-        display: table-cell;
-        vertical-align: middle;
-        width: 100%;
-        padding-top: 5px;
-        .ka-button {
-            margin-right: 10px;
-        }
-    }
+.ka-entries {
+  padding-left: 0;
+  li {
+      width: 100%;
+  }
+  .ka-avatar-container {
+      margin: 0;
+  }
+  .ka-entry-details {
+      display: table-row;
+  }
+  .ka-feedback-entry {
+    display: table-cell;
+    vertical-align: middle;
+    width: 100%;
+    padding-top: 5px;
+  }
 }
 
 .ka-editing {

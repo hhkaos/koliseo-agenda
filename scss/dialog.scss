@@ -1,3 +1,4 @@
+$close-width: 60px;
 $transitionDuration: .5s;
 .ka-overlay {
   background: transparent;
@@ -23,27 +24,42 @@ $transitionDuration: .5s;
   height: 100%;
   box-shadow: 0 0 50px rgba(0, 0, 0, .5);
   transform: translate(-50%, -50%);
-  background: $white;
+  background: #ececec;
 }
-.ka-dialog-title,
-.ka-dialog-description {
 
+.ka-dialog-header {
+  border-bottom: 2px solid #ccc;
+  background: #fff;
+  margin-bottom: 1rem;
+  overflow: hidden;
+  padding-left: 2 * $td-padding;
 }
+
+.ka-dialog-title {
+  margin-bottom: 0;
+}
+
+.ka-stats {
+  margin: 1rem 0;
+  color: #444;
+  display: flex;
+}
+
 .ka-dialog-contents {
   padding: $td-padding * 2;
-  & > ul {
-    padding-left: 20px;
-  }
+  margin: $td-padding * 2;
+  background: #fff;
+  border: 1px solid #ddd;
 }
+
+
 .ka-author-description > ul {
   padding-left: 20px;
   list-style-type: disc;
 }
-$close-width: 60px;
+
 .ka-close {
-  position: absolute;
-  top: 0;
-  right: 0;
+  float: right;
   width: $close-width;
   height: $close-width;
   cursor: pointer;

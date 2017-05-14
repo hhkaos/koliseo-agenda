@@ -1,0 +1,58 @@
+.ka-talk-buttons {
+
+  > .ka-social-link {
+    padding: .8rem 1rem;
+    display: inline-block;
+    color: #444;
+    background: #eee;
+    margin: 0 0.8rem 1rem 0;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    transition: background-color 300ms ease-out;
+
+    &:hover, &:focus {
+      background: #dcdcdc;
+    }
+
+    &.primary, .selected {
+      background-color: $blue;
+      border: 1px solid $blue-dark;
+      color: $white;      
+    }
+  }
+
+  .ka-icon {
+    fill: #888;
+    height: 1rem;
+    margin-right: .8rem;
+  }
+}
+
+/*
+.ka-button {
+  padding: .5rem 1rem;
+  background-color: $blue;
+  border: 1px solid $blue-dark;
+  color: $white;
+  border-radius: 2px;
+  transition: background-color 300ms ease-out;
+  font-size: 11px;
+  cursor: pointer;
+
+  &:hover, &:focus {
+    background-color: scale-color($blue, $lightness: -25%);
+  }
+
+  &[disabled], &.disabled {
+    background-color: scale-color($blue, $lightness: 25%);
+    border-color: scale-color($blue-dark, $lightness: 25%);
+    cursor: default;
+  }
+
+  &.ka-button-secondary {
+    background-color: $gray-lighter;
+    border-color: $gray-light;
+    color: $font-color;
+  }
+}
+*/

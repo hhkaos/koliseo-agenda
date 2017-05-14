@@ -36,7 +36,7 @@ export default class TalkFeedbackInputView extends Component {
         <form className="ka-entry-details" onSubmit={this.onSubmit}>
           <AvatarView user={user} />
           <div className="ka-feedback-entry">
-            <a className="ka-button ka-right">Sign in</a>
+            <a className="ka-button">Sign in</a>
             <span>{user.isAnonymous()? 'You must sign in to provide feedback' : user.name}</span>
           </div>
           <div className="ka-star-cell">

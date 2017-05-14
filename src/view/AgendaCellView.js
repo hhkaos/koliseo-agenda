@@ -1,7 +1,6 @@
 import { h, render, Component } from 'preact';
 import { LikeButton } from './Buttons';
-import { SlidesLink, VideoLink } from './Links';
-import { SmallView } from './StarsView';
+import { SlidesLink, VideoLink, StarLink } from './Links';
 import PropTypes from 'prop-types';
 import AgendaActions from '../actions/AgendaActions';
 import AvatarView from './AvatarView';
@@ -36,7 +35,7 @@ export default class AgendaCellView extends Component {
           <SlidesLink href={slidesUrl} title={title} />
           <VideoLink href={videoUrl} title={title} />
           <LikeButton cell={cell} />
-          <SmallView rating={feedback.ratingAverage} entriesCount={feedback.entriesCount} onClick={this.onClick}/>
+          <StarLink rating={feedback.ratingAverage} entriesCount={feedback.entriesCount} onClick={this.onClick}/>
         </div>
       </div>
     )

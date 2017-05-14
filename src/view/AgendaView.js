@@ -67,9 +67,7 @@ class AgendaView extends Component {
   // if there is no OAuth client ID, does not show anything at all
   renderUserInfo() {
     return (
-      <div className="ka-right" id="ka-user-info">
-        <LoginLogoutButton />
-      </div>
+      <LoginLogoutButton />
     )
   }
 
