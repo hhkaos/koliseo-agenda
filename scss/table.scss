@@ -54,13 +54,9 @@ $border-color: #9cb9c9;
 // name of the user in the table
 .ka-username {
   text-transform: uppercase;
-  line-height: 1;
-  //font-size: 10px;
+  line-height: 1.1;
   color: $gray;
-  text-overflow: ellipsis;
-  white-space: nowrap;
   text-align: center;
-  overflow: hidden;
   margin: 1rem 0;
 }
 

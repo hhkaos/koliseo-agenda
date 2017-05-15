@@ -92,6 +92,10 @@ $transitionDuration: .3s;
 .ka-author-header {
   margin: 0 0 1rem;
   color: #444;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
 }
 
 .ka-author-twitter {

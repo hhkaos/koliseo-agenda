@@ -12,6 +12,7 @@
   display: inline-flex;
   align-items: center;
   cursor: pointer;
+  white-space: nowrap;
 
   &:hover, &:focus {
     background: #dcdcdc;

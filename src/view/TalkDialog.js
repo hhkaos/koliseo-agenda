@@ -130,10 +130,13 @@ export default class TalkDialog extends Component {
               </a>
             }
           </h3>
-          <div 
-            className="ka-author-description" 
-            dangerouslySetInnerHTML={{ __html: formatMarkdown(description)}} 
-          />
+          {
+            description && 
+            <div 
+              className="ka-author-description" 
+              dangerouslySetInnerHTML={{ __html: formatMarkdown(description)}} 
+            />
+          }
         </div>
       </div>
     )
