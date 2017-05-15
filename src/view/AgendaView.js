@@ -8,7 +8,6 @@ import UserActions from '../actions/UserActions';
 import KoliseoAPI from '../controller/KoliseoAPI';
 import { LoginLogoutButton } from './Buttons';
 import AgendaDayView from './AgendaDayView';
-import PropTypes from 'prop-types';
 import UserContextComponent from './UserContextComponent';
 import LoadingView from './LoadingView';
 
@@ -83,7 +82,7 @@ class AgendaView extends Component {
         <div className="ka-hint">
           <a href="http://koliseo.com" target="_blank" rel="noopener" className="ka-logo"></a>
           <p className="ka-hint-p small">
-            This agenda is a free automated service from <a href="http://koliseo.com" target="_blank" rel="noopener">koliseo.com</a>. Drop us a line if you need something like this for your own events.
+            This agenda is a free automagic service from <a href="http://koliseo.com" target="_blank" rel="noopener">koliseo.com</a>. Drop us a line if this sounds like something you need for your own events.
           </p>
         </div>
       </div>
@@ -102,6 +101,10 @@ export default function renderAgenda({
   );
   return Promise.all([AgendaActions.load(), UserActions.load()])
     .then(([ { callForPapers, agenda }, currentUser ]) => {
+
+      if (!agenda.feedbackEnabled) {
+        console.log('Agenda.feedbackEnabled is false. Feedback will be disabled.');
+      }
 
       const dayId = !location.hash ? '' : /#([^\/]+)(\/.+)?/.exec(location.hash)[1]
       const talkHash = dayId && location.hash.substring(1);

@@ -24,7 +24,6 @@ document.getElementById('oauthClientForm').addEventListener('submit', function o
 function onLoad() {
   var clientId = localStorage.getItem('test-client-id');
   document.getElementById('clientId').value = clientId || '';
-  console.log(clientId ? `Client ID ${clientId} will be used to communicate with the server` : 'Client ID not configured, the widget will be read-only');
   if (typeof Koliseo !== 'undefined' && Koliseo.agenda && typeof fetch !== 'undefined') {
     Koliseo.agenda.render({
       // Codemotion 2015

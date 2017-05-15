@@ -43,6 +43,11 @@ class KoliseoAPI {
   // returns a Promise that returns the current user
   init({ c4pUrl, oauthClientId } = {}) {
     assert(c4pUrl, 'Missing c4pUrl');
+    console.log(oauthClientId? 
+      `Client ID ${oauthClientId} will be used to communicate with the server` : 
+      'Client ID not configured, the widget will be read-only'
+    );
+
     this.c4pUrl = c4pUrl;
     this.oauthClientId = oauthClientId;
     this.token = getTokenFromUrl();
