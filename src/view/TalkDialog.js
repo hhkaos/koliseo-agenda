@@ -5,7 +5,6 @@ import { SlidesLink, VideoLink, ExternalFlag } from './Links';
 import marked from 'marked';
 import AvatarView from './AvatarView';
 import FeedbackListView from './FeedbackListView';
-import PropTypes from 'prop-types';
 import AgendaActions from '../actions/AgendaActions';
 
 export function formatMarkdown(s) {
@@ -16,7 +15,7 @@ const FirstChild = (props) => {
   return props.children[0] || null
 }
 
-const ANIMATION_TIMEOUT = 500;
+const ANIMATION_TIMEOUT = 300;
 
 /**
  * Display a dialog with the talk contents
