@@ -45,7 +45,7 @@ export class LikeButton extends Component {
         title={state.title}
         data-state={state.value}
         onClick={this.onClick}
-        className={ "ka-social-link ka-like-link ka-button-with-indicator " + className}>
+        className={ "ka-social-link ka-like-link " + className}>
         <svg 
           xmlns="http://www.w3.org/2000/svg" 
           className={"ka-icon with-label " + state.value} 
