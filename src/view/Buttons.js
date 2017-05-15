@@ -59,12 +59,22 @@ export class LikeButton extends Component {
 
 }
 
+function signIn(e) {
+  UserActions.login();
+}
+
+function signOut(e) {
+  UserActions.logout();
+}
+
+
 /**
  * Render the login or log out button
  */
 export function LoginLogoutButton(props) {
   const user = this.context.currentUser;
   return user.readOnly? undefined :
-    user.isAnonymous()? <button className="ka-button">Sign in</button> :
-      <button className="ka-button ka-button-secondary">Sign out</button>
+        user.isAnonymous()? 
+          <button className="ka-button" onClick={signIn}>Sign in</button> :
+          <button className="ka-button" onClick={signOut}>Sign out</button>;
 }

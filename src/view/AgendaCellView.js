@@ -1,10 +1,16 @@
 import { h, render, Component } from 'preact';
 import { LikeButton } from './Buttons';
 import { SlidesLink, VideoLink, StarLink } from './Links';
-import PropTypes from 'prop-types';
 import AgendaActions from '../actions/AgendaActions';
 import AvatarView from './AvatarView';
 
+/**
+ * Render a table cell
+ * 
+ * {AgendaCell, required} the cell to display
+ * cell
+ * 
+ */
 export default class AgendaCellView extends Component {
 
   constructor() {
@@ -63,7 +69,3 @@ export default class AgendaCellView extends Component {
 
 }
 
-AgendaCellView.propTypes = {
-  // {AgendaCell} the cell to display
-  cell: PropTypes.object.isRequired
-}

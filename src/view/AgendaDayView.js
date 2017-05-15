@@ -1,9 +1,12 @@
 import { h, render, Component } from 'preact';
 import AgendaCellView from './AgendaCellView';
-import PropTypes from 'prop-types';
 
 /**
  * Render a day table of talks 
+ * 
+ * {AgendaDay, required} the day to render
+ * day
+ * 
  */
 export default class AgendaDayView extends Component {
 
@@ -47,7 +50,3 @@ export default class AgendaDayView extends Component {
 
 };
 
-AgendaDayView.propTypes = {
-  // {AgendaDay} the day to render
-  day: PropTypes.object.isRequired
-}

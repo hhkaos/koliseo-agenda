@@ -1,5 +1,4 @@
 import { h, render, Component } from 'preact';
-import PropTypes from 'prop-types';
 
 /**
  * Render a bar with stars

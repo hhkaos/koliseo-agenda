@@ -1,6 +1,5 @@
 import { h, render, Component } from 'preact';
 import FeedbackActions from '../actions/FeedbackActions';
-import PropTypes from 'prop-types';
 import AltContainer from 'alt-ng/AltContainer';
 import { FeedbackView, LoadingSkeletonView } from './FeedbackView';
 import FeedbackStore from '../stores/FeedbackStore';
@@ -14,6 +13,10 @@ import FeedbackInputView from './FeedbackInputView';
  *
  * {Array of Feedback} the list of feedback to display
  * entries
+ * 
+ * {boolean} true if feedback is enabled
+ * feedbackEnabled
+ * 
  */
 class FeedbackListView extends Component {
 
@@ -43,10 +46,14 @@ class FeedbackListView extends Component {
   }
 
   render() {
+    const currentUser = this.context.currentUser;
     const { feedbackEnabled, loading, entries, currentFeedback } = this.props;
     return (
       <div className="ka-feedback-entries">
-        { feedbackEnabled && <FeedbackInputView feedback={currentFeedback} /> }
+        { 
+          feedbackEnabled && !currentUser.readOnly && 
+          <FeedbackInputView feedback={currentFeedback} /> 
+        }
         { loading? this.renderLoading() : this.renderEntries(entries) }
       </div>
     )

@@ -2,7 +2,6 @@ import { h, render, Component } from 'preact';
 import { formatDate } from '../util';
 import AvatarView from './AvatarView';
 import StarsView from './StarsView';
-import PropTypes from 'prop-types';
 
 /**
  * Read-only view of talk feedback

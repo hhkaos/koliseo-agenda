@@ -26,7 +26,7 @@ describe('FeedbackListView', () => {
   function mount(currentUser) {
     render(
       <MockUserContextComponent currentUser={currentUser}>
-        <FeedbackListView cell={cell} />
+        <FeedbackListView cell={cell} feedbackEnabled={true}/>
       </MockUserContextComponent>, element
     )
     return FeedbackActions.fetch({ talkId: 5, currentUser });
@@ -53,6 +53,29 @@ describe('FeedbackListView', () => {
     });
     return mount(ANONYMOUS).then(() => {
       assert.react.contains(element, 'kk');
+    })
+  })
+
+  it('renders without OAuthID', () => {
+    return mount(ANONYMOUS).then(() => {
+      assert.react.contains(element, 'kk');
+
+      // no submit form if there is no OAuth ID
+      assert.react.notExists(element, 'form.ka-dialog-section'); 
+
+      // even without OAuth ID it should show existing feedback
+      todo();
+    })
+  })
+
+  it('renders without agenda.feedbackEnabled', () => {
+    return mount(ANONYMOUS).then(() => {
+      render(
+        <MockUserContextComponent currentUser={currentUser}>
+          <FeedbackListView cell={cell} feedbackEnabled={false} />
+        </MockUserContextComponent>, element
+      )
+      assert.react.notExists(element, 'form.ka-dialog-section');
     })
   })
 

@@ -1,5 +1,4 @@
 import { h, render, Component } from 'preact';
-import PropTypes from 'prop-types';
 
 /**
  * Render the avatar
@@ -34,7 +33,13 @@ export default class AvatarView extends Component {
     }
     const href = this.props.href || 'https://www.koliseo.com/' + user.uuid;
     return (
-      <a href={ href } className="ka-avatar-a" title={user.name} onError={this.onError}>
+      <a 
+        href={ href } 
+        className="ka-avatar-a" 
+        title={user.name} 
+        onError={this.onError}
+        onClick={this.props.onClick}
+      >
         <img className="ka-avatar-img" src={user.avatar} />
       </a>
     )

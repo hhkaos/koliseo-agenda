@@ -3,7 +3,7 @@ import AvatarView from './AvatarView';
 import StarsView from './StarsView';
 import FeedbackActions from '../actions/FeedbackActions';
 import Feedback from '../model/Feedback';
-import UserActions from '../actions/UserActions';
+import { LoginLogoutButton } from './Buttons';
 
 /**
  * Input component for talk feedback
@@ -27,10 +27,6 @@ export default class FeedbackInputView extends Component {
     !this.state.message && FeedbackActions.sendFeedback(this.props.feedback);
   }
 
-  signIn(e) {
-    UserActions.login();
-  }
-
   renderAnonymous() {
     return (
       <div className="ka-avatar-text">
@@ -39,7 +35,7 @@ export default class FeedbackInputView extends Component {
           <StarsView rating={0} />
         </div>
         <div className="ka-form-right">
-          <a className="ka-button" onClick={this.signIn}>Sign in</a>
+          <LoginLogoutButton />
         </div>
       </div>
     )
