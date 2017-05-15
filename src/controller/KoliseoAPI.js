@@ -30,10 +30,8 @@ const URL = 'https://www.koliseo.com';
 
 /**
  * this.c4pUrl: (required) the URL to talk to
- * this.urls: only used for testing, receives all the URLs to communicate to. Alternative to c4pUrl.
  * this.token: (optional) the oauth token
  * this.oauthClientId: (optional) The Koliseo clientID of this application
- * this.agendaUrl, this,likesUrl: (optional) URLs only used while testing
  * 
  * Stores in localStorage:
  * ka-state: (optional) state sent to OAuth identity provider
@@ -43,16 +41,9 @@ class KoliseoAPI {
 
   // initializes the parameters to communicate to the server
   // returns a Promise that returns the current user
-  init({ urls, c4pUrl, oauthClientId } = {}) {
-    if (!urls && c4pUrl) {
-      urls = { c4p: c4pUrl }
-    }
-    assert(urls && urls.c4p, 'Missing c4pUrl');
-    this.urls = Object.assign({
-      agenda: urls.c4p + '/agenda',
-      likes: urls.c4p + '/likes',
-      me: URL + '/me'
-    }, urls);
+  init({ c4pUrl, oauthClientId } = {}) {
+    assert(c4pUrl, 'Missing c4pUrl');
+    this.c4pUrl = c4pUrl;
     this.oauthClientId = oauthClientId;
     this.token = getTokenFromUrl();
     if (!this.token) {
@@ -63,7 +54,7 @@ class KoliseoAPI {
 
   getCurrentUser() {
     return this.fetch({
-      url: this.urls.me
+      url: URL + '/me'
     });
   }
 
@@ -123,31 +114,30 @@ class KoliseoAPI {
   }
 
   getC4p() {
-    return this.fetch({ url: this.urls.c4p });
+    return this.fetch({ url: this.c4pUrl });
   }
 
   getAgenda() {
-    return this.fetch({ url: this.urls.agenda });
+    return this.fetch({ url: this.c4pUrl + '/agenda' });
   }
 
   sendFeedback({ id, rating, comment }) {
     return this.fetch({
       method: 'post', 
-      url: `${this.urls.c4p}/proposals/${id}/feedback`, 
+      url: `${this.c4pUrl}/proposals/${id}/feedback`, 
       body: { id, rating, comment }
     });
   }
 
   getFeedbackEntries({ id, cursor }) {
-    // todo('process with cursor')
     return this.fetch({
-      url: `${this.urls.c4p}/proposals/${id}/feedback?${cursor? 'cursor=' + cursor : ''}`
+      url: `${this.c4pUrl}/proposals/${id}/feedback?${cursor? 'cursor=' + cursor : ''}`
     })
   }
 
   getCurrentUserLikes() {
     return this.fetch({ 
-      url: this.urls.likes
+      url: this.c4pUrl + '/likes'
     }).catch((error) => {
       // anonymous users get here
       // todo: there is a bug on the server side that is returning 500 for anonymous users
@@ -160,14 +150,14 @@ class KoliseoAPI {
 
   addLike({ talkId }) {
     return this.fetch({
-      url: `${this.urls.agenda}/likes/${talkId}`, 
+      url: `${this.c4pUrl + '/agenda'}/likes/${talkId}`, 
       method: 'post'
     });
   }
 
   removeLike({ talkId }) {
     return this.fetch({
-      url: `${this.urls.agenda}/likes/${talkId}`, 
+      url: `${this.c4pUrl + '/agenda'}/likes/${talkId}`, 
       method: 'delete'
     });
   }

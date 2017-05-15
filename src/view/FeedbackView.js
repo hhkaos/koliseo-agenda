@@ -6,36 +6,37 @@ import PropTypes from 'prop-types';
 
 /**
  * Read-only view of talk feedback
+ * 
+ * {Feedback} the feedback to display
+ * feedback
  */
-export default class FeedbackView extends Component {
+export function FeedbackView({ feedback }) {
 
-  render() {
-    const { feedback } = this.props;
-    const { lastModified, user, comment } = feedback;
-    
-    return (
-      <div className="ka-avatar-li">
-        <div className="ka-entry-details">
-          <AvatarView user={user}/>
-          <div className="ka-feedback-entry">
-            <div className="ka-author-name">
-              <span className="ka-author">{user.name}</span>
-              {lastModified && <span className="ka-feedback-time">{formatDate(lastModified)}</span>}
-            </div>
-            <div className="ka-star-cell">
-              <StarsView rating={feedback.rating} />
-            </div>
-            <p>{comment}</p>
-          </div>
+  const { lastModified, user, comment } = feedback;
+  
+  return (
+    <div className="ka-dialog-section ka-avatar-and-text">
+      <AvatarView user={user}/>
+      <div className="ka-avatar-text">
+        <div className="ka-feedback-author">
+          {user.name} {lastModified && <span className="ka-feedback-time">{formatDate(lastModified)}</span>}
         </div>
+        <StarsView rating={feedback.rating} />
+        <div className="ka-feedback-comment">{comment}</div>
       </div>
-    )
-
-  }
+    </div>
+  )
 
 }
 
-FeedbackView.propTypes = {
-  // {Feedback} the feedback to display
-  feedback: PropTypes.object.isRequired,
+/**
+ * Skeleton placeholder while loading
+ */
+export function LoadingSkeletonView() {
+  return (
+    <div className="ka-dialog-section ka-avatar-and-text loading">
+      <div className="ka-avatar-a loading" />
+      <div className="ka-avatar-text loading"></div>
+    </div>
+  )
 }

@@ -3,7 +3,9 @@ $avatarMargin: 1rem;
 
 .ka-avatar-a {
   display: inline-block;
-  margin-bottom: $avatarMargin;
+  border-radius: 50%;
+  width: $avatarWidth;
+  height: $avatarWidth;
 
   &:not(:first-child) {
     margin-left: .3rem;

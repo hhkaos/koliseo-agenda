@@ -9,7 +9,7 @@ import Feedback from '../model/Feedback';
  * Properties:
  * feedback: {Feedback} the Feedback instance to store the input
  */
-export default class TalkFeedbackInputView extends Component {
+export default class FeedbackInputView extends Component {
 
   constructor() {
     super();
@@ -32,22 +32,34 @@ export default class TalkFeedbackInputView extends Component {
     const { rating, comment, lastModified } = currentFeedback;
 
     return (
-      <div className="ka-avatar-li ka-editing">
-        <form className="ka-entry-details" onSubmit={this.onSubmit}>
-          <AvatarView user={user} />
-          <div className="ka-feedback-entry">
-            <a className="ka-button">Sign in</a>
-            <span>{user.isAnonymous()? 'You must sign in to provide feedback' : user.name}</span>
-          </div>
-          <div className="ka-star-cell">
-            <StarsView rating={rating} editable={true} />
-          </div>
-          { comment && <textarea name="comment" className="ka-comment" placeholder="Share your thoughts" maxlength="255" onChange={this.onCommentChange}>{comment}</textarea> }
-          {message && <span className="ka-messages"><span className="ka-message {message.level}">{message.message}</span></span>}
-          <button className="ka-button" type="submit" disabled={message && message.level == 'alert'} >Send</button>          
-        </form>
-      </div>
+      <form className="ka-dialog-section ka-avatar-and-text" onSubmit={this.onSubmit}>
+        <AvatarView user={user} />
+        <div className="ka-avatar-text">
+          <a className="ka-button">Sign in</a>
+          <span>{user.isAnonymous()? 'You must sign in to provide feedback' : user.name}</span>
+          <StarsView rating={rating} editable={true} />
+          {
+            !user.isAnonymous() && 
+            <textarea 
+              className="ka-comment" 
+              placeholder="Share your thoughts" 
+              maxlength="255" 
+              onChange={this.onCommentChange} 
+              value={comment}
+            />
+          }
+          {
+            message && 
+            <span className="ka-messages">
+              <span className="ka-message {message.level}">     
+                {message.message}
+              </span>
+            </span>
+          }
+          <button className="ka-button primary" type="submit" disabled={message && message.level == 'alert'}>Send</button>          
+        </div>
+      </form>
     )
   }
 
-} 
+}

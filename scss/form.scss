@@ -1,0 +1,48 @@
+form.ka-avatar-and-text {
+  background: #00a1ff;
+  margin-bottom: 0;
+  color: #fff;
+}
+
+.ka-messages {
+    margin-top: 10px;
+    display: inline-block;
+    visibility: visible;
+    opacity: 1;
+    transition: visibility 0s, opacity 0.5s linear;
+    .ka-message {
+        padding: .4rem;
+        border-radius: 3px;
+        display: block;
+        &.alert {
+            background-color: $red-dark;
+            color: white;
+        }
+        &.warn {
+            background-color: $orange;
+            color: white;
+        }
+    }
+    &.ka-hide {
+        visibility: hidden;
+        opacity: 0;
+        .ka-message {
+            display: none;
+        }
+    }
+}
+
+.ka-comment {
+    width: 100%;
+    margin-bottom: 10px;
+    height: 40px;
+    padding: 5px;
+    resize: vertical;
+    font-size: 90%;
+}
+
+//.ka-star-cell {
+//    display: inline-block;
+//    padding-top: 4px;
+//}
+

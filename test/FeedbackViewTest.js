@@ -6,7 +6,7 @@ import { URL, initDOM } from './mock/jsdom-init';
 import MockUserContextComponent from './mock/MockUserContextComponent';
 import Feedback from '../src/model/Feedback';
 import MockFeedback from './mock/MockFeedback';
-import FeedbackView from '../src/view/FeedbackView';
+import { FeedbackView } from '../src/view/FeedbackView';
 
 describe('FeedbackView', () => {
 

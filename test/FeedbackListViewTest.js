@@ -7,44 +7,53 @@ import MockUserContextComponent from './mock/MockUserContextComponent';
 import { registerMockFetch } from './mock/MockFeedback';
 import FeedbackListView from '../src/view/FeedbackListView';
 import FeedbackActions from '../src/actions/FeedbackActions';
+import AgendaCell from '../src/model/AgendaCell';
+import MockCell from './mock/MockCell';
+import 'mock-local-storage';
 
 describe('FeedbackListView', () => {
 
   initDOM();
   let element;
-
-  before(() => {
-    registerMockFetch();
-  })
+  let cell = new AgendaCell(MockCell);
 
   beforeEach(() => {
     element = document.createElement('div');
     document.body.appendChild(element);
+    registerMockFetch();
   });
 
-  it('renders with authenticated user', () => {
+  function mount(currentUser) {
     render(
-      <MockUserContextComponent currentUser={AUTHENTICATED}>
-        <FeedbackListView cellId={5} />
+      <MockUserContextComponent currentUser={currentUser}>
+        <FeedbackListView cell={cell} />
       </MockUserContextComponent>, element
     )
-    assert.react.contains(element, '<div class="ka-feedback-entries"></div>');
-    return FeedbackActions.fetch({ cellId: 5 }).then(() => {
+    return FeedbackActions.fetch({ talkId: 5, currentUser });
+  }
+
+  it('renders with authenticated user', () => {
+    const promise = mount(AUTHENTICATED);
+    //assert.react.contains(element, 'loading');
+    return promise.then(() => {
       assert.react.contains(element, 'kk');
     })
   })
 
   it('renders with anonymous user', () => {
-    render(
-      <MockUserContextComponent currentUser={ANONYMOUS}>
-        <FeedbackListView cellId={5} />
-      </MockUserContextComponent>, element
-    )
-    assert.react.contains(element, '<div class="ka-feedback-entries"></div>');
-    return FeedbackActions.fetch({ cellId: 5 }).then(() => {
+    return mount(ANONYMOUS).then(() => {
       assert.react.contains(element, 'kk');
     })
   })
 
+  it('renders with empty list', () => {
+    // return a paged response, up to 2 pages
+    fetchMock.get(/feedback/, {
+      data: []
+    });
+    return mount(ANONYMOUS).then(() => {
+      assert.react.contains(element, 'kk');
+    })
+  })
 
 });

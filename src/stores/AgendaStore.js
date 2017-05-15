@@ -57,9 +57,11 @@ class AgendaStore extends Store {
       selectedCell: cell
     });
     cell && this.pushState(cell.title, hash);
+    document.body.classList.add('hide-scroll-bar');
   }
 
   unselectTalk() {
+    document.body.classList.remove('hide-scroll-bar');
     this.setState({
       selectedCell: undefined
     });

@@ -5,7 +5,7 @@ export default class Agenda {
 
   constructor(agenda) {
 
-    this.feedbackEnabled =- agenda.feedbackEnabled;
+    this.feedbackEnabled = agenda.feedbackEnabled;
 
     // all talks indexed by "dayId/talkId"
     this.cellsByHash = {};

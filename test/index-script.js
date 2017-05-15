@@ -27,7 +27,11 @@ function onLoad() {
   console.log(clientId ? `Client ID ${clientId} will be used to communicate with the server` : 'Client ID not configured, the widget will be read-only');
   if (typeof Koliseo !== 'undefined' && Koliseo.agenda && typeof fetch !== 'undefined') {
     Koliseo.agenda.render({
-      c4pUrl: 'https://www.koliseo.com/codemotion/codemotion-madrid/r4p/5685252034920448',
+      // Codemotion 2015
+      // c4pUrl: 'https://www.koliseo.com/codemotion/codemotion-madrid/r4p/5685252034920448',
+
+      // Codemotion 2016
+      c4pUrl: 'https://www.koliseo.com/codemotion/codemotion-madrid/r4p/5753906952929280',
       /*
       urls: {
         c4p: './json/c4p.json',

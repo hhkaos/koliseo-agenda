@@ -53,95 +53,26 @@ $starSize: $ratingSize / 5;
 }
 
 @for $index from 1 through 4 {
-    .ka-star-#{$index + 1} {
-        left: $index * $starSize;
-    }
+  .ka-star-#{$index + 1} {
+    left: $index * $starSize;
+  }
 }
 
 .ka-stars-container {
-    display: inline-block;
-    vertical-align: middle;
+  display: inline-block;
+  vertical-align: middle;
 }
 
-.ka-comment {
-    width: 100%;
-    margin-bottom: 10px;
-    height: 40px;
-    padding: 5px;
-    resize: vertical;
-    font-size: 90%;
-}
-
-.ka-star-cell {
-    display: inline-block;
-    padding-top: 4px;
+.ka-feedback-author {
+  font-size: 90%;
+  line-height: 2;
 }
 
 .ka-feedback-time {
-    color: $gray;
-    font-size: 90%;
+  color: $gray;
 }
 
-.ka-author {
-    margin-right: 5px;
+.ka-feedback-comment {
+  margin-top: .6rem;
 }
 
-.ka-messages {
-    margin-top: 10px;
-    display: inline-block;
-    visibility: visible;
-    opacity: 1;
-    transition: visibility 0s, opacity 0.5s linear;
-    .ka-message {
-        padding: .4rem;
-        border-radius: 3px;
-        display: block;
-        &.alert {
-            background-color: $red-dark;
-            color: white;
-        }
-        &.warn {
-            background-color: $orange;
-            color: white;
-        }
-    }
-    &.ka-hide {
-        visibility: hidden;
-        opacity: 0;
-        .ka-message {
-            display: none;
-        }
-    }
-}
-
-.ka-entries {
-  padding-left: 0;
-  li {
-      width: 100%;
-  }
-  .ka-avatar-container {
-      margin: 0;
-  }
-  .ka-entry-details {
-      display: table-row;
-  }
-  .ka-feedback-entry {
-    display: table-cell;
-    vertical-align: middle;
-    width: 100%;
-    padding-top: 5px;
-  }
-}
-
-.ka-editing {
-    background: rgba($gray-lighter, .3);
-    border-radius: 3px;
-    border: 1px solid #dedede;
-    margin-bottom: 10px;
-}
-
-@media #{$medium-up} {
-    .ka-messages {
-        margin-top: 0;
-    }
-}

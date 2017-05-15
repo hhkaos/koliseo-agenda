@@ -9,7 +9,7 @@ class FeedbackStore extends Store {
     super();
     this.state = {
       // {int, required} id of the current talk being displayed
-      // cellId
+      // talkId
 
       // {boolean} loading state
       // loading
@@ -25,12 +25,18 @@ class FeedbackStore extends Store {
 
   // add the page of feedback to the list
   // currently we are not paging these but a cursor could be added easily
-  fetch({ cellId, loading, entries, currentUser }) {
-
-    // either fetch just started (we are in a loading state)
-    // or we just received results, in which case accept if they are only for our latest request
-    if (loading || cellId == this.state.cellId) {
-      let currentFeedback;
+  fetch({ talkId, loading, entries, currentUser, firstPage }) {
+    if (firstPage) {
+      // Starting. Reset state
+      this.setState({
+        talkId,
+        loading,
+        entries,
+        currentFeedback: undefined
+      })
+    } else if (talkId == this.state.talkId) {
+      // we just received a page of results
+      let currentFeedback = this.state.currentFeedback;
       const processedEntries = entries.map((entry) => {
         if (entry.user.id == currentUser.id) {
           currentFeedback = new Feedback(entry);
@@ -38,7 +44,7 @@ class FeedbackStore extends Store {
         return new Feedback(entry);
       })
       this.setState({
-        cellId, 
+        talkId, 
         loading, 
         entries: processedEntries,
         currentFeedback

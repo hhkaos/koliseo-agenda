@@ -13,16 +13,33 @@ const FeedbackActions = {
   },
 
   // fetch Feedback entries for a given talk
-  fetch(cellId, currentUser) {
-    this.dispatch({
+  fetch({ talkId, currentUser, cursor}) {
+
+    // if first page, display loading
+    const firstPage = !cursor;
+    firstPage && this.dispatch({
       payload: {
-        cellId, loading: true, entries: [], currentUser
+        talkId, 
+        loading: true, 
+        entries: [], 
+        currentUser,
+        firstPage
       }
     });
-    return KoliseoAPI.getFeedbackEntries({id : cellId}).then((response) => {
-      return {
-        cellId, loading: false, entries: response.data, currentUser
-      }
+    return KoliseoAPI.getFeedbackEntries({
+      id : talkId,
+      cursor
+    }).then(({ data, cursor }) => {
+      this.preventDefault();
+      this.dispatch({
+        payload: {
+          talkId, 
+          loading: !!cursor, 
+          entries: data, 
+          currentUser
+        }
+      });
+      return cursor? alt.actions.FeedbackActions.fetch({talkId, currentUser, cursor}) : undefined;
     })
   }
 

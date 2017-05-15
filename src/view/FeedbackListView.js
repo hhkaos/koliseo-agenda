@@ -2,15 +2,15 @@ import { h, render, Component } from 'preact';
 import FeedbackActions from '../actions/FeedbackActions';
 import PropTypes from 'prop-types';
 import AltContainer from 'alt-ng/AltContainer';
-import FeedbackView from './FeedbackView';
+import { FeedbackView, LoadingSkeletonView } from './FeedbackView';
 import FeedbackStore from '../stores/FeedbackStore';
 import FeedbackInputView from './FeedbackInputView';
 
 /**
  * Render the list of talk feedback
  * 
- * {Number, required} the cell id to display
- * cellId
+ * {AgendaCell, required} the cell to display
+ * cell
  *
  * {Array of Feedback} the list of feedback to display
  * entries
@@ -18,12 +18,14 @@ import FeedbackInputView from './FeedbackInputView';
 class FeedbackListView extends Component {
 
   componentDidMount() {
-    FeedbackActions.fetch(this.props.cellId, this.context.currentUser)
+    FeedbackActions.fetch({
+      talkId: this.props.cell.contents.id, 
+      currentUser: this.context.currentUser
+    })
   }
 
   renderLoading() {
-    // todo: display entries skeleton
-    return <div class="loading">Loading...</div>
+    return [ 1, 2, 3].map((index) => <LoadingSkeletonView key={index}/>);
   }
 
   renderEntries(entries) {
@@ -44,7 +46,7 @@ class FeedbackListView extends Component {
     const { feedbackEnabled, loading, entries, currentFeedback } = this.props;
     return (
       <div className="ka-feedback-entries">
-        {feedbackEnabled && <FeedbackInputView feedback={currentFeedback} /> }
+        { feedbackEnabled && <FeedbackInputView feedback={currentFeedback} /> }
         { loading? this.renderLoading() : this.renderEntries(entries) }
       </div>
     )

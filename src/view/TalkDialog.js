@@ -179,7 +179,7 @@ export default class TalkDialog extends Component {
             {authors.map(this.renderAuthor)}
           </div>
           <div className="ka-dialog-contents">
-            <FeedbackListView cellId={id} feedbackEnabled={feedbackEnabled} />
+            <FeedbackListView cell={selectedCell} feedbackEnabled={feedbackEnabled} />
           </div>
         </div>
       </div>
