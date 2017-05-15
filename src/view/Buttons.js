@@ -28,7 +28,7 @@ export class LikeButton extends Component {
 
   render() {
     const { currentUser } = this.context;
-    const { cell, displayLabel } = this.props;
+    const { cell, displayLabel, className = '' } = this.props;
     const { totalLikes } = cell.contents;
     const liked = currentUser.isLiked(cell.id);
     const state = liked? {
@@ -45,7 +45,7 @@ export class LikeButton extends Component {
         title={state.title}
         data-state={state.value}
         onClick={this.onClick}
-        className="ka-social-link ka-like-link">
+        className={ "ka-social-link ka-like-link " + className}>
         <svg 
           xmlns="http://www.w3.org/2000/svg" 
           className={"ka-icon with-label " + state.value} 

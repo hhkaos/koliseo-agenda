@@ -18,9 +18,9 @@ export function ExternalFlag() {
 /**
  * Render the slides. If the link is undefined, does not render anything
  */
-export function SlidesLink({ href, children }) {
+export function SlidesLink({ className = '', href, children }) {
   return href && (
-    <a href={href} target="_blank" rel="noopener" className="ka-social-link" title="Click here to go to the slides">
+    <a href={href} target="_blank" rel="noopener" className={"ka-social-link " + className} title="Click here to go to the slides">
       <svg xmlns="http://www.w3.org/2000/svg" 
       class="ka-icon" 
       viewBox="0 0 108.333 100">
@@ -34,9 +34,9 @@ export function SlidesLink({ href, children }) {
 /**
  * Render the link to the video. If the link is undefined, does not render anything
  */
-export function VideoLink({ href, title, children }) {
+export function VideoLink({ className = '', href, title, children }) {
   return href && (
-    <a href={href} target="_blank" rel="noopener" className="ka-social-link external" title="Click here to go to the video">
+    <a href={href} target="_blank" rel="noopener" className={"ka-social-link external " + className} title="Click here to go to the video">
       <svg 
         xmlns="http://www.w3.org/2000/svg" 
         className="ka-icon" 

@@ -90,11 +90,11 @@ export default class TalkDialog extends Component {
     const { slidesUrl, videoUrl, title } = selectedCell.contents;
     return (
       <div className="ka-talk-buttons">
-        <LikeButton displayLabel={true} cell={selectedCell}/>
-        <SlidesLink href={slidesUrl} title={title}>
+        <LikeButton className="ka-button" displayLabel={true} cell={selectedCell}/>
+        <SlidesLink className="ka-button" href={slidesUrl} title={title}>
           Slides <ExternalFlag/>
         </SlidesLink>
-        <VideoLink href={videoUrl} title={title}>
+        <VideoLink className="ka-button" href={videoUrl} title={title}>
           Video <ExternalFlag />
         </VideoLink>
       </div>

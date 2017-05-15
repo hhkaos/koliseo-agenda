@@ -2,8 +2,21 @@ form.ka-avatar-and-text {
   background: #00a1ff;
   margin-bottom: 0;
   color: #fff;
-}
 
+  & .ka-star-rating:before {
+    filter: grayscale(100%) brightness(200%);
+  } 
+  & > .ka-avatar-text {
+    display: flex;
+    align-items: center;
+  }
+}
+.ka-form-middle {
+  flex-grow: 1;
+}
+.ka-form-username {
+  margin-bottom: .5rem;
+}
 .ka-messages {
     margin-top: 10px;
     display: inline-block;
