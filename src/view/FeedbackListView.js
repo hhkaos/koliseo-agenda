@@ -14,9 +14,6 @@ import FeedbackInputView from './FeedbackInputView';
  * {Array of Feedback} the list of feedback to display
  * entries
  * 
- * {boolean} true if feedback is enabled
- * feedbackEnabled
- * 
  */
 class FeedbackListView extends Component {
 
@@ -46,8 +43,8 @@ class FeedbackListView extends Component {
   }
 
   render() {
-    const currentUser = this.context.currentUser;
-    const { feedbackEnabled, loading, entries, currentFeedback } = this.props;
+    const { currentUser, feedbackEnabled } = this.context.currentUser;
+    const { loading, entries, currentFeedback } = this.props;
     return (
       <div className="ka-feedback-entries">
         { 

@@ -3,7 +3,7 @@ import assert from './assertions';
 import KoliseoAPI from '../src/controller/KoliseoAPI';
 //import fetchMock from 'fetch-mock';
 import { URL, initDOM } from './mock/jsdom-init'; 
-import MockUserContextComponent from './mock/MockUserContextComponent';
+import MockContextComponent from './mock/MockContextComponent';
 import MockCell from './mock/MockCell';
 import AgendaCell from '../src/model/AgendaCell';
 import { registerMockFetch } from './mock/MockFeedback';
@@ -37,9 +37,9 @@ describe('TalkDialog', () => {
     }
     
     render(
-      <MockUserContextComponent user={AUTHENTICATED}>
-        <TalkDialog selectedCell={cell} tagColors={tagColors}/>
-      </MockUserContextComponent>, element
+      <MockContextComponent user={AUTHENTICATED} tagColors={tagColors}>
+        <TalkDialog selectedCell={cell} />
+      </MockContextComponent>, element
     )
     assert.react.contains(element, '<div class="ka-dialog"><a class="ka-close" title="close"></a><div class="ka-dialog-contents">');
     assert.react.contains(element, 'Title for talk 1');

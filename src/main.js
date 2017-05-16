@@ -19,7 +19,7 @@ Koliseo.agenda = {
             {e.message}
           </div>
         </div>, 
-        element
+        element, element.lastChild
       );
     });
   }

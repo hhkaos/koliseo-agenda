@@ -3,7 +3,7 @@ import assert from './assertions';
 import KoliseoAPI from '../src/controller/KoliseoAPI';
 import fetchMock from 'fetch-mock';
 import { URL, initDOM } from './mock/jsdom-init';
-import MockUserContextComponent from './mock/MockUserContextComponent';
+import MockContextComponent from './mock/MockContextComponent';
 import Feedback from '../src/model/Feedback';
 import MockFeedback from './mock/MockFeedback';
 import StarsView from '../src/view/StarsView';
@@ -21,9 +21,9 @@ describe('StarsView', () => {
   it('renders as read-only', () => {
     const feedback = new Feedback(MockFeedback)
     render(
-      <MockUserContextComponent>
+      <MockContextComponent>
         <StarsView rating={feedback.rating} />
-      </MockUserContextComponent>, element
+      </MockContextComponent>, element
     )
     assert.react.contains(element, '<span class="ka-star-bar" style="width: 70%;">');
     assert.react.notContains(element, '<a data-rating="4" class="ka-star ka-star-4"></a>');
@@ -32,9 +32,9 @@ describe('StarsView', () => {
   it('renders correctly for read-write', () => {
     const feedback = new Feedback(MockFeedback)
     render(
-      <MockUserContextComponent>
+      <MockContextComponent>
         <StarsView rating={feedback.rating} editable={true}/>
-      </MockUserContextComponent>, element
+      </MockContextComponent>, element
     )
     assert.react.contains(element, '<a data-rating="4" class="ka-star ka-star-4"></a>');
   })

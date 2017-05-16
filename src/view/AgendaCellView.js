@@ -3,6 +3,7 @@ import { LikeButton } from './Buttons';
 import { SlidesLink, VideoLink, StarLink } from './Links';
 import AgendaActions from '../actions/AgendaActions';
 import AvatarView from './AvatarView';
+import TagsView from './TagsView';
 
 /**
  * Render a table cell
@@ -37,6 +38,7 @@ export default class AgendaCellView extends Component {
         <p className="ka-talk-title">
           <a href={'#' + hash} data-id={cell.id} onClick={this.onClick}>{title}</a>
         </p>
+        <TagsView tags={tags} />
         <div className="ka-td-footer">
           <SlidesLink href={slidesUrl} title={title} />
           <VideoLink href={videoUrl} title={title} />

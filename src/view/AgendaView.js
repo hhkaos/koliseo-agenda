@@ -8,7 +8,7 @@ import UserActions from '../actions/UserActions';
 import KoliseoAPI from '../controller/KoliseoAPI';
 import { LoginLogoutButton } from './Buttons';
 import AgendaDayView from './AgendaDayView';
-import UserContextComponent from './UserContextComponent';
+import ContextComponent from './ContextComponent';
 import LoadingView from './LoadingView';
 
 /**
@@ -114,12 +114,12 @@ export default function renderAgenda({
       AgendaActions.selectTalkByHash(talkHash);
       render(
         <AltContainer store={UserStore}>
-          <UserContextComponent>
+          <ContextComponent tagColors={callForPapers.tagColors} feedbackEnabled={agenda.feedbackEnabled}>
             <AltContainer store={AgendaStore}>
               <AgendaView />
-              <TalkDialog tagColors={callForPapers.tagColors} feedbackEnabled={agenda.feedbackEnabled}/>
+              <TalkDialog />
             </AltContainer>
-          </UserContextComponent>
+          </ContextComponent>
         </AltContainer>, 
         element, element.lastChild
       );

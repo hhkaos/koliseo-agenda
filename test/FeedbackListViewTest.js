@@ -3,7 +3,7 @@ import assert from './assertions';
 import fetchMock from 'fetch-mock';
 import { URL, initDOM } from './mock/jsdom-init';
 import { AUTHENTICATED, ANONYMOUS } from './mock/MockUser';
-import MockUserContextComponent from './mock/MockUserContextComponent';
+import MockContextComponent from './mock/MockContextComponent';
 import { registerMockFetch } from './mock/MockFeedback';
 import FeedbackListView from '../src/view/FeedbackListView';
 import FeedbackActions from '../src/actions/FeedbackActions';
@@ -25,9 +25,9 @@ describe('FeedbackListView', () => {
 
   function mount(currentUser) {
     render(
-      <MockUserContextComponent currentUser={currentUser}>
-        <FeedbackListView cell={cell} feedbackEnabled={true}/>
-      </MockUserContextComponent>, element
+      <MockContextComponent currentUser={currentUser} feedbackEnabled={true}>
+        <FeedbackListView cell={cell} />
+      </MockContextComponent>, element
     )
     return FeedbackActions.fetch({ talkId: 5, currentUser });
   }
@@ -69,14 +69,12 @@ describe('FeedbackListView', () => {
   })
 
   it('renders without agenda.feedbackEnabled', () => {
-    return mount(ANONYMOUS).then(() => {
-      render(
-        <MockUserContextComponent currentUser={currentUser}>
-          <FeedbackListView cell={cell} feedbackEnabled={false} />
-        </MockUserContextComponent>, element
-      )
-      assert.react.notExists(element, 'form.ka-dialog-section');
-    })
+    render(
+      <MockContextComponent currentUser={ANONYMOUS} feedbackEnabled={false} >
+        <FeedbackListView cell={cell} />
+      </MockContextComponent>, element
+    )
+    assert.react.notExists(element, 'form.ka-dialog-section');
   })
 
 });

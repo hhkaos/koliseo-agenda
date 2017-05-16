@@ -6,6 +6,7 @@ import marked from 'marked';
 import AvatarView from './AvatarView';
 import FeedbackListView from './FeedbackListView';
 import AgendaActions from '../actions/AgendaActions';
+import TagsView from './TagsView';
 
 export function formatMarkdown(s) {
   return marked(s || '');
@@ -23,11 +24,6 @@ const ANIMATION_TIMEOUT = 300;
  * {AgendaCell, required} the talk contents
  * selectedCell
  *
- * { Json of {tag, colorIndex } } the list of colors to be used for displaying the talk tags
- * tagColors
- * 
- * {boolean} true if feedback is enabled
- * feedbackEnabled
  */
 export default class TalkDialog extends Component {
 
@@ -100,21 +96,6 @@ export default class TalkDialog extends Component {
     )
   }
 
-  renderTags(tags) {
-    if (!tags) {
-      return undefined;
-    }
-    return (
-      <div className="ka-tags">
-        {
-          Object.keys(tags).map(category => {
-            return tags[category].map(tag => <span key={category} className={ 'tag tag' + this.props.tagColors[category] }>{tag}</span>)
-          }) 
-        }
-      </div>
-    )
-  }
-
   renderAuthor(user) {
     const { id, uuid, name, avatar, description, twitterAccount } = user;
     return (
@@ -159,7 +140,7 @@ export default class TalkDialog extends Component {
 
   render() {
     const { hidden } = this.state;
-    const { selectedCell, feedbackEnabled } = this.props;
+    const { selectedCell } = this.props;
     const { id, contents = {} } = selectedCell || {};
     const { title, tags, feedback, description, authors } = contents;
     return (
@@ -175,13 +156,13 @@ export default class TalkDialog extends Component {
                 className="ka-dialog-description" 
                 dangerouslySetInnerHTML={{ __html: formatMarkdown(description) }} 
               />
-              {this.renderTags(tags)}
+              <TagsView tags={tags} />
               {this.renderLinks()}
             </div>
             {authors.map(this.renderAuthor)}
           </div>
           <div className="ka-dialog-contents">
-            <FeedbackListView cell={selectedCell} feedbackEnabled={feedbackEnabled} />
+            <FeedbackListView cell={selectedCell} />
           </div>
         </div>
       </div>
