@@ -33,7 +33,7 @@
     height: auto;
     background-image: none;
     border: 1px solid $gray-light;
-    border-left-width: 5px;
+    border-left-width: 7px;
     position: relative;
 
     & >.ka-td-contents {
@@ -92,6 +92,10 @@
     border: 0;
     border-bottom: 4px solid #ccc;
     text-align: left;
+    position: sticky;
+    top: 0px;
+    background: #fff;
+    z-index: 20;
   }
 
   .ka-td-footer {
