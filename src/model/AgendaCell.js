@@ -19,7 +19,7 @@ class CellContents {
 // Can be a talk or information about a break
 export default class AgendaCell {
 
-  constructor({ id, start, end, contents, currentUser, readOnly }) {
+  constructor({ id, start, end, contents, currentUser, readOnly }, track) {
 
     // vertical and horizontal span for this cell, 1 for single row / column
     this.colSpan = this.rowSpan = 1;
@@ -45,6 +45,9 @@ export default class AgendaCell {
     // BREAK: { title }
     // EXTENDED: { title, merged }
     this.contents = !contents? undefined : new CellContents(contents);
+
+    // the data of this track
+    this.track = track;
 
   }
 

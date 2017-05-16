@@ -10,6 +10,9 @@ form.ka-avatar-and-text {
     display: flex;
     align-items: center;
   }
+  & .ka-button {
+    margin-bottom: 1rem;
+  }
 }
 .ka-form-middle {
   flex-grow: 1;

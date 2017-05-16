@@ -4,6 +4,10 @@
 
 @media #{$small} {
 
+  .ka-hint {
+    flex-direction: column;
+  }
+
   .ka-mobile-only {
     display: block;
   }
@@ -12,57 +16,86 @@
     display: none;
   }
 
-  .ka-table, .ka-tr, .ka-th, .ka-body {
+  .ka-table > thead {
+    display: none;
+  } 
+
+  .ka-table, .ka-tr, .ka-th, .ka-body, .ka-td {
     display: block;
+    width: 100% !important;
+  }
+
+  .ka-td {
+    margin: 1em 0;
+  }
+
+  .ka-td.talk {
+    height: auto;
+    background-image: none;
+    border: 1px solid $gray-light;
+    border-left-width: 5px;
+    position: relative;
+
+    & >.ka-td-contents {
+      height: auto;
+      flex-direction: row-reverse;
+      flex-wrap: wrap;
+      align-items: flex-start; 
+    }
+
+    &:before {
+      display: block;
+      content: attr(data-track-name);
+      font-weight: bold;
+      text-transform: uppercase;
+      color: #333;
+    }
+  }
+  .ka-avatars {
+    padding-left: 1rem;
+    margin-top: -1.2rem;
+    margin-bottom: .5rem;
+    max-width: 10rem;
+    justify-content: flex-start;
+  }
+  .ka-username {
+    text-align: left;
+    flex-grow: 1;
+    margin-top: 0;
+    margin-bottom: .5rem;
+  }
+  .ka-talk-title {
+    text-align: left;
+    width: 100%;
+    margin: 0 0 0.3rem;
+  }
+
+  $track-colors: $green-dark, $orange-dark, $pink-dark, $purple-dark, $yellow, $teal-dark, $red-dark, $blue-darker, $brown-dark, $gray-dark;
+
+  @for $i from 1 through length($track-colors) {
+    $track-color: nth($track-colors, $i);
+    .ka-td.ka-track-#{$i - 1} {
+      //background-color: $track-color;
+      border-left-color: $track-color;
+    }
+  }
+
+  $mobile-img-width: 3.8rem;
+  .ka-avatar-a, .ka-avatar-img {
+    width: $mobile-img-width;
+    height: $mobile-img-width;
   }
 
   .ka-th {
-    background-color: $shaded-background;
-    padding-left: $td-padding + 1rem;
-    cursor: pointer;
-    &:after {
-      float: right;
-      border-radius: 50%;
-      width: 1rem;
-      height: 1rem;
-      border: 1px solid #ccc;
-      content: '+';
-    }
+    font-size: 1.2rem;
+    background: #fff;
+    border: 0;
+    border-bottom: 4px solid #ccc;
+    text-align: left;
   }
 
-/*
-  .ka-tr.ka-expanded {
-    & > .ka-td {
-      display: block;
-    }
-
-    & > .ka-th:after {
-      content: '-';
-    }
-  }
-*/
-  .ka-head, .ka-th:only-child,  .ka-td, .ka-td-empty {
-    display: none;
-  }
-
-  .ka-label, .ka-time {
-    font-size: 80%;
-    border-radius: 3px;
-    background-color: #807e7e;
-    padding: 5px;
-    color: #fff;
-    font-weight: bold;
-    display: inline-block;
-    margin-top: 5px;
-  }
-
-
-  $colors: $green-dark, $orange-dark, $pink-dark, $purple-dark, $yellow, $teal-dark, $red-dark, $blue-darker, $brown-dark, $gray-dark;
-
-  @for $i from 1 through length($colors) {
-    .ka-label-#{$i - 1} {
-      background-color: nth($colors, $i);
-    }
+  .ka-td-footer {
+    width: 100%;
   }
 
 }

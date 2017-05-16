@@ -32,8 +32,12 @@ $border-color: #9cb9c9;
   font-weight: bold;
   background-color: $shaded-background;
   border-color: #aaa;
-  //color: white;
-  //background-color: $tdGradientColor1;
+
+  // remove rows where there are no cells
+  &:only-child {
+    display: none;
+  }
+
 }
 
 .ka-td.talk {

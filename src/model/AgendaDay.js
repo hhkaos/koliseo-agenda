@@ -15,7 +15,9 @@ export default class AgendaDay {
 
     this.id = id;
     this.name = name;
-    this.tracks = tracks;
+    this.tracks = tracks.map(({id, name}, index) => {
+      return { index, id, name }
+    });
 
     // labels for rows
     // start: starting time, as string
@@ -58,7 +60,7 @@ export default class AgendaDay {
         const { start, end, contents } = slot;
         const rowIndex = this.getRowLabelIndex({ start });
         let row = this.data[rowIndex];
-        const cell = row[colIndex] = new AgendaCell(slot);
+        const cell = row[colIndex] = new AgendaCell(slot, this.tracks[colIndex]);
         const endRowIndex = this.getRowLabelIndex({ end });
         cell.rowSpan = (endRowIndex - rowIndex) + 1;
 
@@ -74,7 +76,8 @@ export default class AgendaDay {
     // calculate colSpans
     this.data.forEach((row, rowIndex) => {
       row.forEach((cell, colIndex) => {
-        const track = tracks[colIndex];
+        const extendedTrack = this.tracks[colIndex];
+
         if (cell) {
           if (cell.type != 'EXTEND') {
             let colSpan = 1;
@@ -82,16 +85,20 @@ export default class AgendaDay {
               const nextCell = row[colIndex + colSpan];
               if (!nextCell ||
                 nextCell.type != 'EXTEND' ||
-                nextCell.contents.trackId != track.id) {
+                nextCell.contents.trackId != extendedTrack.id) {
                 break;
               }
+              nextCell.contents.extendedTrack = extendedTrack;
               row[colIndex + colSpan] = undefined;
               colSpan++;
               nextCell.contents.merged = true;
             }
             cell.colSpan = colSpan;
           } else {
-            cell.contents.name = tracks.find((t) => t.id == cell.contents.trackId).name
+            if (!cell.contents.extendedTrack) {
+              // set cell.contents.extendedTrack to the extended track if not already processed
+              cell.contents.extendedTrack = this.tracks.find((t) => t.id == cell.contents.trackId);
+            }
           }
         }
       })

@@ -31,7 +31,8 @@ describe('Agenda', () => {
       assert.equal('{"start":"08:00","end":"09:00"}', JSON.stringify(day0.rowLabels[0]));
       assert.equal('{"start":"09:00","end":"09:15"}', JSON.stringify(day0.rowLabels[1]));
       assert.equal('27 noviembre', day0.name);
-      assert.equal('{"rowSpan":1,"colSpan":12,"id":47474001,"start":"08:00","end":"09:00","type":"BREAK","contents":{"type":"BREAK","title":"Registro"}}', JSON.stringify(day0.data[0][0]));
+      assert.equal('{"rowSpan":1,"colSpan":12,"id":47474001,"start":"08:00","end":"09:00","type":"BREAK","contents":{"type":"BREAK","title":"Registro"},"track":{"index":0,"id":5114954600415232,"name":"Track 1"}}', JSON.stringify(day0.data[0][0]));
+      assert.equal('{"index":0,"id":5114954600415232,"name":"Track 1"}', JSON.stringify(day0.data[5][0].track));
       assert(agenda.cellsByHash["5699289732874240/5733608132182016"], "Could not find indexed talk");
       assert(agenda.cellsByHash["5699289732874240/5629608451899392"], "Could not find indexed talk");
       assert.equal('undefined', typeof day0.data[0][1]);

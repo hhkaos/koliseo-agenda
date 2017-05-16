@@ -2,9 +2,6 @@
 .ka-hint {
   display: flex;
   align-items: center;
-  @media #{$small} {
-    flex-direction: column;
-  }
 }
 .ka-hint-p {
   line-height: 1.2;
