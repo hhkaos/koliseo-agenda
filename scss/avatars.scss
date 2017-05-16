@@ -58,4 +58,6 @@ $avatarMargin: 1rem;
   flex-grow: 1;
   margin-left: 1rem;
   align-self: center;
+  // break words in ka-author-description
+  overflow: hidden;
 }

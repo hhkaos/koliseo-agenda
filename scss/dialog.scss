@@ -61,6 +61,10 @@ $transitionDuration: .3s;
   }
 }
 
+.ka-dialog-description, .ka-author-description {
+  word-wrap: break-word;
+}
+
 .ka-author-description > ul {
   padding-left: 20px;
   list-style-type: disc;
