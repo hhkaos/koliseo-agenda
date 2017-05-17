@@ -8,7 +8,7 @@ describe('Agenda', () => {
   let agenda;
 
   // uncomment to switch to easy mode :)
-  // const AGENDA_FILENAME = 'test/json/talks.json';
+  // const AGENDA_FILENAME = 'test/json/agenda.json';
   const AGENDA_FILENAME = 'test/json/codemotion.json'; 
 
   before(() => {

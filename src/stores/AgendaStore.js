@@ -1,6 +1,7 @@
 import alt from '../alt';
 import Store from 'alt-ng/Store';
 import AgendaActions from '../actions/AgendaActions';
+import HistoryAdapter from '../controller/HistoryAdapter';
 
 class AgendaStore extends Store {
 
@@ -46,7 +47,6 @@ class AgendaStore extends Store {
       selectedDay: selectedDay,
       selectedCell: undefined
     });
-    this.pushState(selectedDay.name, selectedDay.id);
   }
 
   // render a talk as modal window, by hash
@@ -56,7 +56,6 @@ class AgendaStore extends Store {
     this.setState({
       selectedCell: cell
     });
-    cell && this.pushState(cell.title, hash);
     document.body.classList.add('hide-scroll-bar');
   }
 
@@ -65,15 +64,8 @@ class AgendaStore extends Store {
     this.setState({
       selectedCell: undefined
     });
-    const selectedDay = this.state.selectedDay;
-    selectedDay && this.pushState(selectedDay.name, selectedDay.id);
-  }
-
-  // add the state to the location hash
-  pushState(title, hash) {
-    if (typeof history !== 'undefined' && history.pushState) {
-      history.pushState({}, title, location.pathname + location.search + '#' + hash);
-    }
+    const day = this.state.selectedDay;
+    HistoryAdapter.replaceState({ title: day.name, hash: day.id });
   }
 
 };

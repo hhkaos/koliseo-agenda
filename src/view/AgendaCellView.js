@@ -4,6 +4,7 @@ import { SlidesLink, VideoLink, StarLink } from './Links';
 import AgendaActions from '../actions/AgendaActions';
 import AvatarView from './AvatarView';
 import TagsView from './TagsView';
+import HistoryAdapter from '../controller/HistoryAdapter';
 
 /**
  * Render a table cell
@@ -22,8 +23,9 @@ export default class AgendaCellView extends Component {
   onClick(e) {
     if (e.button == 0 && !e.ctrlKey && !e.metaKey) {
       e.preventDefault();
-      const hash = this.props.cell.contents.hash;
+      const { hash, title } = this.props.cell.contents;
       AgendaActions.selectTalkByHash(hash);
+      HistoryAdapter.pushState({ title: title, hash });
     }
   }
 

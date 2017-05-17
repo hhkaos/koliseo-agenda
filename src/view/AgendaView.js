@@ -11,6 +11,7 @@ import AgendaDayView from './AgendaDayView';
 import ContextComponent from './ContextComponent';
 import LoadingView from './LoadingView';
 import TagStylesView from './TagStylesView';
+import HistoryAdapter from '../controller/HistoryAdapter';
 
 /**
  * Displays an entire agenda, including multiple days
@@ -37,8 +38,9 @@ class AgendaView extends Component {
 
   onClick(e) {
     e.preventDefault();
-    const dayId = e.target.dataset.dayId;
+    const { dayId, dayName } = e.target.dataset;
     AgendaActions.selectDayById(dayId);
+    HistoryAdapter.pushState({ title: dayName, hash: dayId });
   }
 
   // render the tabs to move between days
@@ -54,7 +56,12 @@ class AgendaView extends Component {
             const className = (id == selectedDay.id? 'selected ' : '' ) + 'ka-tab-a'
             return (
               <div className="ka-tab-li" key={id}>
-                <a className={className} data-day-id={id} href={'#' + id} onClick={this.onClick}>{name}</a>
+                <a 
+                  className={className} 
+                  data-day-id={id} 
+                  data-day-name={name} 
+                  href={'#' + id} 
+                  onClick={this.onClick}>{name}</a>
               </div>
             )
           })
@@ -108,16 +115,9 @@ export default function renderAgenda({
       }
 
       // back button behavior
-      window.addEventListener('popstate', function (event) {
-        //debugger;
-      });
+      window.addEventListener('popstate', HistoryAdapter.popState);
+      HistoryAdapter.initState(agenda, !location.hash? '' : location.hash.substring(1));
 
-      const dayId = !location.hash ? '' : /#([^\/]+)(\/.+)?/.exec(location.hash)[1]
-      const talkHash = dayId && location.hash.substring(1);
-
-      const agendaDay = agenda.daysById[dayId] || agenda.getDaysArray()[0]
-      AgendaActions.selectDayById(agendaDay);
-      AgendaActions.selectTalkByHash(talkHash);
       render(
         <AltContainer store={UserStore}>
           <TagStylesView tagCategories={callForPapers.tagCategories} />
