@@ -17,7 +17,8 @@ export default function({ tags }) {
         Object.keys(tags).map(category => {
           const prefix = 'tag-' + dasherize(category);
           return tags[category].map(tag => {
-            return <span key={category} className={'tag ' + prefix + ' ' + prefix + '--' + dasherize(tag)}>{tag}</span>
+            const className = 'tag ' + prefix + ' ' + prefix + '--' + dasherize(tag); 
+            return <span key={className} className={className}>{tag}</span>
           })
         })
       }
