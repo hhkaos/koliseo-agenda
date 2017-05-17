@@ -15,8 +15,10 @@ $transitionDuration: .3s;
   z-index: 100;
 }
 // hide the scroll bar associated to the body while displaying a dialog
-.hide-scroll-bar::-webkit-scrollbar { 
-    display: none; 
+// also, make the body non-scrollable
+// see http://stackoverflow.com/questions/9280258/prevent-body-scrolling-but-allow-overlay-scrolling
+.no-scroll { 
+  overflow: hidden; 
 }
 .ka-hidden {
   opacity: 0;
