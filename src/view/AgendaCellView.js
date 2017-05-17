@@ -70,6 +70,7 @@ export default class AgendaCellView extends Component {
           colspan={colSpan}
           data-track-id={track.id}
           data-track-name={track.name}
+          data-time={ start + '-' + end }
         >
           {$contents}
         </td>

@@ -45,7 +45,7 @@
 
     &:before {
       display: block;
-      content: attr(data-track-name);
+      content: attr(data-track-name)" ("attr(data-time)")";
       font-weight: bold;
       text-transform: uppercase;
       color: #333;
