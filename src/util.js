@@ -15,6 +15,16 @@ export function assert(assertion, message) {
   }
 }
 
+// transform a free String into something that looks like a CSS class name
+export function dasherize(value) {
+  return !value? value : value.
+    trim().
+    toLowerCase().
+    replace(/[^a-z0-9\-_\s]+/g, '').
+    replace(/[\-_\s]+/g, '-');
+}
+
+
 /*
 var entityMap = {
   "&": "&amp;",

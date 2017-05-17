@@ -1,8 +1,13 @@
+import { h, render, Component } from 'preact';
+import { dasherize } from '../util';
 
-// render a list of tags
+/**
+ * Render a list of tags
+ * { JSON of {categoryName, [ tag ] } } A JSON object where the category is the key and the value is a list of tags 
+ * tags
+ */ 
 export default function({ tags }) {
 
-  const tagColors = this.context.tagColors;
   if (!tags) {
     return undefined;
   }
@@ -10,7 +15,10 @@ export default function({ tags }) {
     <div className="ka-tags">
       {
         Object.keys(tags).map(category => {
-          return tags[category].map(tag => <span key={category} className={'tag tag' + tagColors[category]}>{tag}</span>)
+          const prefix = 'tag-' + dasherize(category);
+          return tags[category].map(tag => {
+            return <span key={category} className={'tag ' + prefix + ' ' + prefix + '--' + dasherize(tag)}>{tag}</span>
+          })
         })
       }
     </div>

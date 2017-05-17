@@ -10,6 +10,7 @@ import { LoginLogoutButton } from './Buttons';
 import AgendaDayView from './AgendaDayView';
 import ContextComponent from './ContextComponent';
 import LoadingView from './LoadingView';
+import TagStylesView from './TagStylesView';
 
 /**
  * Displays an entire agenda, including multiple days
@@ -106,6 +107,11 @@ export default function renderAgenda({
         console.log('Agenda.feedbackEnabled is false. Feedback will be disabled.');
       }
 
+      // back button behavior
+      window.addEventListener('popstate', function (event) {
+        //debugger;
+      });
+
       const dayId = !location.hash ? '' : /#([^\/]+)(\/.+)?/.exec(location.hash)[1]
       const talkHash = dayId && location.hash.substring(1);
 
@@ -114,7 +120,8 @@ export default function renderAgenda({
       AgendaActions.selectTalkByHash(talkHash);
       render(
         <AltContainer store={UserStore}>
-          <ContextComponent tagColors={callForPapers.tagColors} feedbackEnabled={agenda.feedbackEnabled}>
+          <TagStylesView tagCategories={callForPapers.tagCategories} />
+          <ContextComponent feedbackEnabled={agenda.feedbackEnabled}>
             <AltContainer store={AgendaStore}>
               <AgendaView />
               <TalkDialog />
