@@ -4,7 +4,7 @@ A client library to embed a Koliseo event agenda in any website. You can visit [
 
 Koliseo is a ticketing platform for events with an interface to manage the event agenda: call for proposals, vote talks, create tracks and slots, and move talks between slots. This widget displays the final agenda as a table.
 
-The library includes one small polyfill dependency. It has been tested (to the best of our knowledge) in Chrome, Firefox, IE 10+, Edge and Safari.
+The library includes one small polyfill dependency. It has been tested (to the best of our knowledge) in Chrome, Firefox, IE 11 and Safari.
 
 ## Usage
 
