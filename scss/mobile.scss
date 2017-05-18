@@ -29,6 +29,10 @@
     margin: 1em 0;
   }
 
+  .ka-td.filtered-out {
+    display: none;
+  }
+
   .ka-td.talk {
     height: auto;
     background-image: none;

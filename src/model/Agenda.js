@@ -23,4 +23,10 @@ export default class Agenda {
     return Object.keys(this.daysById).map(k => this.daysById[k]);
   }
 
+  // Apply a filter to the agenda contents.
+  // Will update AgendaCell.filteredOut for each cell
+  applyFilter(filter) {
+    this.getDaysArray().forEach(day => day.applyFilter(filter));
+  }
+
 }

@@ -12,6 +12,7 @@ import ContextComponent from './ContextComponent';
 import LoadingView from './LoadingView';
 import TagStylesView from './TagStylesView';
 import HistoryAdapter from '../controller/HistoryAdapter';
+import FilterView from './FilterView';
 
 /**
  * Displays an entire agenda, including multiple days
@@ -24,6 +25,8 @@ import HistoryAdapter from '../controller/HistoryAdapter';
  * 
  * {AgendaDay}  the currently selected day
  * selectedDay
+ * 
+ * {JSON of {categoryName, [tags] }, required} the tags extracted from the Call for Papers 
  * 
  */
 class AgendaView extends Component {
@@ -80,17 +83,18 @@ class AgendaView extends Component {
 
   // renders the tabs and content around our table
   render() {
-    const { agenda, selectedDay } = this.props;
+    const { agenda, selectedDay, filter, tagCategories } = this.props;
     return (
       <div>
         {this.renderDayTabs(agenda, selectedDay)}
         <div className="kworkspace">
+          <FilterView filter={filter} tagCategories={tagCategories} />
           <AgendaDayView day={selectedDay} />
         </div>
         <div className="ka-hint">
           <a href="http://koliseo.com" target="_blank" rel="noopener" className="ka-logo"></a>
           <p className="ka-hint-p small">
-            This agenda is a free automagic service from <a href="http://koliseo.com" target="_blank" rel="noopener">koliseo.com</a>. Drop us a line if this sounds like something you need for your own events.
+            This agenda is a free service from <a href="http://koliseo.com" target="_blank" rel="noopener">koliseo.com</a>. Drop us a line if this sounds like something you need for your own events.
           </p>
         </div>
       </div>
@@ -123,7 +127,7 @@ export default function renderAgenda({
           <TagStylesView tagCategories={callForPapers.tagCategories} />
           <ContextComponent feedbackEnabled={agenda.feedbackEnabled}>
             <AltContainer store={AgendaStore}>
-              <AgendaView />
+              <AgendaView tagCategories={callForPapers.tagCategories} />
               <TalkDialog />
             </AltContainer>
           </ContextComponent>

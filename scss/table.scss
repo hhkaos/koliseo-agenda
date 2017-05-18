@@ -78,8 +78,15 @@ $border-color: #9cb9c9;
   text-align: center;
 }
 
-.ka-td.hidden {
-  visibility: hidden;
+.ka-td.filtered-out {
+  opacity: .2;
+  & > .ka-td-contents {
+    filter: blur(3px);
+  }
+}
+
+.ka-td {
+  transition: opacity .2s ease-out;
 }
 
 .ka-td-footer {

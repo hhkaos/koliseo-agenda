@@ -1,0 +1,55 @@
+$filter-border-radius: 5px;
+.ka-filter-input {
+  padding: 0.67rem;
+  border: 1px solid #ccc;
+  border-bottom-width: 2px;
+  border-radius: $filter-border-radius 0 0 $filter-border-radius;
+  flex-grow: 1;
+  max-width: 40rem;
+}
+.ka-filter-form {
+  display: flex;
+  flex-wrap: wrap;
+
+  & .ka-button {
+    border-radius: 0 $filter-border-radius $filter-border-radius 0;
+    margin: 0;
+  }
+}
+.ka-filter-query-container {
+  width: 100%;
+  display: flex;
+  margin: 1rem 0;
+}
+.ka-filter-fieldset {
+    //display: inline-block;
+    margin: 0 1rem 0 0;
+    padding: .5rem 1rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ddd;
+
+    & > legend {
+      text-transform: uppercase;
+      color: #777;
+      border: 0;
+      padding: 0;
+    }
+
+    & > .ka-tags {
+      margin-top: 0;
+    }
+
+    & .tag {
+      cursor: pointer;
+      &:not(.selected):not(:hover):not(:focus) {
+        background-color: #ccc;
+        border-color: #aaa;
+        color: #555;
+      }
+      &:not(.selected):hover, &:not(.selected):focus {
+        background-color: #aaa;
+        border-color: #888;
+        color: #fff;
+      }
+    }
+}

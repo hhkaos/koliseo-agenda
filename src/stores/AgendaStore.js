@@ -1,7 +1,9 @@
 import alt from '../alt';
 import Store from 'alt-ng/Store';
 import AgendaActions from '../actions/AgendaActions';
+import FilterActions from '../actions/FilterActions';
 import HistoryAdapter from '../controller/HistoryAdapter';
+import Filter from '../model/Filter';
 
 class AgendaStore extends Store {
 
@@ -16,9 +18,12 @@ class AgendaStore extends Store {
 
       // the currently selected talk
       // selectedCell: undefined,
+
+      // the current filter
+      filter: new Filter()
     }
     this.bindActions(AgendaActions);
-
+    this.bindActions(FilterActions);
   }
 
   load({ callForPapers, agenda }) {
@@ -59,6 +64,7 @@ class AgendaStore extends Store {
     document.body.classList.add('no-scroll');
   }
 
+  // triggered by TalkDialog when closing the dialog. Unselects the talk being displayed
   unselectTalk() {
     document.body.classList.remove('no-scroll');
     this.setState({
@@ -67,6 +73,24 @@ class AgendaStore extends Store {
     const day = this.state.selectedDay;
     HistoryAdapter.replaceState({ title: day.name, hash: day.id });
   }
+
+  // the user selects/unselects a tag in the filter
+  toggleFilterTag({ category, tag }) {
+    const filter = this.state.filter;
+    filter.toggleTag(category, tag);
+    this.setFilter(filter);
+  }
+
+  setFilter(filter) {
+    const agenda = this.state.agenda;
+    agenda.applyFilter(filter);
+    this.setState({
+      filter, //Object.assign({}, filter)
+      agenda
+    })
+
+  }
+
 
 };
 

@@ -1,6 +1,7 @@
 import User from './User';
 
 class CellContents {
+
   constructor({ authors, ...values }) {
     Object.assign(this, values);
     if (values.type == 'TALK') {
@@ -13,6 +14,30 @@ class CellContents {
       }
     }
   }
+
+  // return true if this cell passes the query filter
+  passesFilterQuery(queryTerms) {
+    return !queryTerms.length || !!queryTerms.find((term) => {
+      return term.test(this.title) ||
+        term.test(this.description) || 
+        !!this.authors.find(({ uuid, name, description }) => {
+          return term.test(uuid) || term.test(name) || term.test(description)
+        })
+    })
+  }
+
+  // return true if this cell passes the tag filter
+  passesFilterTags(tagCategories) {
+    const keys = Object.keys(tagCategories);
+    return !keys.length || keys.every(categoryName => {
+      const expectedTags = tagCategories[categoryName];
+      const actualTags = this.tags[categoryName];
+      return !expectedTags.length || (actualTags && !!expectedTags.find(tag => {
+        return actualTags.indexOf(tag) != -1;
+      }))
+    })
+  }
+
 }
 
 // Data for a cell. 
@@ -40,6 +65,9 @@ export default class AgendaCell {
     // undefined if the slot is empty
     this.type = contents && contents.type || undefined;
 
+    // true if this cell passes the criteria for the filter
+    this.passesFilter = true;
+
     // contents of the cell (different according to type). May be undefined if the slot is empty.
     // TALK: { hash, title, description, authors, tags, feedback, slidesUrl, videoUrl }
     // BREAK: { title }
@@ -49,6 +77,18 @@ export default class AgendaCell {
     // the data of this track
     this.track = track;
 
+  }
+
+  // apply a filter to this cell
+  applyFilter({ queryTerms, tags }) {
+    const contents = this.contents;
+    this.passesFilter = 
+      !contents || 
+      contents.type !== 'TALK' ||
+      (
+        contents.passesFilterQuery(queryTerms) &&
+        contents.passesFilterTags(tags)
+      );
   }
 
 }

@@ -54,18 +54,24 @@ export default class AgendaCellView extends Component {
 
   render() {
     const { cell } = this.props;
-    const { start, end, contents, rowSpan, colSpan, track } = cell;
-    var type = contents && contents.type;
-    var $contents =
+    const { start, end, contents, rowSpan, colSpan, track, passesFilter } = cell;
+    const type = contents && contents.type;
+    const $contents =
       type === 'TALK'? this.renderTalk(cell) :
       type === 'BREAK'? contents.title :
       type === 'EXTEND' ? <div>Extended from <b>{contents.extendedTrack.name}</b></div> :
             'Empty slot';
+    const classList = [
+      'ka-td',
+      `ka-track-${track.index}`,
+      type && type.toLowerCase() || '',
+      passesFilter? '' : 'filtered-out'
+    ];
 
     return (
       type === 'EXTEND' && contents.merged? undefined :
         <td 
-          className={`ka-td ${type && type.toLowerCase() || ''} ka-track-${track.index}`} 
+          className={ classList.join(' ') } 
           rowspan={rowSpan} 
           colspan={colSpan}
           data-track-id={track.id}

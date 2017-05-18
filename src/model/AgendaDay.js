@@ -118,4 +118,15 @@ export default class AgendaDay {
     return this.colLabels.length === 0;
   }
 
+  // Apply a filter to the agenda contents.
+  // Will update AgendaCell.filteredOut for each cell
+  applyFilter(filter) {
+    this.data.forEach((row) => {
+      row.forEach((cell) => {
+        cell && cell.applyFilter(filter);
+      })
+    });
+  }
+
+
 }
