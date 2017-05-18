@@ -80,6 +80,7 @@ export default class AgendaCell {
   }
 
   // apply a filter to this cell
+  // returns the value of this.passesFilter
   applyFilter({ queryTerms, tags }) {
     const contents = this.contents;
     this.passesFilter = 

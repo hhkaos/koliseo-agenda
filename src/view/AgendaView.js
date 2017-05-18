@@ -88,7 +88,7 @@ class AgendaView extends Component {
       <div>
         {this.renderDayTabs(agenda, selectedDay)}
         <div className="kworkspace">
-          <FilterView filter={filter} tagCategories={tagCategories} />
+          <FilterView filter={filter} tagCategories={tagCategories} totalFilteredTalks={selectedDay.totalFilteredTalks} />
           <AgendaDayView day={selectedDay} />
         </div>
         <div className="ka-hint">

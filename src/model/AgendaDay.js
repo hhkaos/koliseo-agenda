@@ -54,6 +54,7 @@ export default class AgendaDay {
     this.data = rowLabels.map(_ => []);
 
     // transform data from columns into rows, including rowspans
+    let totalFilteredTalks = 0;
     tracks.forEach(({ id, name, slots }, colIndex) => {
       colLabels.push(name);
       slots.forEach((slot) => {
@@ -68,10 +69,14 @@ export default class AgendaDay {
           const hash = this.id + '/' + contents.id;
           cell.contents.hash = hash;
           cellsByHash[hash] = cell;
+          totalFilteredTalks++;
         }
 
       })
     });
+
+    // the total number of talks that are selected by the current filter
+    this.totalFilteredTalks = totalFilteredTalks;
 
     // calculate colSpans
     this.data.forEach((row, rowIndex) => {
@@ -121,11 +126,18 @@ export default class AgendaDay {
   // Apply a filter to the agenda contents.
   // Will update AgendaCell.filteredOut for each cell
   applyFilter(filter) {
+    let totalFilteredTalks = 0;
     this.data.forEach((row) => {
       row.forEach((cell) => {
-        cell && cell.applyFilter(filter);
+        if (cell) {
+          cell.applyFilter(filter);
+          if (cell.passesFilter && cell.contents && cell.contents.type == 'TALK') {
+            totalFilteredTalks++;
+          }
+        }
       })
     });
+    this.totalFilteredTalks = totalFilteredTalks;
   }
 
 

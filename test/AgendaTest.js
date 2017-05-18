@@ -38,13 +38,20 @@ describe('Agenda', () => {
     assert.equal('undefined', typeof day0.data[0][1]);
   });
 
-  it('should apply filter', () => {
-    // This will just test a basic use case. 
-    // For more complete tests, see FilterTest.js
-    const filter = Object.assign(new Filter(), { tags: { 'xx': ['yyy'] } });
+  // For more complete tests of Filter, see FilterTest.js
+  it('should recalculate totals when applying a Filter', () => {
+    const day0 = agenda.getDaysArray()[0];
+    assert.equal(72, day0.totalFilteredTalks);
+
+    const filter = Object.assign(new Filter(), {
+      tags: {
+        "Technology": [ "Big Data"  ] 
+      } 
+    });
     agenda.applyFilter(filter);
+    assert.equal(14, day0.totalFilteredTalks);
+
     const cell = agenda.cellsByHash["5699289732874240/5733608132182016"];
-    console.log(JSON.stringify(cell));
     assert(!cell.passesFilter, "Talk should not pass filter");
   })
 

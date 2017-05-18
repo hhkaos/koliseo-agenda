@@ -41,6 +41,8 @@ function TagsFieldsetView({categoryName, tags, selectedTags, onClick}) {
  * filter
  * 
  * {JSON of categoryName, [tags]} the list of tags that can be used
+ * 
+ * totalFilteredTalks {number} the total of talks that pass the filter for this AgendaDay
  */
 export default class FilterView extends Component {
 
@@ -108,7 +110,7 @@ export default class FilterView extends Component {
 
   render() {
     const { focused } = this.state;
-    const { filter, tagCategories } = this.props;
+    const { filter, tagCategories, totalFilteredTalks } = this.props;
     const { query, tags } = filter;
     const isEmpty = filter.isEmpty();
     return (
@@ -138,6 +140,7 @@ export default class FilterView extends Component {
         <div className={"ka-filter-tag-container" + (isEmpty && !focused? ' ka-collapsed' : '') }>
           { this.renderTagFieldSets(tagCategories, tags) }
         </div>
+        <div className="ka-filter-total">Total {totalFilteredTalks} talks displayed</div>
       </form>
     )
   }
