@@ -6,15 +6,18 @@ $filter-border-radius: 5px;
   border-radius: $filter-border-radius 0 0 $filter-border-radius;
   flex-grow: 1;
   max-width: 40rem;
+  min-width: 0;
 }
 .ka-filter-form {
-  display: flex;
-  flex-wrap: wrap;
 
   & .ka-button {
-    border-radius: 0 $filter-border-radius $filter-border-radius 0;
     margin: 0;
+    &.primary {
+      border-radius: 0 $filter-border-radius $filter-border-radius 0;
+      margin: 0 1rem 0 0;
+    }
   }
+  
 }
 .ka-filter-query-container {
   width: 100%;
@@ -52,4 +55,14 @@ $filter-border-radius: 5px;
         color: #fff;
       }
     }
+}
+.ka-filter-tag-container {
+  overflow: hidden;
+  max-height: 40rem;
+  transition: max-height .3s ease-out;
+  display: flex;
+  flex-wrap: wrap;
+ &.ka-collapsed {
+    max-height: 0;
+  }
 }

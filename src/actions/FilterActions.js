@@ -2,7 +2,7 @@ import alt from '../alt';
 
 const FilterActions = {
 
-  generate: [ 'toggleFilterTag']
+  generate: ['toggleFilterTag', 'submitFilter', 'onFilterQueryChange', 'clearFilter']
 
 }
 

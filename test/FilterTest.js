@@ -23,22 +23,28 @@ describe('Filter', () => {
     assert(!agendaCell.passesFilter, "Cell should NOT pass filter: " + JSON.stringify(filter) + " with contents: " + JSON.stringify(agendaCell));
   }
 
-  it('should toggle tags', () => {
+  it('should toggle tags and detect for isEmpty()', () => {
     const f = new Filter();
+    assert(f.isEmpty());
+    
     f.toggleTag('Language', 'Spanish');
+    assert(!f.isEmpty());
     assert.equal('{"Language":["Spanish"]}', JSON.stringify(f.tags));
+    
     f.toggleTag('Language', 'Spanish');
+    assert(f.isEmpty());
     assert.equal('{"Language":[]}', JSON.stringify(f.tags));
+    
     f.toggleTag('Language', 'Spanish');
     f.toggleTag('Language', 'English');
-    assert.equal('{"Language":["Spanish","English"]}', JSON.stringify(f.tags));
-    
+    assert.equal('{"Language":["Spanish","English"]}', JSON.stringify(f.tags));    
   });
 
   it('should parse query terms', () => {
     const f = new Filter();
     f.query = '   xxx 123 yyy';
     assert.equal(3, f.queryTerms.length);
+    assert(!f.isEmpty());
   })
 
   it('should pass an empty filter', () => {

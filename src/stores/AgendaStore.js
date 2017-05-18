@@ -81,6 +81,21 @@ class AgendaStore extends Store {
     this.setFilter(filter);
   }
 
+  // the user has entered a query and clicked submit
+  submitFilter() {
+    this.setFilter(this.state.filter);
+  }
+
+  // updates the query value, but does not triger a rerender
+  onFilterQueryChange(query) {
+    this.state.filter.query = query;
+    this.setFilter(this.state.filter);
+  }
+
+  clearFilter() {
+    this.setFilter(new Filter());
+  }
+
   setFilter(filter) {
     const agenda = this.state.agenda;
     agenda.applyFilter(filter);

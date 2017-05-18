@@ -26,6 +26,15 @@ export default class Filter {
     tags[category] = data;
   }
 
+  // return true if there is nothing selected
+  isEmpty() {
+    const tags = this.tags;
+    return !this.queryTerms.length && 
+      !Object.keys(tags).find(categoryName => {
+        return !!tags[categoryName].length
+      })
+  }
+
   // break query in parts that can be used for regexp search
   set query(q) {
     this._query = q;
