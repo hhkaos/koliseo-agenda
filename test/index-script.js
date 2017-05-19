@@ -26,19 +26,15 @@ function onLoad() {
   document.getElementById('clientId').value = clientId || '';
   if (typeof Koliseo !== 'undefined' && Koliseo.agenda && typeof fetch !== 'undefined') {
     Koliseo.agenda.render({
+      // test event
+      c4pUrl: 'https://www.koliseo.com/extrema/evento-de-prueba1/r4p/5675064775147520',
+      
       // Codemotion 2015
-      // c4pUrl: 'https://www.koliseo.com/codemotion/codemotion-madrid/r4p/5685252034920448',
+      //c4pUrl: 'https://www.koliseo.com/codemotion/codemotion-madrid/r4p/5685252034920448',
 
       // Codemotion 2016
-      c4pUrl: 'https://www.koliseo.com/codemotion/codemotion-madrid/r4p/5753906952929280',
-      /*
-      urls: {
-        c4p: './json/c4p.json',
-        agenda: './json/codemotion.json', // 'talks.json',
-        likes: './json/likes.json',
-        me: './json/me.json',
-      },
-      */
+      //c4pUrl: 'https://www.koliseo.com/codemotion/codemotion-madrid/r4p/5753906952929280',
+      
       element: document.querySelector('.ka'),
       oauthClientId: clientId
     })
