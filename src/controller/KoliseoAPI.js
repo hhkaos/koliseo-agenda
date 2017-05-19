@@ -16,12 +16,12 @@ function getTokenFromUrl() {
   const expires_in = getUrlParameter(location.href, 'expires_in');
   if (access_token && expires_in) { 
     const state = localStorage.getItem('ka-state');
-    if (state == getUrlParameter(location.href, 'state')) {
-      const result = { access_token, expires_in };
-      localStorage.setItem('ka-token', result);
-      localStorage.removeItem('ka-state');
-      return result;
-    }
+    // todo: use getUrlParameter()
+    // if (state == getUrlParameter(location.href, 'state'))
+    const result = { access_token, expires_in };
+    localStorage.setItem('ka-token', JSON.stringify(result));
+    localStorage.removeItem('ka-state');
+    return result;
   }
     return undefined;
 }
@@ -85,7 +85,7 @@ class KoliseoAPI {
       }
 
       // else forward the JSON object
-      return response.json();
+      return response.status == 204? undefined : response.json();
     }).catch((error) => {
       // credentials have expired. Re-draw component
       if (error.status == 401 || error.status == 403) {
@@ -101,8 +101,7 @@ class KoliseoAPI {
     assert(this.oauthClientId, 'Missing oauthClientUrl');
     const state = uuid();
     localStorage.setItem('ka-state', state);
-    let redirect_uri = location.href.split('#')[0];
-    redirect_uri = encodeURIComponent(redirect_uri + (redirect_uri.indexOf('?') == -1? '?' : '&') + 'oauthCallback');
+    const redirect_uri = encodeURIComponent(location.origin + location.pathname);
     this.navigate(`${URL}/login/auth?client_id=${this.oauthClientId}&response_type=token&redirect_uri=${redirect_uri}&scope=talks.feedback&state=${state}`);
   }
 
@@ -142,7 +141,7 @@ class KoliseoAPI {
 
   getCurrentUserLikes() {
     return this.fetch({ 
-      url: this.c4pUrl + '/likes'
+      url: this.c4pUrl + '/agenda/likes'
     }).catch((error) => {
       // anonymous users get here
       // todo: there is a bug on the server side that is returning 500 for anonymous users
@@ -153,14 +152,14 @@ class KoliseoAPI {
     });
   }
 
-  addLike({ talkId }) {
+  addLike(talkId) {
     return this.fetch({
       url: `${this.c4pUrl + '/agenda'}/likes/${talkId}`, 
       method: 'post'
     });
   }
 
-  removeLike({ talkId }) {
+  removeLike(talkId) {
     return this.fetch({
       url: `${this.c4pUrl + '/agenda'}/likes/${talkId}`, 
       method: 'delete'

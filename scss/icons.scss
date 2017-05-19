@@ -14,17 +14,16 @@ $iconWidth: .8rem;
     & .ka-icon-slides {
       fill: #b927e1;
     }
-
+    & .ka-icon-heart {
+      fill: #aaa;
+    }
   }
 }
 
-.ka-social-link.selected,
-.ka-social-link:hover, 
-.ka-social-link:focus {
-  & .ka-icon-heart{
-    fill: #d80027;
-  } 
+.ka-social-link.selected .ka-icon-heart {
+  fill: #d80027;
 }
+
 .ka-like-link {
   flex-grow: 1;
   text-align: right;

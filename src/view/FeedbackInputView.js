@@ -9,6 +9,7 @@ import { LoginLogoutButton } from './Buttons';
  * Input component for talk feedback
  * Properties:
  * feedback: {Feedback} the Feedback instance to store the input
+ * disabled: {boolean} true to disable the form
  */
 export default class FeedbackInputView extends Component {
 
@@ -24,14 +25,18 @@ export default class FeedbackInputView extends Component {
 
   onSubmit(e) {
     e.preventDefault();
-    !this.state.message && FeedbackActions.sendFeedback(this.props.feedback);
+    !this.state.message && !this.props.disabled && FeedbackActions.sendFeedback(this.props.feedback);
   }
 
-  renderAnonymous() {
+  renderAnonymous(disabled) {
     return (
       <div className="ka-avatar-text">
         <div className="ka-form-middle">
-          <div className="ka-form-username">You must sign in to provide feedback</div>
+          <div className="ka-form-username">
+            { 
+              disabled? 'Feedback for this event has been disabled' : 'You must sign in to provide feedback'
+            }
+          </div>
           <StarsView rating={0} />
         </div>
         <div className="ka-form-right">
@@ -42,21 +47,22 @@ export default class FeedbackInputView extends Component {
   }
 
   renderAuthenticated() {
-    const { currentFeedback = new Feedback({ user }) } = this.props;
+    const user = this.context.currentUser;
+    const { currentFeedback = new Feedback({ user }), feedbackWarning } = this.props;
     const { rating, comment, lastModified } = currentFeedback;
     return (
       <div className="ka-avatar-text">
-        <div className="ka-form-username">{user.name}</div>
-        <StarsView rating={rating} editable={true} />
-        <textarea
-          className="ka-comment"
-          placeholder="Share your thoughts"
-          maxlength="255"
-          onChange={this.onCommentChange}
-          value={comment}
-        />
-        <div class="ka-talk-buttons">
-          <button className="ka-button primary" type="submit" disabled={message && message.level == 'alert'}>Send</button>
+        <div className="ka-form-middle">
+          <div className="ka-form-username">{user.name}</div>
+          <StarsView rating={rating} editable={true} />
+          <textarea
+            className="ka-feedback-comment"
+            placeholder="Share your thoughts"
+            maxlength="255"
+            onChange={this.onCommentChange}
+            value={comment}
+          />
+          <button className="ka-button" type="submit" disabled={feedbackWarning && feedbackWarning.level == 'alert'}>Send</button>
         </div>
       </div>
     )
@@ -65,11 +71,11 @@ export default class FeedbackInputView extends Component {
 
   render() {
     const user = this.context.currentUser;
-    const { message } = this.props;
+    const { message, disabled } = this.props;
     return (
-      <form className="ka-dialog-section ka-avatar-and-text" onSubmit={this.onSubmit}>
+      <form className="ka-dialog-section ka-avatar-and-text ka-feedback-form" disabled={disabled} onSubmit={this.onSubmit}>
         <AvatarView user={user} />
-        { user.isAnonymous()? this.renderAnonymous() : this.renderAuthenticated() }
+        { user.isAnonymous()? this.renderAnonymous(disabled) : this.renderAuthenticated() }
         {
           message && 
           <span className="ka-messages">

@@ -12,6 +12,7 @@ export default {
       "ratingAverage": 4,
       "entriesCount": 3
     },
+    totalLikes: 11,
     "creationDate": 1435663557878,
     "authors": [
       {

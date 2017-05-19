@@ -103,9 +103,13 @@ class AgendaStore extends Store {
       filter, //Object.assign({}, filter)
       agenda
     })
-
   }
 
+  addLike(talkId) {
+  }
+
+  removeLike(talkId) {
+  }
 
 };
 

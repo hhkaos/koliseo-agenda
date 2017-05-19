@@ -69,4 +69,8 @@ describe('AgendaView', () => {
     })
   })
 
+  it('renders with wrong talk in location.hash', () => {
+    todo();
+  })
+
 });

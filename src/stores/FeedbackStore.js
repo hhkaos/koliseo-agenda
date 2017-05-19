@@ -19,6 +19,9 @@ class FeedbackStore extends Store {
 
       // {Feedback, undefined if none} feedback by the current user, 
       // currentFeedback
+
+      // feedback warning message
+      // feedbackWarning
     }
     this.bindActions(FeedbackActions);
   }
@@ -58,14 +61,14 @@ class FeedbackStore extends Store {
     currentFeedback[attribute] = value;
     this.setState({
       currentFeedback,
-      message: currentFeedback.getMessage()
+      feedbackWarning: currentFeedback.getMessage()
     })
   }
 
   // feedback already sent by the action
   sendFeedback(feedback) {
     setState({
-      message: {
+      feedbackWarning: {
         level: 'info',
         message: 'Thanks for your feedback!'
       }

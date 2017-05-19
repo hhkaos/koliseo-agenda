@@ -1,12 +1,14 @@
 $filter-border-radius: 5px;
-.ka-filter-input {
+.ka-filter-input, .ka-feedback-comment {
   padding: 0.67rem;
   border: 1px solid #ccc;
   border-bottom-width: 2px;
-  border-radius: $filter-border-radius 0 0 $filter-border-radius;
   flex-grow: 1;
-  max-width: 40rem;
   min-width: 0;
+}
+.ka-filter-input {
+  border-radius: $filter-border-radius 0 0 $filter-border-radius;
+  max-width: 40rem;
 }
 .ka-filter-form {
 

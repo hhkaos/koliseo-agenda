@@ -32,7 +32,7 @@ class FeedbackListView extends Component {
     if (!entries) {
       return false;
     } else if (!entries.length) {
-      return <div class="no-feedback"></div>;
+      return <div class="ka-dialog-section ka-no-feedback">There is no feedback for this talk yet.</div>;
     } else {
       return entries.map((feedback) => {
         return (
@@ -43,14 +43,11 @@ class FeedbackListView extends Component {
   }
 
   render() {
-    const { currentUser, feedbackEnabled } = this.context.currentUser;
+    const { currentUser, feedbackEnabled } = this.context;
     const { loading, entries, currentFeedback } = this.props;
     return (
       <div className="ka-feedback-entries">
-        { 
-          feedbackEnabled && !currentUser.readOnly && 
-          <FeedbackInputView feedback={currentFeedback} /> 
-        }
+        <FeedbackInputView feedback={currentFeedback} disabled={!feedbackEnabled || currentUser.readOnly}/> 
         { loading? this.renderLoading() : this.renderEntries(entries) }
       </div>
     )

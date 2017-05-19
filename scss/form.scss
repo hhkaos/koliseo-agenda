@@ -1,7 +1,15 @@
-form.ka-avatar-and-text {
+.ka-feedback-form {
   background: #00a1ff;
+  border-bottom: 2px solid #0982ca;
   margin-bottom: 0;
   color: #fff;
+
+  &[disabled] {
+    opacity: .7;
+    filter: grayscale(80%);
+  }
+
+
 
   & .ka-star-rating:before {
     filter: grayscale(100%) brightness(200%);
@@ -17,6 +25,9 @@ form.ka-avatar-and-text {
 .ka-form-middle {
   flex-grow: 1;
   text-shadow: 0 1px 0 rgba(0,0,0,0.4);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 .ka-form-username {
   margin-bottom: .5rem;
@@ -49,17 +60,15 @@ form.ka-avatar-and-text {
     }
 }
 
-.ka-comment {
-    width: 100%;
-    margin-bottom: 10px;
-    height: 40px;
-    padding: 5px;
-    resize: vertical;
-    font-size: 90%;
+.ka-feedback-comment {
+  resize: vertical;
+  border-color: #ddd;
+  height: 3rem;
+  transition: height .2s ease-out;
+  font-family: inherit;
+  width: 100%;
+  &:focus {
+    height: 5rem;
+    outline-color: rgba(0,0,0,.5);
+  }
 }
-
-//.ka-star-cell {
-//    display: inline-block;
-//    padding-top: 4px;
-//}
-
