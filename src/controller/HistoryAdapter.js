@@ -30,7 +30,7 @@ export default {
 
   initState(agenda, hash) {
     const isTalk = isTalkHash(hash);
-    const dayId = isTalk ? /#([^\/]+)\/(.+)?/.exec(hash)[1] : hash;
+    const dayId = isTalk ? /([0-9]+)\/([0-9]+)/.exec(hash)[1] : hash;
 
     const agendaDay = agenda.daysById[dayId] || agenda.getDaysArray()[0]
     AgendaActions.selectDayById(agendaDay.id);
