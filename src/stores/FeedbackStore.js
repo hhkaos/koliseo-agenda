@@ -35,7 +35,7 @@ class FeedbackStore extends Store {
         talkId,
         loading,
         entries,
-        currentFeedback: undefined
+        currentFeedback: new Feedback({user: currentUser})
       })
     } else if (talkId == this.state.talkId) {
       // we just received a page of results

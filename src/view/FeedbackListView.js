@@ -47,7 +47,10 @@ class FeedbackListView extends Component {
     const { loading, entries, currentFeedback } = this.props;
     return (
       <div className="ka-feedback-entries">
-        <FeedbackInputView feedback={currentFeedback} disabled={!feedbackEnabled || currentUser.readOnly}/> 
+        <FeedbackInputView 
+          currentFeedback={currentFeedback} 
+          disabled={!feedbackEnabled || currentUser.readOnly}
+        /> 
         { loading? this.renderLoading() : this.renderEntries(entries) }
       </div>
     )

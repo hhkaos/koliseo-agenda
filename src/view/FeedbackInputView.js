@@ -25,7 +25,9 @@ export default class FeedbackInputView extends Component {
 
   onSubmit(e) {
     e.preventDefault();
-    !this.state.message && !this.props.disabled && FeedbackActions.sendFeedback(this.props.feedback);
+    !this.state.message && 
+    !this.props.disabled && 
+    FeedbackActions.sendFeedback(this.props.currentFeedback);
   }
 
   renderAnonymous(disabled) {

@@ -37,6 +37,7 @@ describe('FeedbackListView', () => {
     //assert.react.contains(element, 'loading');
     return promise.then(() => {
       assert.react.contains(element, 'kk');
+      assert.react.contains(element, 'comment from current user in textarea, stars in stars');
     })
   })
 
