@@ -4,6 +4,7 @@
 set -e
 FOLDER=.gh-pages
 
+npm run build
 if [ ! -d .gh-pages ]; then
   git clone -b gh-pages git@github.com:icoloma/koliseo-agenda.git ${FOLDER}
 else
