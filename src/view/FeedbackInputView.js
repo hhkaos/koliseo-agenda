@@ -50,23 +50,31 @@ export default class FeedbackInputView extends Component {
     this.canBeSubmitted() && FeedbackActions.sendFeedback(this.props.talkId, this.props.currentFeedback);
   }
 
-  renderAnonymous(disabled) {
+  renderDisabled() {
     return (
       <div className="ka-avatar-text">
         <div className="ka-form-middle">
           <div className="ka-form-username">
-            { 
-              disabled? 'Feedback for this event has been disabled' : 'You must sign in to provide feedback'
-            }
+            Feedback for this event has been disabled
           </div>
           <StarsView rating={0} />
         </div>
-        {
-          !disabled && 
-            <div className="ka-form-right">
-              <LoginLogoutButton />
-            </div>
-        }
+      </div>
+    )
+  }
+
+  renderAnonymous() {
+    return (
+      <div className="ka-avatar-text">
+        <div className="ka-form-middle">
+          <div className="ka-form-username">
+            You must sign in to provide feedback
+          </div>
+          <StarsView rating={0} />
+        </div>
+        <div className="ka-form-right">
+          <LoginLogoutButton />
+        </div>
       </div>
     )
   }
@@ -113,7 +121,11 @@ export default class FeedbackInputView extends Component {
     return (
       <form className="ka-dialog-section ka-avatar-and-text ka-feedback-form" disabled={disabled} onSubmit={this.onSubmit}>
         <AvatarView user={user} />
-        { disabled || user.isAnonymous()? this.renderAnonymous(disabled) : this.renderAuthenticated() }
+        { 
+          disabled? this.renderDisabled() :
+          user.isAnonymous()? this.renderAnonymous() : 
+          this.renderAuthenticated() 
+        }
       </form>
     )
   }
