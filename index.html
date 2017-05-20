@@ -3,7 +3,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300' rel='stylesheet' type='text/css'>
-  <link rel="stylesheet" href="js/kagenda-styles.css">
+  <link rel="stylesheet" href="js/koliseo-agenda.css">
   <style>
   /*
 
@@ -70,15 +70,15 @@
   function onLoad() {
     if (typeof Koliseo !== 'undefined' && Koliseo.agenda && typeof fetch !== 'undefined') {
       Koliseo.agenda.render({
-        c4pUrl: 'c4p.json',
-        agendaUrl: 'codemotion.json', 
-        element: document.querySelector('.ka')
+        c4pUrl: 'https://www.koliseo.com/codemotion/codemotion-madrid/r4p/5685252034920448',
+        element: document.querySelector('.ka'),
+        oauthClientId: 560004
       })
     }
   }
 
-  (typeof fetch === 'undefined') && loadJS('js/koliseo-polyfill.js', onLoad)
-  loadJS('js/koliseo-agenda.js', onLoad)
+  (typeof fetch === 'undefined') && loadJS('js/polyfill.js', onLoad)
+  loadJS('js/koliseo-agenda.min.js', onLoad)
 
   </script>
 </body>
