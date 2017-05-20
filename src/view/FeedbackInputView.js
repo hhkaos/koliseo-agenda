@@ -110,7 +110,7 @@ export default class FeedbackInputView extends Component {
     return (
       <form className="ka-dialog-section ka-avatar-and-text ka-feedback-form" disabled={disabled} onSubmit={this.onSubmit}>
         <AvatarView user={user} />
-        { user.isAnonymous()? this.renderAnonymous(disabled) : this.renderAuthenticated() }
+        { disabled || user.isAnonymous()? this.renderAnonymous(disabled) : this.renderAuthenticated() }
       </form>
     )
   }

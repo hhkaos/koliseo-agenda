@@ -11,7 +11,7 @@ else
   git pull
   cd ..
 fi
-cp build/* ${FOLDER}/js/
+cp build/koliseo-agenda.min.js build/koliseo-agenda.css build/polyfill.js ${FOLDER}/js/
 cd ${FOLDER}
 git add .
 git commit -m "${1:-Update library}"
