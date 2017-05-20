@@ -27,7 +27,7 @@ describe('Buttons', () => {
   it('renders for logged in user', () => {
     const cell = new AgendaCell(MockCell);
     render(
-      <MockContextComponent user={AUTHENTICATED}>
+      <MockContextComponent currentUser={AUTHENTICATED}>
         <LikeButton cell={cell} />
         <LoginLogoutButton />
       </MockContextComponent>, element
@@ -50,7 +50,7 @@ describe('Buttons', () => {
   it('renders for anonymous user', () => {
     const user = new User({ likes: [] })
     render(
-      <MockContextComponent user={AUTHENTICATED}>
+      <MockContextComponent currentUser={AUTHENTICATED}>
         <LikeButton cell={new AgendaCell(MockCell)} />
         <LoginLogoutButton />
       </MockContextComponent>, element

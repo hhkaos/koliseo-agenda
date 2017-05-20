@@ -8,11 +8,8 @@ import FeedbackInputView from './FeedbackInputView';
 /**
  * Render the list of talk feedback
  * 
- * {AgendaCell, required} the cell to display
- * cell
- *
- * {Array of Feedback} the list of feedback to display
- * entries
+ * cell: {AgendaCell, required} the cell to display
+ * entries: {Array of Feedback} the list of feedback to display
  * 
  */
 class FeedbackListView extends Component {
@@ -44,11 +41,13 @@ class FeedbackListView extends Component {
 
   render() {
     const { currentUser, feedbackEnabled } = this.context;
-    const { loading, entries, currentFeedback } = this.props;
+    const { cell, loading, entries, currentFeedback, message } = this.props;
     return (
       <div className="ka-feedback-entries">
         <FeedbackInputView 
+          talkId={cell.contents.id}
           currentFeedback={currentFeedback} 
+          message={message}
           disabled={!feedbackEnabled || currentUser.readOnly}
         /> 
         { loading? this.renderLoading() : this.renderEntries(entries) }

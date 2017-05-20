@@ -8,8 +8,8 @@ const FeedbackActions = {
 
   generate: ['onChange'],
 
-  sendFeedback(feedback) {
-    return KoliseoAPI.sendFeedback(feedback);
+  sendFeedback(talkId, feedback) {
+    return KoliseoAPI.sendFeedback({ talkId, ...feedback });
   },
 
   // fetch Feedback entries for a given talk

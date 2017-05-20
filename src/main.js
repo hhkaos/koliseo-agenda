@@ -14,11 +14,9 @@ Koliseo.agenda = {
     renderAgenda({ element, ...options }).catch(e => {
       console.error(e, e.stack);
       render(
-        <div className="ka-messages">
-          <div className="ka-message alert">
-            {e.message}
-          </div>
-        </div>, 
+        <div className="ka-message alert">
+          {e.message}
+        </div>,
         element, element.lastChild
       );
     });

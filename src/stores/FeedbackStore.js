@@ -3,6 +3,10 @@ import Store from 'alt-ng/Store';
 import FeedbackActions from '../actions/FeedbackActions';
 import Feedback from '../model/Feedback';
 
+// minimum number of stars that should be assigned to send without a comment
+const MIN_STARS_WIHOUT_COMMENT = 3;
+
+
 class FeedbackStore extends Store {
 
   constructor() {
@@ -20,8 +24,8 @@ class FeedbackStore extends Store {
       // {Feedback, undefined if none} feedback by the current user, 
       // currentFeedback
 
-      // feedback warning message
-      // feedbackWarning
+      // feedback message
+      // message
     }
     this.bindActions(FeedbackActions);
   }
@@ -41,10 +45,11 @@ class FeedbackStore extends Store {
       // we just received a page of results
       let currentFeedback = this.state.currentFeedback;
       const processedEntries = entries.map((entry) => {
-        if (entry.user.id == currentUser.id) {
-          currentFeedback = new Feedback(entry);
+        const result = new Feedback(entry);
+        if (result.user.id == currentUser.id) {
+          currentFeedback = result;
         }
-        return new Feedback(entry);
+        return result;
       })
       this.setState({
         talkId, 
@@ -59,20 +64,32 @@ class FeedbackStore extends Store {
   onChange({ attribute, value }) {
     const currentFeedback = this.state.currentFeedback;
     currentFeedback[attribute] = value;
+
+    const { comment, rating } = currentFeedback;
+    const message = comment.trim()? undefined :
+      rating >= MIN_STARS_WIHOUT_COMMENT && rating < 5? {
+        message: 'The author would appreciate your comment',
+        level: 'warn'
+      } : rating < MIN_STARS_WIHOUT_COMMENT? {
+        message: 'Comment is required for 2 stars or less',
+        level: 'alert'
+      } : undefined;
+
     this.setState({
       currentFeedback,
-      feedbackWarning: currentFeedback.getMessage()
+      message
     })
   }
 
   // feedback already sent by the action
   sendFeedback(feedback) {
-    setState({
-      feedbackWarning: {
+    this.setState({
+      message: {
         level: 'info',
         message: 'Thanks for your feedback!'
       }
-    })
+    });
+    setTimeout(() => this.setState({ message: null }), 1000);
   }
 
 }

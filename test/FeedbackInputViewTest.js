@@ -20,24 +20,26 @@ describe('FeedbackInputView', () => {
   });
 
   it('renders for authenticated user', () => {
+    const feedback = new Feedback(MockFeedback)
     render(
       <MockContextComponent>
-        <FeedbackInputView />
+        <FeedbackInputView currentFeedback={feedback} />
       </MockContextComponent>, element
     )
-    assert.react.contains(element, '<span class="ka-author">Foo User</span><span class="ka-feedback-time">1/1/1970</span></div>');
+    assert.react.contains(element, '<a href="https://www.koliseo.com/foo" class="ka-avatar-a" title="Foo User"><img class="ka-avatar-img"></a>');
+    assert.react.contains(element, '<div class="ka-form-username">Foo User</div>');
     assert.react.contains(element, '<p>Foo bar baz</p>');
   })
 
   it('renders for unauthenticated user', () => {
-    const feedback = new Feedback(MockFeedback)
+    const feedback = new Feedback(Object.assign({}, MockFeedback, { user: ANONYMOUS }));
     render(
-      <MockContextComponent user={ANONYMOUS}>
+      <MockContextComponent currentUser={ANONYMOUS}>
         <FeedbackInputView feedback={feedback} />
       </MockContextComponent>, element
     )
-    assert.react.contains(element, '<span class="ka-author">Foo User</span><span class="ka-feedback-time">1/1/1970</span></div>');
-    assert.react.contains(element, '<p>Foo bar baz</p>');
+    assert.react.contains(element, '<span class="ka-avatar-a"><img class="ka-avatar-img" src="data:image/svg+xml');
+    assert.react.contains(element, 'You must sign in to provide feedback');
   })
 
   it('renders with existing feedback', () => {
@@ -47,8 +49,28 @@ describe('FeedbackInputView', () => {
         <FeedbackInputView currentFeedback={feedback} />
       </MockContextComponent>, element
     )
-    assert.react.contains(element, '<span class="ka-author">Foo User</span><span class="ka-feedback-time">1/1/1970</span></div>');
-    assert.react.contains(element, '<p>Foo bar baz</p>');
+    assert.react.contains(element, '<div class="ka-form-username">Foo User</div>');
+    assert.react.contains(element, '<div class="ka-star-rating"><span class="ka-star-bar" style="width: 70%;"></span>');
+    assert.react.contains(element, '<textarea class="ka-feedback-comment" placeholder="Share your thoughts" maxlength="255"></textarea>');
+  })
+
+  it('renders alert message', () => {
+    const feedback = new Feedback(MockFeedback)
+    Object.assign(feedback, { 
+      rating: 1, 
+      comments: '' 
+    });
+    render(
+      <MockContextComponent>
+        <FeedbackInputView currentFeedback={feedback} message={{
+          message: 'foobar',
+          level: 'alert'
+        }}/>
+      </MockContextComponent>, element
+    )
+    
+    assert.react.contains(element, 'disabled');
+    assert.react.contains(element, 'alert');
   })
 
 });

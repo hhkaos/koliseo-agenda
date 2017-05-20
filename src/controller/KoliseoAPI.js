@@ -53,7 +53,10 @@ class KoliseoAPI {
     this.token = getTokenFromUrl();
     if (!this.token) {
       const s = localStorage.getItem('ka-token');
-      this.token = JSON.parse(s);
+      const token = JSON.parse(s || '{}');
+      if (token.access_token && new Date(+token.expires_in) > new Date()) {
+        this.token = token;
+      }
     }
   }
 
@@ -66,7 +69,7 @@ class KoliseoAPI {
   fetch({ url, method = 'get', body }) {
     const headers = {
       Accept: 'application/json',
-      //Mode: 'cors', todo: Not yet supported
+      //Mode: 'no-cors', // todo mode: 'cors' not yet supported on the server side
       'Content-Type': 'application/json'
     };
     if (this.token) {
@@ -125,11 +128,11 @@ class KoliseoAPI {
     return this.fetch({ url: this.c4pUrl + '/agenda' });
   }
 
-  sendFeedback({ id, rating, comment }) {
+  sendFeedback({ talkId, rating, comment }) {
     return this.fetch({
       method: 'post', 
-      url: `${this.c4pUrl}/proposals/${id}/feedback`, 
-      body: { id, rating, comment }
+      url: `${this.c4pUrl}/proposals/${talkId}/feedback`, 
+      body: { rating, comment }
     });
   }
 

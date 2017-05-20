@@ -37,7 +37,7 @@ describe('TalkDialog', () => {
     }
     
     render(
-      <MockContextComponent user={AUTHENTICATED} tagColors={tagColors}>
+      <MockContextComponent currentUser={AUTHENTICATED} tagColors={tagColors}>
         <TalkDialog selectedCell={cell} />
       </MockContextComponent>, element
     )

@@ -1,5 +1,4 @@
 import { h, render, Component } from 'preact';
-import FeedbackActions from '../actions/FeedbackActions';
 
 /**
  * Render a bar with stars
@@ -21,6 +20,14 @@ export default class StarsView extends Component {
     this.onMouseLeave = this.onMouseLeave.bind(this);
     this.state = {
       width: props.rating
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps !== this.props) {
+      this.setState({
+        width: nextProps.rating
+      })
     }
   }
 
@@ -50,11 +57,9 @@ export default class StarsView extends Component {
   }
 
   onClick(e) {
+    e.preventDefault();
     let rating = e.target.dataset.rating;
-    FeedbackActions.onChange({
-      attribute: 'rating', 
-      value: rating 
-    });
+    this.props.onChange(rating);
   }
 
   render() {

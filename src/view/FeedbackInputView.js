@@ -4,30 +4,50 @@ import StarsView from './StarsView';
 import FeedbackActions from '../actions/FeedbackActions';
 import Feedback from '../model/Feedback';
 import { LoginLogoutButton } from './Buttons';
+import throttle from 'lodash.throttle';
 
 /**
  * Input component for talk feedback
  * Properties:
  * feedback: {Feedback} the Feedback instance to store the input
  * disabled: {boolean} true to disable the form
+ * talkId: {number} the id of the talk being rated
  */
 export default class FeedbackInputView extends Component {
 
   constructor() {
     super();
-    this.onChange = this.onCommentChange.bind(this);
+    this.onCommentChange = throttle(this.onCommentChange.bind(this), 300);
     this.onSubmit = this.onSubmit.bind(this);
+    this.onRatingChange = this.onRatingChange.bind(this);
   }
 
   onCommentChange(e) {
-    FeedbackActions.onChange({ attribute: 'comment', value: e.target.value });
+    FeedbackActions.onChange({ 
+      attribute: 'comment', 
+      value: e.target.value 
+    });
+  }
+
+  onRatingChange(rating) {
+    FeedbackActions.onChange({
+      attribute: 'rating',
+      value: rating
+    });
+  }
+
+  // return true if the form can be submitted
+  canBeSubmitted() {
+    const { currentFeedback, message } = this.props;
+    return currentFeedback && 
+      currentFeedback.rating > 0 &&
+      (!message || message.level !== 'alert')
+      ;
   }
 
   onSubmit(e) {
     e.preventDefault();
-    !this.state.message && 
-    !this.props.disabled && 
-    FeedbackActions.sendFeedback(this.props.currentFeedback);
+    this.canBeSubmitted() && FeedbackActions.sendFeedback(this.props.talkId, this.props.currentFeedback);
   }
 
   renderAnonymous(disabled) {
@@ -50,21 +70,34 @@ export default class FeedbackInputView extends Component {
 
   renderAuthenticated() {
     const user = this.context.currentUser;
-    const { currentFeedback = new Feedback({ user }), feedbackWarning } = this.props;
+    const { currentFeedback = new Feedback({ user }), message } = this.props;
     const { rating, comment, lastModified } = currentFeedback;
     return (
       <div className="ka-avatar-text">
         <div className="ka-form-middle">
           <div className="ka-form-username">{user.name}</div>
-          <StarsView rating={rating} editable={true} />
+          <StarsView 
+            rating={rating} 
+            editable={true} 
+            onChange={this.onRatingChange}
+          />
           <textarea
             className="ka-feedback-comment"
             placeholder="Share your thoughts"
             maxlength="255"
-            onChange={this.onCommentChange}
+            onInput={this.onCommentChange}
             value={comment}
           />
-          <button className="ka-button" type="submit" disabled={feedbackWarning && feedbackWarning.level == 'alert'}>Send</button>
+          {
+            message &&
+            <span className={"ka-message " + message.level}>
+              {message.message}
+            </span>
+          }
+          <button 
+            className="ka-button" 
+            type="submit" 
+            disabled={!this.canBeSubmitted()}>Send</button>
         </div>
       </div>
     )
@@ -73,19 +106,11 @@ export default class FeedbackInputView extends Component {
 
   render() {
     const user = this.context.currentUser;
-    const { message, disabled } = this.props;
+    const { disabled } = this.props;
     return (
       <form className="ka-dialog-section ka-avatar-and-text ka-feedback-form" disabled={disabled} onSubmit={this.onSubmit}>
         <AvatarView user={user} />
         { user.isAnonymous()? this.renderAnonymous(disabled) : this.renderAuthenticated() }
-        {
-          message && 
-          <span className="ka-messages">
-            <span className="ka-message {message.level}">     
-              {message.message}
-            </span>
-          </span>
-        }
       </form>
     )
   }

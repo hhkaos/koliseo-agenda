@@ -24,7 +24,7 @@
 }
 .ka-form-middle {
   flex-grow: 1;
-  text-shadow: 0 1px 0 rgba(0,0,0,0.4);
+  text-shadow: 0 1px 0 rgba(0,0,0,0.2);
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -32,39 +32,47 @@
 .ka-form-username {
   margin-bottom: .5rem;
 }
-.ka-messages {
-    margin-top: 10px;
-    display: inline-block;
-    visibility: visible;
-    opacity: 1;
-    transition: visibility 0s, opacity 0.5s linear;
-    .ka-message {
-        padding: .4rem;
-        border-radius: 3px;
-        display: block;
-        &.alert {
-            background-color: $red-dark;
-            color: white;
-        }
-        &.warn {
-            background-color: $orange;
-            color: white;
-        }
-    }
-    &.ka-hide {
-        visibility: hidden;
-        opacity: 0;
-        .ka-message {
-            display: none;
-        }
-    }
+
+$triangle-width: .5rem;
+.ka-message {
+  margin-top: 1rem;
+  padding: .7rem 1rem;
+  border-radius: 3px;
+  display: inline-block;
+  text-shadow: none;
+  border: 2px solid #fff;
+  color: #fff;
+  position: relative;
+
+  &::before {
+    position: absolute;
+    top: -$triangle-width;
+    left: 1rem;
+    display: block;
+    border: $triangle-width solid transparent;
+    border-top-width: 0;
+    content: '';
+    border-bottom-color: #fff;
+  }
+  &.alert {
+    background-color: #d81825;
+  }
+  &.warn {
+    background-color: $orange;
+  }
+  &.info {
+    background-color: #1daa13;
+  }
+}
+.ka-feedback-form .ka-message {
+  box-shadow: 1px 1px 0 rgba(0,0,0,.2);
 }
 
 .ka-feedback-comment {
   resize: vertical;
   border-color: #ddd;
   height: 3rem;
-  transition: height .2s ease-out;
+  transition: height .2s 2s ease-out;
   font-family: inherit;
   width: 100%;
   &:focus {

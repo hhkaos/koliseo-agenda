@@ -35,8 +35,11 @@
 }
 
 .ka-button:disabled {
-  filter: grayscale(100%) brightness(150%);
+  color: #aaa;
   cursor: default;
+  border-color: transparent;
+  background: #eee;
+  text-shadow: 0 1px 0 #fff;
 }
 
 .ka-button-label {
