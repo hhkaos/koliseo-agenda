@@ -61,9 +61,12 @@ export default class FeedbackInputView extends Component {
           </div>
           <StarsView rating={0} />
         </div>
-        <div className="ka-form-right">
-          <LoginLogoutButton />
-        </div>
+        {
+          !disabled && 
+            <div className="ka-form-right">
+              <LoginLogoutButton />
+            </div>
+        }
       </div>
     )
   }
