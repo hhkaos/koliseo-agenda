@@ -58,10 +58,14 @@ class AgendaStore extends Store {
   // returns the talk if found, otherwise undefined
   selectTalkByHash(hash) {
     const cell = this.getAgenda().cellsByHash[hash];
-    this.setState({
-      selectedCell: cell
-    });
-    document.body.classList.add('no-scroll');
+    if (cell) {
+      this.setState({
+        selectedCell: cell
+      });
+      document.body.classList.add('no-scroll');
+    } else {
+      console.log("Could not find talk " + hash);
+    }
   }
 
   // triggered by TalkDialog when closing the dialog. Unselects the talk being displayed
