@@ -10,7 +10,7 @@ export default class User {
   // likes: array of talk IDs liked by this user. empty if not logged in.
   // readOnly: true if there is no OAuth token configured
   constructor(userData) {
-    Object.assign(this, userData);
+    Object.assign(this, { likes: [] }, userData);
   }
 
   // return true if the user has not logged in

@@ -2,16 +2,23 @@ import alt from '../alt';
 import KoliseoAPI from '../controller/KoliseoAPI';
 import User from '../model/User';
 
+let ANONYMOUS;
+
 const UserActions = {
 
   login() {
     return KoliseoAPI.login();
   },
 
+  logout() {
+    KoliseoAPI.logout();
+    return ANONYMOUS;
+  },
+
   // load the current user and their likes
   load() {
     const readOnly = !KoliseoAPI.oauthClientId;
-    const ANONYMOUS = new User({
+    ANONYMOUS = new User({
       likes: [], readOnly
     });
     

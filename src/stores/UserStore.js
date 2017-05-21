@@ -1,6 +1,7 @@
 import alt from '../alt';
 import Store from 'alt-ng/Store';
 import UserActions from '../actions/UserActions';
+import User from '../model/User';
 
 class UserStore extends Store {
 
@@ -16,6 +17,12 @@ class UserStore extends Store {
   load(currentUser) {
     this.setState({
       currentUser
+    })
+  }
+
+  logout(ANONYMOUS) {
+    this.setState({
+      currentUser: ANONYMOUS
     })
   }
 

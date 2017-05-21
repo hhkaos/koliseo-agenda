@@ -1,4 +1,5 @@
 import { getUrlParameter, assert } from '../util';
+import HistoryAdapter from './HistoryAdapter';
 
 // generate a random identifier
 // http://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
@@ -15,12 +16,15 @@ function getTokenFromUrl() {
   const access_token = getUrlParameter(location.href, 'access_token');
   const expires_in = getUrlParameter(location.href, 'expires_in');
   if (access_token && expires_in) { 
-    const state = localStorage.getItem('ka-state');
-    // todo: use getUrlParameter()
+    // todo: use OAuth state
+    // const state = localStorage.getItem('ka-state');
     // if (state == getUrlParameter(location.href, 'state'))
     const result = { access_token, expires_in };
     localStorage.setItem('ka-token', JSON.stringify(result));
     localStorage.removeItem('ka-state');
+
+    // remove oauth arguments from location
+    HistoryAdapter.replaceState({ title: document.title, hash: '' });
     return result;
   }
     return undefined;
