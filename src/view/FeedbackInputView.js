@@ -93,7 +93,7 @@ export default class FeedbackInputView extends Component {
             onChange={this.onRatingChange}
           />
           <textarea
-            className="ka-feedback-comment"
+            className="ka-feedback-textarea"
             placeholder="Share your thoughts"
             maxlength="255"
             onInput={this.onCommentChange}
